@@ -70,7 +70,7 @@ You gain: one server, one port, one operational surface.
 | Module                       | What it does                                                                                                                |
 | ---------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
 | `dropwizard-twirp`           | Runtime library: `TwirpBundle`, protobuf + JSON body providers, exception mappers, `TwirpException`, `ErrorCode`, `TwirpClients`. |
-| `dropwizard-twirp-protoc`    | Standalone `protoc` plugin (shaded fat-jar) that emits a Java service interface, a JAX-RS resource, and a portable JAX-RS client per service. Also ships `TwirpGenerateCommand`. |
+| `dropwizard-twirp-protoc`    | Standalone `protoc` plugin (shaded fat-jar) that emits a Java service interface, a JAX-RS resource, and a portable JAX-RS client per service. |
 | `dropwizard-twirp-example`   | End-to-end example: a Dropwizard app exposing the canonical Haberdasher Twirp service over both wire formats. See [its README](dropwizard-twirp-example/README.md) for runnable server + client demos. |
 
 ## Quickstart
@@ -321,60 +321,14 @@ generated stub itself doesn't depend on Dropwizard. If you ever want to call
 the same service from a non-Dropwizard app, drop the generated jar in and
 hand it a vanilla `ClientBuilder.newClient()`.
 
-## Generating from a packaged jar (`twirp-generate` command)
+## Code generation without Maven (raw `protoc` plugin)
 
-For workflows that don't want a Maven build step — or for ops folks who only
-have the jar — `dropwizard-twirp-protoc` ships a Dropwizard
-[`Command`](https://www.dropwizard.io/en/stable/manual/core.html#commands)
-called `twirp-generate`. Wire it in alongside `TwirpBundle`:
-
-```java
-@Override
-public void initialize(Bootstrap<MyConfiguration> bootstrap) {
-    bootstrap.addBundle(new TwirpBundle<>());
-    bootstrap.addCommand(new TwirpGenerateCommand());
-}
-```
-
-Then any `java -jar myapp.jar twirp-generate …` invocation regenerates the
-stubs:
-
-```bash
-$ java -jar myapp.jar twirp-generate \
-      -I src/main/proto \
-      --proto haberdasher.proto \
-      --output-dir target/generated-sources/twirp
-Wrote 3 file(s) to /abs/path/to/target/generated-sources/twirp
-```
-
-| Flag                       | Default  | Effect                                                                   |
-| -------------------------- | -------- | ------------------------------------------------------------------------ |
-| `--proto FILE`             | required | A `.proto` to generate from. Repeat for multiple files.                  |
-| `--proto-path DIR` / `-I`  | `.`      | Search path for `import`s. Repeat for multiple roots.                    |
-| `--output-dir DIR` / `-o`  | required | Where to write generated Java sources. Created if missing.               |
-| `--prefix PATH`            | `/twirp` | URL prefix on every generated `@Path`.                                   |
-| `--no-client`              | off      | Skip generating the JAX-RS client stub. Use for server-only deploys.     |
-| `--no-server`              | off      | Skip generating the JAX-RS resource. Use for client-only modules (e.g. a shared client jar). |
-| `--protoc PATH`            | `protoc` | Path to the `protoc` binary; `protoc` on `$PATH` by default.             |
-
-(`--no-client` and `--no-server` together is rejected; with both off you'd
-emit only the service interface, which is rarely what you want and is
-better expressed as "use plain protoc, not Twirp codegen".)
-
-The command shells out to `protoc --descriptor_set_out=…` for parsing, then
-runs the same in-process plugin the Maven build uses. It's the same emitter,
-the same code — just driven via the CLI instead of xolstice.
-
-> **Note:** `TwirpGenerateCommand` lives in `dropwizard-twirp-protoc`. That
-> module declares its `dropwizard-core` dependency as `provided` so the shaded
-> protoc fat jar stays small (and so xolstice's plugin invocation doesn't drag
-> in Dropwizard at build time). Your application's existing `dropwizard-core`
-> dependency satisfies the symbol at runtime.
-
-## Code generation, alternative invocations
-
-The `dropwizard-twirp-protoc` jar is also a self-contained `protoc` plugin you
-can drive directly from `protoc` itself (no Dropwizard application required):
+The `dropwizard-twirp-protoc` shaded jar is a self-contained `protoc` plugin,
+so any build system that can invoke `protoc` (Gradle, Bazel, Make, plain
+shell) can drive it. There's nothing Dropwizard-specific about generation
+itself — `protoc` just needs to find an executable named
+`protoc-gen-twirp_java` on `PATH`, which is a one-line shell shim around the
+jar:
 
 ```bash
 $ cat > protoc-gen-twirp_java <<'EOF'
@@ -382,10 +336,13 @@ $ cat > protoc-gen-twirp_java <<'EOF'
 exec java -jar /opt/dropwizard-twirp-protoc-0.1.0-SNAPSHOT.jar
 EOF
 $ chmod +x protoc-gen-twirp_java
-$ PATH=$PWD:$PATH protoc --twirp_java_out=. haberdasher.proto
+$ PATH=$PWD:$PATH protoc \
+        --twirp_java_out=. \
+        -I src/main/proto \
+        haberdasher.proto
 ```
 
-Plugin options (`--twirp_java_out=<key>=<value>,<key>=<value>:OUT`):
+Plugin options are passed as `--twirp_java_out=<key>=<value>,<key>=<value>:OUT`:
 
 <a id="plugin-options"></a>
 
@@ -395,7 +352,12 @@ Plugin options (`--twirp_java_out=<key>=<value>,<key>=<value>:OUT`):
 | `client` | `true`   | Emit a JAX-RS `<Service>Client`. Set to `false` for server-only deploys.                     |
 | `server` | `true`   | Emit a JAX-RS `<Service>Resource`. Set to `false` for client-only modules (shared client jar consumed by other apps). |
 
-The Maven equivalent is the `<pluginParameter>` element on `<protocPlugin>`:
+Setting both `client=false` and `server=false` is rejected — the only thing
+that would be emitted is the service interface, which is rarely what you want
+and is better expressed as "use plain protoc, not Twirp codegen".
+
+The exact same option keys also work from the Maven plugin via the
+`<pluginParameter>` element on `<protocPlugin>`:
 
 ```xml
 <protocPlugin>
@@ -414,8 +376,8 @@ my-app-server/   # depends on my-app-api, generates 'client=false' → deployed
 
 ## Status
 
-This is **0.1.0-SNAPSHOT**. The runtime, codegen, client, and command are all
-tested end-to-end (90 tests across the reactor) but the API is not yet frozen.
+This is **0.1.0-SNAPSHOT**. The runtime, codegen, and generated client are all
+tested end-to-end (82 tests across the reactor) but the API is not yet frozen.
 
 Roadmap ideas (not yet implemented):
 

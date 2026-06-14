@@ -26,6 +26,17 @@ public final class Plugin {
      */
     public CodeGeneratorResponse generate(CodeGeneratorRequest request) {
         Options options = Options.parse(request.getParameter());
+        if (!options.generateServer() && !options.generateClient()) {
+            // Reject the degenerate config uniformly across every invocation
+            // path (Maven plugin, raw `protoc`, programmatic callers). Without
+            // this guard you'd silently get only the service interface, which
+            // is rarely useful and is better served by plain `protoc` with no
+            // Twirp plugin at all.
+            return CodeGeneratorResponse.newBuilder()
+                    .setError("dropwizard-twirp-protoc: client=false and server=false "
+                            + "cannot both be set; nothing useful would be generated.")
+                    .build();
+        }
         List<FileDescriptorProto> protos = request.getProtoFileList();
         TypeMapper types = TypeMapper.fromFiles(protos);
 

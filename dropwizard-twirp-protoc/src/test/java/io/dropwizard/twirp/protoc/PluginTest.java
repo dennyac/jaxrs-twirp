@@ -121,21 +121,24 @@ class PluginTest {
     }
 
     @Test
-    void serviceInterfaceIsAlwaysEmittedRegardlessOfToggles() {
-        // The interface is the contract both client and resource depend on, so
-        // even when both toggles are off we still emit it. (The command layer
-        // forbids --no-client and --no-server together, but the plugin core is
-        // permissive — fewer surprises if you wire it up directly.)
+    void bothTogglesOffIsRejectedAsADegenerateConfig() {
+        // The interface alone is rarely useful — if you wanted just protoc
+        // message classes you'd skip the Twirp plugin entirely. Reject the
+        // config uniformly so every invocation path (Maven, raw protoc,
+        // programmatic) gets the same error instead of silently emitting an
+        // interface no one will use.
         CodeGeneratorRequest req = CodeGeneratorRequest.newBuilder()
                 .setParameter("client=false,server=false")
                 .addFileToGenerate("haberdasher.proto")
                 .addProtoFile(haberdasherFile(true))
                 .build();
 
-        List<String> names = new Plugin().generate(req).getFileList().stream()
-                .map(File::getName).toList();
+        CodeGeneratorResponse response = new Plugin().generate(req);
 
-        assertThat(names).containsExactly("com/twitch/twirp/example/haberdasher/Haberdasher.java");
+        assertThat(response.getFileList()).isEmpty();
+        assertThat(response.getError())
+                .contains("client=false and server=false")
+                .contains("nothing useful would be generated");
     }
 
     @Test
