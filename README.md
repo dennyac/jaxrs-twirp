@@ -396,7 +396,7 @@ The Maven equivalent is the `<pluginParameter>` element on `<protocPlugin>`:
 ## Status
 
 This is **0.1.0-SNAPSHOT**. The runtime, codegen, client, and command are all
-tested end-to-end (89 tests across the reactor) but the API is not yet frozen.
+tested end-to-end (90 tests across the reactor) but the API is not yet frozen.
 
 Roadmap ideas (not yet implemented):
 

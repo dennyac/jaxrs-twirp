@@ -82,10 +82,16 @@ RPC failed: INVALID_ARGUMENT - inches must be > 0
 is ~50 lines and heavily commented. It's the most direct way to learn how to
 use the generated client from your own code.
 
-### 3. Call it with curl
+### 3. Call it with curl (both wire formats from the same endpoint)
 
-The same endpoint also speaks JSON, so you can poke at it without any Java
-client at all:
+A Twirp service speaks **two interchangeable wire formats** on the same
+URL: `application/protobuf` and `application/json`. The generated
+resource declares both in `@Consumes`/`@Produces`, and `TwirpBundle`
+registers a message-body reader/writer for each. The client picks the
+format via `Content-Type`; the server echoes that choice in its
+response `Content-Type` (per Twirp v7 — no `Accept` header required).
+
+**JSON in, JSON out:**
 
 ```bash
 $ curl -s -H 'Content-Type: application/json' \
@@ -98,16 +104,7 @@ $ curl -s -H 'Content-Type: application/json' \
 }
 ```
 
-Note the URL shape: `/twirp/<proto-package>.<ServiceName>/<RpcName>`. That's
-the Twirp v7 routing spec — every Twirp service uses it.
-
-Notice we did *not* send `Accept: application/json` — the server picks the
-response format by mirroring `Content-Type`, per the Twirp spec. Send
-`Content-Type: application/protobuf` and you'll get protobuf back; send
-JSON and you'll get JSON back. (You can still send `Accept`, it just isn't
-required.)
-
-For the protobuf wire format you'd pipe a serialized `Size` message:
+**Protobuf in, protobuf out — same URL, same JVM, same resource instance:**
 
 ```bash
 $ python -c 'import sys; sys.stdout.buffer.write(b"\x08\x0c")' \
@@ -115,8 +112,24 @@ $ python -c 'import sys; sys.stdout.buffer.write(b"\x08\x0c")' \
          -H 'Content-Type: application/protobuf' \
          http://localhost:8080/twirp/twitch.twirp.example.haberdasher.Haberdasher/MakeHat \
   | xxd
-# (binary Hat response)
+00000000: 080c 1203 7265 641a 0666 6564 6f72 61    ....red..fedora
 ```
+
+(`\x08\x0c` is a serialized `Size{inches=12}` — protobuf field 1 (varint),
+value 12. The response is a `Hat` with `inches=12`, a random color, and
+`style_name=fedora`; the color string in your shell's hex output will
+vary across requests.)
+
+Note the URL shape: `/twirp/<proto-package>.<ServiceName>/<RpcName>`.
+That's the Twirp v7 routing spec — every Twirp service uses it,
+regardless of wire format.
+
+The `bothWireFormatsCoexistOnTheSameResource` test in
+[`ExampleApplicationIntegrationTest`](src/test/java/io/dropwizard/twirp/example/ExampleApplicationIntegrationTest.java)
+interleaves JSON → protobuf → JSON against the same listener to prove
+this isn't an accident. The generated Java client supports both too:
+the default constructor uses protobuf, the `(WebTarget, String contentType)`
+overload uses JSON — `MakeHatCommand`'s `--json` flag exercises that path.
 
 ### 4. Trigger a server-side error
 

@@ -171,6 +171,61 @@ class ExampleApplicationIntegrationTest {
         assertThat(node.get("code").asText()).isEqualTo("malformed");
     }
 
+    @Test
+    void bothWireFormatsCoexistOnTheSameResource() throws Exception {
+        // The generated HaberdasherResource has ONE method per RPC with
+        // @Consumes({protobuf, json}) and @Produces({protobuf, json}). This
+        // test interleaves both formats against the same endpoint to prove
+        // they share a single resource instance — no separate /protobuf or
+        // /json sub-routes, no second listener, no per-format service.
+        URI endpoint = uri(MAKE_HAT_PATH);
+
+        // 1) JSON in -> JSON out.
+        HttpResponse<String> jsonResponse = http.send(
+                HttpRequest.newBuilder(endpoint)
+                        .header("Content-Type", "application/json")
+                        .POST(BodyPublishers.ofString("{\"inches\":12}", StandardCharsets.UTF_8))
+                        .build(),
+                BodyHandlers.ofString(StandardCharsets.UTF_8));
+
+        assertThat(jsonResponse.statusCode()).isEqualTo(200);
+        assertThat(jsonResponse.headers().firstValue("Content-Type"))
+                .hasValueSatisfying(ct -> assertThat(ct).startsWith("application/json"));
+        JsonNode jsonBody = mapper.readTree(jsonResponse.body());
+        assertThat(jsonBody.get("inches").asInt()).isEqualTo(12);
+        assertThat(jsonBody.get("style_name").asText()).isEqualTo("fedora");
+
+        // 2) Protobuf in -> protobuf out, same JVM, same listener, same path.
+        HttpResponse<byte[]> protoResponse = http.send(
+                HttpRequest.newBuilder(endpoint)
+                        .header("Content-Type", "application/protobuf")
+                        .POST(BodyPublishers.ofByteArray(
+                                Size.newBuilder().setInches(7).build().toByteArray()))
+                        .build(),
+                BodyHandlers.ofByteArray());
+
+        assertThat(protoResponse.statusCode()).isEqualTo(200);
+        assertThat(protoResponse.headers().firstValue("Content-Type"))
+                .hasValue("application/protobuf");
+        Hat protoHat = Hat.parseFrom(protoResponse.body());
+        assertThat(protoHat.getInches()).isEqualTo(7);
+        assertThat(protoHat.getStyleName()).isEqualTo("bowler");
+
+        // 3) Back to JSON to prove the protobuf request didn't poison state.
+        HttpResponse<String> jsonAgain = http.send(
+                HttpRequest.newBuilder(endpoint)
+                        .header("Content-Type", "application/json")
+                        .POST(BodyPublishers.ofString("{\"inches\":12}", StandardCharsets.UTF_8))
+                        .build(),
+                BodyHandlers.ofString(StandardCharsets.UTF_8));
+
+        assertThat(jsonAgain.statusCode()).isEqualTo(200);
+        assertThat(jsonAgain.headers().firstValue("Content-Type"))
+                .hasValueSatisfying(ct -> assertThat(ct).startsWith("application/json"));
+        assertThat(mapper.readTree(jsonAgain.body()).get("style_name").asText())
+                .isEqualTo("fedora");
+    }
+
     private URI uri(String path) {
         return URI.create("http://localhost:" + APP.getLocalPort() + path);
     }
