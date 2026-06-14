@@ -55,7 +55,7 @@ public class TwirpGenerateCommand extends Command {
     /** Default name. Override by subclassing and passing a different name to {@link #TwirpGenerateCommand(String, String)}. */
     public static final String DEFAULT_NAME = "twirp-generate";
     private static final String DEFAULT_DESCRIPTION =
-            "Regenerate Twirp Java sources (service interface, JAX-RS resource, Jersey client) from .proto files.";
+            "Regenerate Twirp Java sources (service interface, JAX-RS resource, JAX-RS client) from .proto files.";
 
     public TwirpGenerateCommand() {
         this(DEFAULT_NAME, DEFAULT_DESCRIPTION);
@@ -97,8 +97,15 @@ public class TwirpGenerateCommand extends Command {
         subparser.addArgument("--no-client")
                 .dest("noClient")
                 .action(Arguments.storeTrue())
-                .help("Skip generating the Jersey client stub. Useful on server-only "
+                .help("Skip generating the JAX-RS client stub. Useful on server-only "
                         + "deployments that don't want a WebTarget dependency.");
+
+        subparser.addArgument("--no-server")
+                .dest("noServer")
+                .action(Arguments.storeTrue())
+                .help("Skip generating the JAX-RS resource. Useful when emitting a "
+                        + "client-only module (e.g. a shared client jar consumed by "
+                        + "other services that doesn't need a Jersey resource).");
 
         subparser.addArgument("--protoc")
                 .dest("protoc")
@@ -114,7 +121,13 @@ public class TwirpGenerateCommand extends Command {
         Path outputDir = Paths.get(namespace.getString("outputDir"));
         String prefix = namespace.getString("prefix");
         boolean noClient = Boolean.TRUE.equals(namespace.getBoolean("noClient"));
+        boolean noServer = Boolean.TRUE.equals(namespace.getBoolean("noServer"));
         String protocBinary = namespace.getString("protoc");
+
+        if (noClient && noServer) {
+            throw new IllegalArgumentException(
+                    "--no-client and --no-server cannot both be set; nothing would be generated.");
+        }
 
         Files.createDirectories(outputDir);
 
@@ -125,7 +138,7 @@ public class TwirpGenerateCommand extends Command {
             try (var in = Files.newInputStream(descriptorSet)) {
                 set = FileDescriptorSet.parseFrom(in);
             }
-            CodeGeneratorRequest request = buildRequest(set, protos, prefix, noClient);
+            CodeGeneratorRequest request = buildRequest(set, protos, prefix, noClient, noServer);
             CodeGeneratorResponse response = new Plugin().generate(request);
             if (!response.getError().isEmpty()) {
                 throw new IllegalStateException("twirp-generate failed: " + response.getError());
@@ -171,11 +184,14 @@ public class TwirpGenerateCommand extends Command {
      * protoc plugin contract.
      */
     static CodeGeneratorRequest buildRequest(FileDescriptorSet set, List<String> protos,
-                                             String prefix, boolean noClient) {
+                                             String prefix, boolean noClient, boolean noServer) {
         StringBuilder parameter = new StringBuilder();
         parameter.append("prefix=").append(prefix);
         if (noClient) {
             parameter.append(",client=false");
+        }
+        if (noServer) {
+            parameter.append(",server=false");
         }
         Set<String> wanted = new LinkedHashSet<>();
         for (String proto : protos) {

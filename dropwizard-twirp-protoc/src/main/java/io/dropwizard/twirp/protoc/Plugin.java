@@ -56,9 +56,11 @@ public final class Plugin {
                 String javaPackage = TypeMapper.javaPackageOf(file);
                 response.addFile(buildFile(serviceGen.generateInterface(service), javaPackage));
                 ClassName serviceInterface = ClassName.get(javaPackage, service.getName());
-                response.addFile(buildFile(
-                        resourceGen.generateResource(file, service, serviceInterface),
-                        javaPackage));
+                if (options.generateServer()) {
+                    response.addFile(buildFile(
+                            resourceGen.generateResource(file, service, serviceInterface),
+                            javaPackage));
+                }
                 if (options.generateClient()) {
                     response.addFile(buildFile(
                             clientGen.generateClient(file, service, serviceInterface),

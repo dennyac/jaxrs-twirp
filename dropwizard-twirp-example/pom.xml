@@ -41,15 +41,16 @@
             <artifactId>protobuf-java</artifactId>
         </dependency>
         <!--
-            Compile scope so MakeHatCommand can build a Jersey client at runtime.
-            Pulls in Apache HttpClient as the transport. If your application
-            doesn't need to call other Twirp services from the same jar (just
-            serve them), you can scope this to test instead and drop
-            MakeHatCommand.
+            Test-scope: GeneratedClientIntegrationTest uses
+            dropwizard-client's JerseyClientBuilder to exercise the generated
+            HaberdasherClient against the running server. The example app
+            itself doesn't make any outbound HTTP calls, so we keep this off
+            the runtime classpath.
         -->
         <dependency>
             <groupId>io.dropwizard</groupId>
             <artifactId>dropwizard-client</artifactId>
+            <scope>test</scope>
         </dependency>
 
         <dependency>
@@ -93,6 +94,47 @@
                                     <mainClass>io.dropwizard.twirp.protoc.Main</mainClass>
                                 </protocPlugin>
                             </protocPlugins>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <!--
+                Shade into a runnable fat jar so the README's `java -jar
+                dropwizard-twirp-example-*.jar server …` / `… twirp-generate …`
+                invocations work without extra build glue. Standard Dropwizard
+                fat-jar config: merge META-INF/services entries so JAX-RS /
+                Jersey / Jakarta provider discovery still works, drop signed
+                jar signatures, and set Main-Class to the application.
+            -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <createDependencyReducedPom>true</createDependencyReducedPom>
+                            <filters>
+                                <filter>
+                                    <artifact>*:*</artifact>
+                                    <excludes>
+                                        <exclude>META-INF/*.SF</exclude>
+                                        <exclude>META-INF/*.DSA</exclude>
+                                        <exclude>META-INF/*.RSA</exclude>
+                                    </excludes>
+                                </filter>
+                            </filters>
+                            <transformers>
+                                <transformer
+                                    implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
+                                <transformer
+                                    implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                    <mainClass>io.dropwizard.twirp.example.ExampleApplication</mainClass>
+                                </transformer>
+                            </transformers>
                         </configuration>
                     </execution>
                 </executions>

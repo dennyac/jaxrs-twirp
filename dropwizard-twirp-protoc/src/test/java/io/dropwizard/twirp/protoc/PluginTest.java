@@ -104,6 +104,41 @@ class PluginTest {
     }
 
     @Test
+    void serverGenerationCanBeDisabledViaOption() {
+        // Client-only module: emit the interface + client stub, no JAX-RS resource.
+        CodeGeneratorRequest req = CodeGeneratorRequest.newBuilder()
+                .setParameter("server=false")
+                .addFileToGenerate("haberdasher.proto")
+                .addProtoFile(haberdasherFile(true))
+                .build();
+
+        List<String> names = new Plugin().generate(req).getFileList().stream()
+                .map(File::getName).toList();
+
+        assertThat(names).containsExactlyInAnyOrder(
+                "com/twitch/twirp/example/haberdasher/Haberdasher.java",
+                "com/twitch/twirp/example/haberdasher/HaberdasherClient.java");
+    }
+
+    @Test
+    void serviceInterfaceIsAlwaysEmittedRegardlessOfToggles() {
+        // The interface is the contract both client and resource depend on, so
+        // even when both toggles are off we still emit it. (The command layer
+        // forbids --no-client and --no-server together, but the plugin core is
+        // permissive — fewer surprises if you wire it up directly.)
+        CodeGeneratorRequest req = CodeGeneratorRequest.newBuilder()
+                .setParameter("client=false,server=false")
+                .addFileToGenerate("haberdasher.proto")
+                .addProtoFile(haberdasherFile(true))
+                .build();
+
+        List<String> names = new Plugin().generate(req).getFileList().stream()
+                .map(File::getName).toList();
+
+        assertThat(names).containsExactly("com/twitch/twirp/example/haberdasher/Haberdasher.java");
+    }
+
+    @Test
     void clientHonorsCustomPathPrefix() {
         CodeGeneratorRequest req = CodeGeneratorRequest.newBuilder()
                 .setParameter("prefix=/rpc")

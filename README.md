@@ -353,8 +353,13 @@ Wrote 3 file(s) to /abs/path/to/target/generated-sources/twirp
 | `--proto-path DIR` / `-I`  | `.`      | Search path for `import`s. Repeat for multiple roots.                    |
 | `--output-dir DIR` / `-o`  | required | Where to write generated Java sources. Created if missing.               |
 | `--prefix PATH`            | `/twirp` | URL prefix on every generated `@Path`.                                   |
-| `--no-client`              | off      | Skip generating the Jersey client stub.                                  |
+| `--no-client`              | off      | Skip generating the JAX-RS client stub. Use for server-only deploys.     |
+| `--no-server`              | off      | Skip generating the JAX-RS resource. Use for client-only modules (e.g. a shared client jar). |
 | `--protoc PATH`            | `protoc` | Path to the `protoc` binary; `protoc` on `$PATH` by default.             |
+
+(`--no-client` and `--no-server` together is rejected; with both off you'd
+emit only the service interface, which is rarely what you want and is
+better expressed as "use plain protoc, not Twirp codegen".)
 
 The command shells out to `protoc --descriptor_set_out=…` for parsing, then
 runs the same in-process plugin the Maven build uses. It's the same emitter,
@@ -382,10 +387,13 @@ $ PATH=$PWD:$PATH protoc --twirp_java_out=. haberdasher.proto
 
 Plugin options (`--twirp_java_out=<key>=<value>,<key>=<value>:OUT`):
 
-| Option   | Default  | Effect                                                                          |
-| -------- | -------- | ------------------------------------------------------------------------------- |
-| `prefix` | `/twirp` | URL path prefix prepended to every `@Path` annotation.                          |
-| `client` | `true`   | Whether to emit a Jersey `<Service>Client`. Set to `false` for server-only deploys. |
+<a id="plugin-options"></a>
+
+| Option   | Default  | Effect                                                                                       |
+| -------- | -------- | -------------------------------------------------------------------------------------------- |
+| `prefix` | `/twirp` | URL path prefix prepended to every `@Path` annotation.                                       |
+| `client` | `true`   | Emit a JAX-RS `<Service>Client`. Set to `false` for server-only deploys.                     |
+| `server` | `true`   | Emit a JAX-RS `<Service>Resource`. Set to `false` for client-only modules (shared client jar consumed by other apps). |
 
 The Maven equivalent is the `<pluginParameter>` element on `<protocPlugin>`:
 
@@ -395,6 +403,13 @@ The Maven equivalent is the `<pluginParameter>` element on `<protocPlugin>`:
     ...
     <pluginParameter>prefix=/rpc,client=false</pluginParameter>
 </protocPlugin>
+```
+
+A common asymmetric setup splits client and server into separate modules:
+
+```
+my-app-api/      # protos + 'server=false' → published as a thin client jar
+my-app-server/   # depends on my-app-api, generates 'client=false' → deployed
 ```
 
 ## Status

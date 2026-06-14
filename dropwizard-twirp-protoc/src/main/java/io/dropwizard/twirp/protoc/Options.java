@@ -12,11 +12,19 @@ import java.util.Map;
  *   <li>{@code prefix} — the URL path prefix prepended to every generated
  *       {@code @Path}. Default: {@code /twirp}. Leading slash is normalized;
  *       trailing slash is stripped.</li>
- *   <li>{@code client} — whether to generate a Jersey client stub alongside the
+ *   <li>{@code client} — whether to generate a JAX-RS client stub alongside the
  *       server resource. Accepts {@code true}/{@code false}. Default: {@code true}.
  *       Set to {@code false} on the server side if you don't want a
  *       {@code WebTarget} dependency on the server classpath.</li>
+ *   <li>{@code server} — whether to generate the JAX-RS resource. Accepts
+ *       {@code true}/{@code false}. Default: {@code true}. Set to {@code false}
+ *       when emitting a client-only module (e.g. a shared client jar consumed
+ *       by other services that doesn't need to bring a Jersey resource along).</li>
  * </ul>
+ *
+ * <p>The service interface is always emitted — both the client and the resource
+ * implement / depend on it, so emitting one without the other would leave a
+ * dangling symbol.
  *
  * <p>Unknown keys are ignored so users on a newer plugin version can pass keys
  * an older protoc-gen-twirp_java doesn't know about.
@@ -25,14 +33,18 @@ public final class Options {
 
     public static final String DEFAULT_PREFIX = "/twirp";
     public static final boolean DEFAULT_GENERATE_CLIENT = true;
+    public static final boolean DEFAULT_GENERATE_SERVER = true;
 
     private final String pathPrefix;
     private final boolean generateClient;
+    private final boolean generateServer;
     private final Map<String, String> raw;
 
-    private Options(String pathPrefix, boolean generateClient, Map<String, String> raw) {
+    private Options(String pathPrefix, boolean generateClient, boolean generateServer,
+                    Map<String, String> raw) {
         this.pathPrefix = pathPrefix;
         this.generateClient = generateClient;
+        this.generateServer = generateServer;
         this.raw = Collections.unmodifiableMap(raw);
     }
 
@@ -42,6 +54,10 @@ public final class Options {
 
     public boolean generateClient() {
         return generateClient;
+    }
+
+    public boolean generateServer() {
+        return generateServer;
     }
 
     public Map<String, String> raw() {
@@ -69,7 +85,8 @@ public final class Options {
         }
         String prefix = raw.getOrDefault("prefix", DEFAULT_PREFIX);
         boolean client = parseBoolean(raw.get("client"), DEFAULT_GENERATE_CLIENT);
-        return new Options(normalizePrefix(prefix), client, raw);
+        boolean server = parseBoolean(raw.get("server"), DEFAULT_GENERATE_SERVER);
+        return new Options(normalizePrefix(prefix), client, server, raw);
     }
 
     static String normalizePrefix(String prefix) {

@@ -33,7 +33,7 @@ class TwirpGenerateCommandTest {
                 .build();
 
         CodeGeneratorRequest req = TwirpGenerateCommand.buildRequest(
-                set, List.of("haberdasher.proto"), "/api", /* noClient= */ false);
+                set, List.of("haberdasher.proto"), "/api", /* noClient= */ false, /* noServer= */ false);
 
         assertThat(req.getParameter()).isEqualTo("prefix=/api");
         assertThat(req.getProtoFileList()).hasSize(1);
@@ -46,9 +46,20 @@ class TwirpGenerateCommandTest {
                 .addFile(haberdasherFile()).build();
 
         CodeGeneratorRequest req = TwirpGenerateCommand.buildRequest(
-                set, List.of("haberdasher.proto"), "/twirp", /* noClient= */ true);
+                set, List.of("haberdasher.proto"), "/twirp", /* noClient= */ true, /* noServer= */ false);
 
         assertThat(req.getParameter()).isEqualTo("prefix=/twirp,client=false");
+    }
+
+    @Test
+    void buildRequestPropagatesNoServerFlag() {
+        FileDescriptorSet set = FileDescriptorSet.newBuilder()
+                .addFile(haberdasherFile()).build();
+
+        CodeGeneratorRequest req = TwirpGenerateCommand.buildRequest(
+                set, List.of("haberdasher.proto"), "/twirp", /* noClient= */ false, /* noServer= */ true);
+
+        assertThat(req.getParameter()).isEqualTo("prefix=/twirp,server=false");
     }
 
     @Test
@@ -60,7 +71,7 @@ class TwirpGenerateCommandTest {
         // ./haberdasher.proto should still be recognized as the descriptor named
         // haberdasher.proto so the plugin emits sources for it.
         CodeGeneratorRequest req = TwirpGenerateCommand.buildRequest(
-                set, List.of("./haberdasher.proto"), "/twirp", false);
+                set, List.of("./haberdasher.proto"), "/twirp", false, false);
 
         assertThat(req.getFileToGenerateList()).containsExactly("haberdasher.proto");
     }
@@ -73,7 +84,7 @@ class TwirpGenerateCommandTest {
                 .build();
 
         CodeGeneratorRequest req = TwirpGenerateCommand.buildRequest(
-                set, List.of("haberdasher.proto"), "/twirp", false);
+                set, List.of("haberdasher.proto"), "/twirp", false, false);
 
         // Imported proto descriptors must be in proto_file (so type resolution
         // works) but NOT in file_to_generate (so we don't emit code for them).
@@ -136,6 +147,50 @@ class TwirpGenerateCommandTest {
                     "com/twitch/twirp/example/haberdasher/Haberdasher.java",
                     "com/twitch/twirp/example/haberdasher/HaberdasherResource.java");
         }
+    }
+
+    @Test
+    void noServerFlagSkipsResourceCodegen(@TempDir Path tempDir) throws Exception {
+        // Client-only module use case: only the interface + client stub get
+        // emitted, no JAX-RS resource (so no Dropwizard server-side deps leak
+        // into the generated client jar).
+        FileDescriptorSet set = FileDescriptorSet.newBuilder()
+                .addFile(haberdasherFile()).build();
+        Path fakeProtoc = writeFakeProtoc(tempDir, set);
+        Path outputDir = tempDir.resolve("out");
+
+        runCommand(new String[]{
+                "--protoc", fakeProtoc.toString(),
+                "--proto", "haberdasher.proto",
+                "-o", outputDir.toString(),
+                "--no-server"
+        });
+
+        try (Stream<Path> files = Files.walk(outputDir)) {
+            Set<String> names = files.filter(Files::isRegularFile)
+                    .map(p -> outputDir.relativize(p).toString().replace('\\', '/'))
+                    .collect(java.util.stream.Collectors.toSet());
+            assertThat(names).containsExactlyInAnyOrder(
+                    "com/twitch/twirp/example/haberdasher/Haberdasher.java",
+                    "com/twitch/twirp/example/haberdasher/HaberdasherClient.java");
+        }
+    }
+
+    @Test
+    void noClientAndNoServerTogetherIsRejected(@TempDir Path tempDir) throws Exception {
+        FileDescriptorSet set = FileDescriptorSet.newBuilder()
+                .addFile(haberdasherFile()).build();
+        Path fakeProtoc = writeFakeProtoc(tempDir, set);
+
+        assertThatThrownBy(() -> runCommand(new String[]{
+                "--protoc", fakeProtoc.toString(),
+                "--proto", "haberdasher.proto",
+                "-o", tempDir.resolve("out").toString(),
+                "--no-client",
+                "--no-server"
+        }))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("nothing would be generated");
     }
 
     @Test

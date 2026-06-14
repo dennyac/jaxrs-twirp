@@ -86,4 +86,32 @@ class OptionsTest {
         // unrecognized values fall back to default rather than throwing
         assertThat(Options.parse("client=maybe").generateClient()).isTrue();
     }
+
+    @Test
+    void serverGenerationDefaultsToTrue() {
+        assertThat(Options.parse(null).generateServer()).isTrue();
+        assertThat(Options.parse("prefix=/foo").generateServer()).isTrue();
+    }
+
+    @Test
+    void serverGenerationCanBeDisabled() {
+        assertThat(Options.parse("server=false").generateServer()).isFalse();
+        assertThat(Options.parse("server=no").generateServer()).isFalse();
+        assertThat(Options.parse("server=0").generateServer()).isFalse();
+    }
+
+    @Test
+    void clientAndServerOptionsParseIndependently() {
+        Options both = Options.parse("client=false,server=false");
+        assertThat(both.generateClient()).isFalse();
+        assertThat(both.generateServer()).isFalse();
+
+        Options serverOnly = Options.parse("client=false");
+        assertThat(serverOnly.generateClient()).isFalse();
+        assertThat(serverOnly.generateServer()).isTrue();
+
+        Options clientOnly = Options.parse("server=false");
+        assertThat(clientOnly.generateClient()).isTrue();
+        assertThat(clientOnly.generateServer()).isFalse();
+    }
 }
