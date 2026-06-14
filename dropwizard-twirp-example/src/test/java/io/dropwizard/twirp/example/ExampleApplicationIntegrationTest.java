@@ -93,6 +93,30 @@ class ExampleApplicationIntegrationTest {
     }
 
     @Test
+    void responseContentTypeMirrorsRequestEvenWithoutAcceptHeader() throws Exception {
+        // Per Twirp v7, the response Content-Type mirrors the request
+        // Content-Type — not the Accept header. Curl-style clients that send
+        // 'Content-Type: application/json' without an Accept header should
+        // still get JSON back, not whatever happens to be first in @Produces.
+        String body = "{\"inches\":9}";
+
+        HttpResponse<String> response = http.send(
+                HttpRequest.newBuilder(uri(MAKE_HAT_PATH))
+                        .header("Content-Type", "application/json")
+                        .POST(BodyPublishers.ofString(body, StandardCharsets.UTF_8))
+                        .build(),
+                BodyHandlers.ofString(StandardCharsets.UTF_8));
+
+        assertThat(response.statusCode()).isEqualTo(200);
+        assertThat(response.headers().firstValue("Content-Type"))
+                .hasValueSatisfying(ct -> assertThat(ct).startsWith("application/json"));
+        // Bowler at 9", proof we actually parsed the request as JSON.
+        JsonNode node = mapper.readTree(response.body());
+        assertThat(node.get("inches").asInt()).isEqualTo(9);
+        assertThat(node.get("style_name").asText()).isEqualTo("bowler");
+    }
+
+    @Test
     void businessLogicErrorsAreEmittedAsTwirpJson() throws Exception {
         // inches=0 violates the impl's precondition; should surface as a
         // structured Twirp error regardless of the request content type.

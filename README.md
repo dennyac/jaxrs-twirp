@@ -15,6 +15,39 @@ client                                 dropwizard
                                     └─────────────────────────────┘
 ```
 
+## What is Twirp?
+
+[Twirp](https://github.com/twitchtv/twirp) is a small RPC framework from
+Twitch. You describe your service in a `.proto` file just like gRPC, and a
+codegen tool produces the client and server stubs. The wire format, however,
+is deliberately boring:
+
+- One HTTP/1.1 `POST` per RPC call. No HTTP/2, no streaming, no bidirectional
+  channels — just request/response.
+- Path is `/<prefix>/<proto-package>.<ServiceName>/<RpcName>` (the prefix is
+  `/twirp` by default).
+- Body is either `application/protobuf` (binary) or `application/json`. The
+  server speaks whichever the client sends.
+- Errors come back as a small JSON envelope (`{"code": "...", "msg": "...",
+  "meta": {...}}`) with a real HTTP status code, *always* JSON regardless of
+  the request content type.
+
+That's the whole spec. Because every Twirp call is a regular HTTP POST with a
+regular body, it slots cleanly into any HTTP stack — including Dropwizard's
+Jetty+Jersey one. You can hit a Twirp endpoint with `curl`, browse it with a
+JSON proxy, or wrap it in a CDN, and it just works.
+
+Comparison cheat sheet:
+
+| You're used to … | Twirp gives you …                                                       |
+| ---------------- | ----------------------------------------------------------------------- |
+| REST + Jackson   | The same wire shape, but with codegen and a strict schema (no JSON-by-hand). |
+| gRPC             | Schema-first RPC over plain HTTP/1.1 — no HTTP/2, no separate server, no streaming. |
+
+If you need streaming or bidirectional RPC, Twirp isn't for you (use gRPC). If
+you want strongly-typed RPC that still feels like an HTTP endpoint, it's
+hard to beat.
+
 ## Why not gRPC?
 
 gRPC on the JVM runs its own HTTP/2 server (Netty by default). Inside a
@@ -38,7 +71,7 @@ You gain: one server, one port, one operational surface.
 | ---------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
 | `dropwizard-twirp`           | Runtime library: `TwirpBundle`, protobuf + JSON body providers, exception mappers, `TwirpException`, `ErrorCode`, `TwirpClients`. |
 | `dropwizard-twirp-protoc`    | Standalone `protoc` plugin (shaded fat-jar) that emits a Java service interface, a JAX-RS resource, and a Jersey client per service. Also ships `TwirpGenerateCommand`. |
-| `dropwizard-twirp-example`   | End-to-end example: a Dropwizard app exposing the canonical Haberdasher Twirp service over both wire formats.               |
+| `dropwizard-twirp-example`   | End-to-end example: a Dropwizard app exposing the canonical Haberdasher Twirp service over both wire formats. See [its README](dropwizard-twirp-example/README.md) for runnable server + client demos. |
 
 ## Quickstart
 
@@ -363,7 +396,7 @@ The Maven equivalent is the `<pluginParameter>` element on `<protocPlugin>`:
 ## Status
 
 This is **0.1.0-SNAPSHOT**. The runtime, codegen, client, and command are all
-tested end-to-end (79 tests across the reactor) but the API is not yet frozen.
+tested end-to-end (89 tests across the reactor) but the API is not yet frozen.
 
 Roadmap ideas (not yet implemented):
 

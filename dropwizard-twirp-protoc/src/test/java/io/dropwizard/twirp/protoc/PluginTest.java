@@ -62,8 +62,11 @@ class PluginTest {
                 .contains("@Path(\"/MakeHat\")")
                 .contains("@Consumes({TwirpMediaTypes.APPLICATION_PROTOBUF, TwirpMediaTypes.APPLICATION_JSON})")
                 .contains("@Produces({TwirpMediaTypes.APPLICATION_PROTOBUF, TwirpMediaTypes.APPLICATION_JSON})")
-                .contains("public Hat makeHat(Size request) {")
-                .contains("return TwirpInvocations.invoke(\"MakeHat\", () -> service.makeHat(request));");
+                // Returns Response (not Hat directly) so we can set Content-Type
+                // dynamically per request, mirroring the Twirp v7 spec.
+                .contains("public Response makeHat(Size request, @Context HttpHeaders headers) {")
+                .contains("Hat result = TwirpInvocations.invoke(\"MakeHat\", () -> service.makeHat(request));")
+                .contains("return Response.ok(result).type(TwirpMediaTypes.responseType(headers)).build();");
 
         String client = files.get("com/twitch/twirp/example/haberdasher/HaberdasherClient.java");
         assertThat(client)
@@ -148,7 +151,7 @@ class PluginTest {
         // The outer class lives in the same package as the resource, so JavaPoet
         // qualifies the nested type rather than emitting a static import.
         assertThat(resource)
-                .contains("public HaberdasherProto.Hat makeHat(HaberdasherProto.Size request) {")
+                .contains("public Response makeHat(HaberdasherProto.Size request, @Context HttpHeaders headers) {")
                 .contains("private final Haberdasher service;");
     }
 

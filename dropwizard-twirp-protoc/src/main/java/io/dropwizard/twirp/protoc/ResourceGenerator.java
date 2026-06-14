@@ -36,6 +36,9 @@ final class ResourceGenerator {
     private static final ClassName JAX_POST = ClassName.get("jakarta.ws.rs", "POST");
     private static final ClassName JAX_CONSUMES = ClassName.get("jakarta.ws.rs", "Consumes");
     private static final ClassName JAX_PRODUCES = ClassName.get("jakarta.ws.rs", "Produces");
+    private static final ClassName JAX_CONTEXT = ClassName.get("jakarta.ws.rs.core", "Context");
+    private static final ClassName JAX_HTTP_HEADERS = ClassName.get("jakarta.ws.rs.core", "HttpHeaders");
+    private static final ClassName JAX_RESPONSE = ClassName.get("jakarta.ws.rs.core", "Response");
     private static final ClassName OBJECTS = ClassName.get(Objects.class);
     private static final ClassName TWIRP_INVOCATIONS =
             ClassName.get("io.dropwizard.twirp", "TwirpInvocations");
@@ -106,17 +109,30 @@ final class ResourceGenerator {
                         TWIRP_MEDIA_TYPES, TWIRP_MEDIA_TYPES)
                 .build();
 
+        // Returns Response (not the proto type directly) so we can mirror the
+        // request's Content-Type onto the response per Twirp v7. The output
+        // proto is still in the @Produces list so JAX-RS content negotiation
+        // and MessageBodyWriter selection still work.
         return MethodSpec.methodBuilder(javaMethodName)
                 .addModifiers(Modifier.PUBLIC)
-                .returns(output)
+                .returns(JAX_RESPONSE)
                 .addParameter(input, "request")
+                .addParameter(jakartaContextParameter("headers", JAX_HTTP_HEADERS))
                 .addAnnotation(JAX_POST)
                 .addAnnotation(AnnotationSpec.builder(JAX_PATH)
                         .addMember("value", "$S", "/" + protoMethodName).build())
                 .addAnnotation(consumes)
                 .addAnnotation(produces)
-                .addStatement("return $T.invoke($S, () -> service.$L(request))",
-                        TWIRP_INVOCATIONS, protoMethodName, javaMethodName)
+                .addStatement("$T result = $T.invoke($S, () -> service.$L(request))",
+                        output, TWIRP_INVOCATIONS, protoMethodName, javaMethodName)
+                .addStatement("return $T.ok(result).type($T.responseType(headers)).build()",
+                        JAX_RESPONSE, TWIRP_MEDIA_TYPES)
+                .build();
+    }
+
+    private static com.squareup.javapoet.ParameterSpec jakartaContextParameter(String name, ClassName type) {
+        return com.squareup.javapoet.ParameterSpec.builder(type, name)
+                .addAnnotation(JAX_CONTEXT)
                 .build();
     }
 }
