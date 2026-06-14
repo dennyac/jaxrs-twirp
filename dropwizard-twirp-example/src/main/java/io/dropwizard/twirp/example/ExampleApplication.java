@@ -5,6 +5,7 @@ import io.dropwizard.core.setup.Bootstrap;
 import io.dropwizard.core.setup.Environment;
 import io.dropwizard.twirp.TwirpBundle;
 import io.dropwizard.twirp.example.haberdasher.HaberdasherResource;
+import io.dropwizard.twirp.protoc.TwirpGenerateCommand;
 
 /**
  * Dropwizard application exposing the Haberdasher Twirp service.
@@ -18,6 +19,16 @@ import io.dropwizard.twirp.example.haberdasher.HaberdasherResource;
  *       passing it an implementation of the generated {@code Haberdasher}
  *       interface.</li>
  * </ol>
+ *
+ * <p>{@link TwirpGenerateCommand} is registered too, so operators can
+ * regenerate Twirp stubs straight from the packaged jar:
+ *
+ * <pre>{@code
+ * java -jar dropwizard-twirp-example.jar twirp-generate \
+ *     -I src/main/proto \
+ *     --proto haberdasher.proto \
+ *     -o target/generated-sources/twirp
+ * }</pre>
  */
 public class ExampleApplication extends Application<ExampleConfiguration> {
 
@@ -33,6 +44,7 @@ public class ExampleApplication extends Application<ExampleConfiguration> {
     @Override
     public void initialize(Bootstrap<ExampleConfiguration> bootstrap) {
         bootstrap.addBundle(new TwirpBundle<>());
+        bootstrap.addCommand(new TwirpGenerateCommand());
     }
 
     @Override

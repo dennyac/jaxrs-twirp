@@ -32,6 +32,22 @@
             <groupId>com.squareup</groupId>
             <artifactId>javapoet</artifactId>
         </dependency>
+        <!--
+            dropwizard-core is only needed by TwirpGenerateCommand and its
+            tests. Marking it <provided> keeps it off the runtime classpath of
+            the protoc plugin fat jar (Maven Shade's default
+            <dependencyResolution>runtime</dependencyResolution> excludes
+            provided deps) so xolstice's invocation of `java -jar
+            dropwizard-twirp-protoc.jar` doesn't drag in Dropwizard at
+            generation time. Applications that wire in TwirpGenerateCommand
+            already depend on dropwizard-core themselves, so this satisfies
+            the symbol resolution there.
+        -->
+        <dependency>
+            <groupId>io.dropwizard</groupId>
+            <artifactId>dropwizard-core</artifactId>
+            <scope>provided</scope>
+        </dependency>
 
         <dependency>
             <groupId>org.junit.jupiter</groupId>
