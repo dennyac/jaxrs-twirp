@@ -1,0 +1,9 @@
+# Minimal Dropwizard configuration for the example.
+# Server listens on a random port for testing; override via env or yml in production.
+server:
+  applicationConnectors:
+    - type: http
+      port: 8080
+  adminConnectors:
+    - type: http
+      port: 8081

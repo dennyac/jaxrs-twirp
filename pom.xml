@@ -29,7 +29,7 @@
     <modules>
         <module>dropwizard-twirp</module>
         <module>dropwizard-twirp-protoc</module>
-        <!-- <module>dropwizard-twirp-example</module> -->
+        <module>dropwizard-twirp-example</module>
     </modules>
 
     <properties>

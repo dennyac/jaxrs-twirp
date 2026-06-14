@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+package twitch.twirp.example.haberdasher;
+
+option java_package = "io.dropwizard.twirp.example.haberdasher";
+option java_multiple_files = true;
+
+// The classic Twirp example: a service that makes hats.
+service Haberdasher {
+    rpc MakeHat (Size) returns (Hat);
+}
+
+message Size {
+    // Inches; must be > 0.
+    int32 inches = 1;
+}
+
+message Hat {
+    int32 inches = 1;
+
+    // e.g. red, blue, green
+    string color = 2;
+
+    // e.g. bowler, fedora — this snake_case field also doubles as a JSON
+    // serialization probe so the integration tests can verify the default
+    // Twirp printer preserves proto field names.
+    string style_name = 3;
+}
