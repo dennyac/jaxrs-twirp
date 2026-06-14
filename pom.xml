@@ -28,8 +28,7 @@
 
     <modules>
         <module>dropwizard-twirp</module>
-        <!-- TODO: re-enable as each module is implemented -->
-        <!-- <module>dropwizard-twirp-protoc</module> -->
+        <module>dropwizard-twirp-protoc</module>
         <!-- <module>dropwizard-twirp-example</module> -->
     </modules>
 
