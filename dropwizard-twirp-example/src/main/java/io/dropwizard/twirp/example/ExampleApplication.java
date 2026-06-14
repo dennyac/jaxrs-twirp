@@ -45,6 +45,7 @@ public class ExampleApplication extends Application<ExampleConfiguration> {
     public void initialize(Bootstrap<ExampleConfiguration> bootstrap) {
         bootstrap.addBundle(new TwirpBundle<>());
         bootstrap.addCommand(new TwirpGenerateCommand());
+        bootstrap.addCommand(new MakeHatCommand());
     }
 
     @Override
