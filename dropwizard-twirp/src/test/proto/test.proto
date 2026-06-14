@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package io.dropwizard.twirp.testproto;
+
+option java_package = "io.dropwizard.twirp.testproto";
+option java_multiple_files = true;
+option java_outer_classname = "TestProtos";
+
+// A small message used by the runtime tests to exercise both wire formats.
+// Has multi-word field names so JSON serialization can be verified to use
+// snake_case (Twirp default) rather than camelCase.
+message TestMessage {
+  string hat_color = 1;
+  int32 hat_size = 2;
+  repeated string tags = 3;
+}
+
+// Used to test that empty bodies / default values round-trip cleanly.
+message EmptyEcho {
+  string note = 1;
+}

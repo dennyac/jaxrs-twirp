@@ -1,0 +1,13 @@
+target/
+build/
+*.iml
+.idea/
+.vscode/
+.DS_Store
+.classpath
+.project
+.settings/
+dependency-reduced-pom.xml
+
+# Generated sources should NOT be committed
+**/generated-sources/
