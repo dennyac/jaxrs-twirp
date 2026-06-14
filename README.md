@@ -34,11 +34,11 @@ You gain: one server, one port, one operational surface.
 
 ## Modules
 
-| Module                       | What it does                                                                                                       |
-| ---------------------------- | ------------------------------------------------------------------------------------------------------------------ |
-| `dropwizard-twirp`           | Runtime library: `TwirpBundle`, protobuf + JSON body providers, exception mappers, `TwirpException`, `ErrorCode`.   |
-| `dropwizard-twirp-protoc`    | Standalone `protoc` plugin (shaded fat-jar) that emits a Java service interface plus a JAX-RS resource per service. |
-| `dropwizard-twirp-example`   | End-to-end example: a Dropwizard app exposing the canonical Haberdasher Twirp service over both wire formats.      |
+| Module                       | What it does                                                                                                                |
+| ---------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
+| `dropwizard-twirp`           | Runtime library: `TwirpBundle`, protobuf + JSON body providers, exception mappers, `TwirpException`, `ErrorCode`, `TwirpClients`. |
+| `dropwizard-twirp-protoc`    | Standalone `protoc` plugin (shaded fat-jar) that emits a Java service interface, a JAX-RS resource, and a Jersey client per service. Also ships `TwirpGenerateCommand`. |
+| `dropwizard-twirp-example`   | End-to-end example: a Dropwizard app exposing the canonical Haberdasher Twirp service over both wire formats.               |
 
 ## Quickstart
 
@@ -126,6 +126,8 @@ A `mvn compile` will emit (under `target/generated-sources/protobuf/java`):
 - protoc's normal Java message classes (`Hat`, `Size`, …)
 - `Haberdasher.java` — the service interface for you to implement
 - `HaberdasherResource.java` — the JAX-RS resource that wraps it
+- `HaberdasherClient.java` — a Jersey client stub that implements `Haberdasher`
+  (skip with the `client=false` plugin option if you don't want it)
 
 ### 4. Implement the service and wire it into Dropwizard
 
@@ -242,13 +244,97 @@ protobuf; same for JSON. Twirp error responses are *always* JSON regardless of
 the inbound content type — that's the spec, so clients can decode errors
 without protobuf descriptors.
 
-## Code generation, alternative invocations
+## Calling a Twirp service from Java
 
-The `dropwizard-twirp-protoc` jar is a self-contained `protoc` plugin. You can
-also run it without Maven:
+`dropwizard-twirp-protoc` also emits a `<Service>Client` per service, e.g.
+`HaberdasherClient`, that implements the same service interface. Give it a
+Jersey `WebTarget` rooted at the remote app:
+
+```java
+Client client = new JerseyClientBuilder(env).build("haberdasher");
+Haberdasher remote = new HaberdasherClient(client.target("https://hats.example.com"));
+
+try {
+    Hat hat = remote.makeHat(Size.newBuilder().setInches(12).build());
+    log.info("got {}", hat);
+} catch (TwirpException ex) {
+    // Server-side TwirpExceptions are decoded back into the same exception
+    // type with the original code, message, and meta map intact. Network
+    // failures surface as ErrorCode.UNAVAILABLE.
+    log.warn("haberdasher failed: {} ({})", ex.getMessage(), ex.getErrorCode());
+}
+```
+
+A few useful properties:
+
+- The default wire format is `application/protobuf`. Pass
+  `TwirpMediaTypes.APPLICATION_JSON` as the second constructor argument to
+  switch to JSON.
+- The constructor registers the standard Twirp body providers on the supplied
+  `WebTarget` for you — no extra Jersey wiring is required.
+- Twirp error responses (any non-2xx with a JSON body) are decoded into
+  `TwirpException` with the original `ErrorCode`, message, and meta map.
+  Unknown wire codes fall back to `ErrorCode.UNKNOWN` with a snippet of the
+  body in `meta["body"]`.
+- Transport failures (connection refused, DNS, …) surface as
+  `ErrorCode.UNAVAILABLE`; bodies that can't be parsed as a Twirp error
+  surface as `ErrorCode.MALFORMED` rather than leaking
+  `WebApplicationException`.
+
+Any Jersey/JAX-RS `Client` works — Dropwizard's `JerseyClientBuilder` is the
+common choice but it's not required.
+
+## Generating from a packaged jar (`twirp-generate` command)
+
+For workflows that don't want a Maven build step — or for ops folks who only
+have the jar — `dropwizard-twirp-protoc` ships a Dropwizard
+[`Command`](https://www.dropwizard.io/en/stable/manual/core.html#commands)
+called `twirp-generate`. Wire it in alongside `TwirpBundle`:
+
+```java
+@Override
+public void initialize(Bootstrap<MyConfiguration> bootstrap) {
+    bootstrap.addBundle(new TwirpBundle<>());
+    bootstrap.addCommand(new TwirpGenerateCommand());
+}
+```
+
+Then any `java -jar myapp.jar twirp-generate …` invocation regenerates the
+stubs:
 
 ```bash
-# unzip the shaded jar somewhere
+$ java -jar myapp.jar twirp-generate \
+      -I src/main/proto \
+      --proto haberdasher.proto \
+      --output-dir target/generated-sources/twirp
+Wrote 3 file(s) to /abs/path/to/target/generated-sources/twirp
+```
+
+| Flag                       | Default  | Effect                                                                   |
+| -------------------------- | -------- | ------------------------------------------------------------------------ |
+| `--proto FILE`             | required | A `.proto` to generate from. Repeat for multiple files.                  |
+| `--proto-path DIR` / `-I`  | `.`      | Search path for `import`s. Repeat for multiple roots.                    |
+| `--output-dir DIR` / `-o`  | required | Where to write generated Java sources. Created if missing.               |
+| `--prefix PATH`            | `/twirp` | URL prefix on every generated `@Path`.                                   |
+| `--no-client`              | off      | Skip generating the Jersey client stub.                                  |
+| `--protoc PATH`            | `protoc` | Path to the `protoc` binary; `protoc` on `$PATH` by default.             |
+
+The command shells out to `protoc --descriptor_set_out=…` for parsing, then
+runs the same in-process plugin the Maven build uses. It's the same emitter,
+the same code — just driven via the CLI instead of xolstice.
+
+> **Note:** `TwirpGenerateCommand` lives in `dropwizard-twirp-protoc`. That
+> module declares its `dropwizard-core` dependency as `provided` so the shaded
+> protoc fat jar stays small (and so xolstice's plugin invocation doesn't drag
+> in Dropwizard at build time). Your application's existing `dropwizard-core`
+> dependency satisfies the symbol at runtime.
+
+## Code generation, alternative invocations
+
+The `dropwizard-twirp-protoc` jar is also a self-contained `protoc` plugin you
+can drive directly from `protoc` itself (no Dropwizard application required):
+
+```bash
 $ cat > protoc-gen-twirp_java <<'EOF'
 #!/usr/bin/env sh
 exec java -jar /opt/dropwizard-twirp-protoc-0.1.0-SNAPSHOT.jar
@@ -257,36 +343,36 @@ $ chmod +x protoc-gen-twirp_java
 $ PATH=$PWD:$PATH protoc --twirp_java_out=. haberdasher.proto
 ```
 
-Plugin options:
+Plugin options (`--twirp_java_out=<key>=<value>,<key>=<value>:OUT`):
 
-| Option   | Default  | Effect                                                 |
-| -------- | -------- | ------------------------------------------------------ |
-| `prefix` | `/twirp` | URL path prefix prepended to every `@Path` annotation. |
+| Option   | Default  | Effect                                                                          |
+| -------- | -------- | ------------------------------------------------------------------------------- |
+| `prefix` | `/twirp` | URL path prefix prepended to every `@Path` annotation.                          |
+| `client` | `true`   | Whether to emit a Jersey `<Service>Client`. Set to `false` for server-only deploys. |
 
-Pass via `--twirp_java_out=prefix=/rpc:.` on the protoc CLI. With the Maven
-plugin, the equivalent is the `<pluginParameter>` element on `<protocPlugin>`:
+The Maven equivalent is the `<pluginParameter>` element on `<protocPlugin>`:
 
 ```xml
 <protocPlugin>
     <id>twirp_java</id>
     ...
-    <pluginParameter>prefix=/rpc</pluginParameter>
+    <pluginParameter>prefix=/rpc,client=false</pluginParameter>
 </protocPlugin>
 ```
 
 ## Status
 
-This is **0.1.0-SNAPSHOT**. The runtime, codegen, and wire-format contract are
-all tested end-to-end (53 tests across the reactor) but the API is not yet
-frozen.
+This is **0.1.0-SNAPSHOT**. The runtime, codegen, client, and command are all
+tested end-to-end (79 tests across the reactor) but the API is not yet frozen.
 
 Roadmap ideas (not yet implemented):
 
-- A Dropwizard `Command` so you can run `java -jar myapp.jar twirp-generate
-  …protos…` from the CLI (the current path is the Maven plugin).
 - A `NotFoundExceptionMapper` so unknown Twirp routes return a JSON
   `bad_route` error instead of Jersey's HTML 404.
-- A matching Java client generator so RPC clients are codegen'd too.
+- Optional client interceptors for adding auth headers / tracing context
+  without subclassing the generated client.
+- Server-side request validation hooks (currently the generated resource
+  passes the protobuf straight to the impl).
 
 ## Building from source
 
