@@ -1,5 +1,6 @@
 package io.dropwizard.twirp.example;
 
+import io.dropwizard.core.setup.Bootstrap;
 import io.dropwizard.testing.ConfigOverride;
 import io.dropwizard.testing.ResourceHelpers;
 import io.dropwizard.testing.junit5.DropwizardAppExtension;
@@ -43,7 +44,7 @@ class MakeHatCommandTest {
         Capture cap = new Capture();
         MakeHatCommand cmd = cap.command();
 
-        cmd.run(null, parseArgs(cmd, "--url", baseUrl(), "--inches", "12"));
+        cmd.run(newBootstrap(), parseArgs(cmd, "--url", baseUrl(), "--inches", "12"));
 
         // "12\" <color> fedora" — color is random but the size and style are
         // deterministic from HaberdasherImpl.
@@ -62,7 +63,7 @@ class MakeHatCommandTest {
         // exercising the --json path covers HaberdasherClient's JSON
         // constructor — if JSON encoding regressed this would surface as a
         // TwirpException printed to stderr.
-        cmd.run(null, parseArgs(cmd, "--url", baseUrl(), "--inches", "7", "--json"));
+        cmd.run(newBootstrap(), parseArgs(cmd, "--url", baseUrl(), "--inches", "7", "--json"));
 
         assertThat(cap.stdout().trim()).matches("7\" \\w+ bowler");
         assertThat(cap.stderr()).isEmpty();
@@ -76,7 +77,7 @@ class MakeHatCommandTest {
         // inches=0 trips HaberdasherImpl's precondition -> INVALID_ARGUMENT.
         // We expect the command to throw RpcFailedException (exitCode=1) and
         // print a structured error line + the meta map.
-        assertThatThrownBy(() -> cmd.run(null, parseArgs(cmd, "--url", baseUrl(), "--inches", "0")))
+        assertThatThrownBy(() -> cmd.run(newBootstrap(), parseArgs(cmd, "--url", baseUrl(), "--inches", "0")))
                 .isInstanceOfSatisfying(MakeHatCommand.RpcFailedException.class,
                         ex -> assertThat(ex.exitCode).isEqualTo(1));
 
@@ -92,7 +93,7 @@ class MakeHatCommandTest {
         MakeHatCommand cmd = cap.command();
 
         // Port 1 has no listener -> transport failure -> UNAVAILABLE.
-        assertThatThrownBy(() -> cmd.run(null, parseArgs(cmd, "--url", "http://localhost:1", "--inches", "7")))
+        assertThatThrownBy(() -> cmd.run(newBootstrap(), parseArgs(cmd, "--url", "http://localhost:1", "--inches", "7")))
                 .isInstanceOf(MakeHatCommand.RpcFailedException.class);
 
         assertThat(cap.stderr()).contains("RPC failed: UNAVAILABLE");
@@ -100,6 +101,16 @@ class MakeHatCommandTest {
 
     private static String baseUrl() {
         return "http://localhost:" + APP.getLocalPort();
+    }
+
+    /**
+     * Mimic what Dropwizard's Cli passes into Command.run — a fresh Bootstrap
+     * with the default MetricRegistry. MakeHatCommand reads
+     * {@code bootstrap.getMetricRegistry()} to instrument the Jersey client,
+     * so we can't pass null here.
+     */
+    private static Bootstrap<ExampleConfiguration> newBootstrap() {
+        return new Bootstrap<>(new ExampleApplication());
     }
 
     /**

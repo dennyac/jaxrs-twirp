@@ -70,7 +70,7 @@ You gain: one server, one port, one operational surface.
 | Module                       | What it does                                                                                                                |
 | ---------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
 | `dropwizard-twirp`           | Runtime library: `TwirpBundle`, protobuf + JSON body providers, exception mappers, `TwirpException`, `ErrorCode`, `TwirpClients`. |
-| `dropwizard-twirp-protoc`    | Standalone `protoc` plugin (shaded fat-jar) that emits a Java service interface, a JAX-RS resource, and a Jersey client per service. Also ships `TwirpGenerateCommand`. |
+| `dropwizard-twirp-protoc`    | Standalone `protoc` plugin (shaded fat-jar) that emits a Java service interface, a JAX-RS resource, and a portable JAX-RS client per service. Also ships `TwirpGenerateCommand`. |
 | `dropwizard-twirp-example`   | End-to-end example: a Dropwizard app exposing the canonical Haberdasher Twirp service over both wire formats. See [its README](dropwizard-twirp-example/README.md) for runnable server + client demos. |
 
 ## Quickstart
@@ -314,8 +314,12 @@ A few useful properties:
   surface as `ErrorCode.MALFORMED` rather than leaking
   `WebApplicationException`.
 
-Any Jersey/JAX-RS `Client` works — Dropwizard's `JerseyClientBuilder` is the
-common choice but it's not required.
+Any JAX-RS `Client` works — Dropwizard's `JerseyClientBuilder` is the common
+choice (and the one the example uses) because you get metrics, Apache
+HttpClient, configurable timeouts, and lifecycle management for free, but the
+generated stub itself doesn't depend on Dropwizard. If you ever want to call
+the same service from a non-Dropwizard app, drop the generated jar in and
+hand it a vanilla `ClientBuilder.newClient()`.
 
 ## Generating from a packaged jar (`twirp-generate` command)
 

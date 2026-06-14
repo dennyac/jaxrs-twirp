@@ -56,8 +56,9 @@ $ mvn exec:java -Dexec.mainClass=io.dropwizard.twirp.example.ExampleApplication 
 
 ### 2. Call it with the bundled client command
 
-`make-hat` is a Dropwizard `Command` that builds a Jersey client, constructs
-the generated `HaberdasherClient`, and invokes `MakeHat`:
+`make-hat` is a Dropwizard `Command` that builds a JAX-RS client via
+[`dropwizard-client`][dw-client]'s `JerseyClientBuilder`, hands its
+`WebTarget` to the generated `HaberdasherClient`, and invokes `MakeHat`:
 
 ```bash
 # Defaults: --url http://localhost:8080 --inches 12.
@@ -81,6 +82,27 @@ RPC failed: INVALID_ARGUMENT - inches must be > 0
 [`MakeHatCommand`](src/main/java/io/dropwizard/twirp/example/MakeHatCommand.java)
 is ~50 lines and heavily commented. It's the most direct way to learn how to
 use the generated client from your own code.
+
+**Two layers worth understanding:**
+
+1. **Generated `HaberdasherClient` — pure JAX-RS.** Its constructor takes
+   any `jakarta.ws.rs.client.WebTarget`. The codegen never depends on
+   Dropwizard, so you can drop it into a plain Jersey app, RestEasy, a
+   Spring service, or a Quarkus app and it still works. We register the
+   protobuf + JSON `MessageBodyReader`/`MessageBodyWriter` on the target
+   inside the generated constructor — no Bundle required on the client
+   side.
+2. **The application wiring — `dropwizard-client`.** `MakeHatCommand`
+   builds the underlying `Client` with `JerseyClientBuilder` because in a
+   Dropwizard app that gives you metrics (under `make-hat-cli.*` on the
+   metric registry), Apache HttpClient under the hood, and configurable
+   timeouts via `JerseyClientConfiguration`. Inside a managed component
+   you'd use `new JerseyClientBuilder(environment)` so the client also
+   gets Managed lifecycle for free; a `Command` doesn't have an
+   `Environment`, so we pass `bootstrap.getMetricRegistry()` (plus an
+   executor + `ObjectMapper`) and close the client via try-with-resources.
+
+[dw-client]: https://www.dropwizard.io/en/stable/manual/client.html
 
 ### 3. Call it with curl (both wire formats from the same endpoint)
 

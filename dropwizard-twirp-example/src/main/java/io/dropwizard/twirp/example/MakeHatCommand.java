@@ -1,7 +1,10 @@
 package io.dropwizard.twirp.example;
 
+import io.dropwizard.client.JerseyClientBuilder;
+import io.dropwizard.client.JerseyClientConfiguration;
 import io.dropwizard.core.cli.Command;
 import io.dropwizard.core.setup.Bootstrap;
+import io.dropwizard.jackson.Jackson;
 import io.dropwizard.twirp.TwirpException;
 import io.dropwizard.twirp.TwirpMediaTypes;
 import io.dropwizard.twirp.example.haberdasher.Haberdasher;
@@ -9,11 +12,12 @@ import io.dropwizard.twirp.example.haberdasher.HaberdasherClient;
 import io.dropwizard.twirp.example.haberdasher.Hat;
 import io.dropwizard.twirp.example.haberdasher.Size;
 import jakarta.ws.rs.client.Client;
-import jakarta.ws.rs.client.ClientBuilder;
 import net.sourceforge.argparse4j.inf.Namespace;
 import net.sourceforge.argparse4j.inf.Subparser;
 
 import java.io.PrintStream;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * Dropwizard {@link Command} that calls the running Haberdasher service from
@@ -44,16 +48,23 @@ import java.io.PrintStream;
  *
  * <p>The interesting bits, in order:
  * <ol>
- *   <li>{@link ClientBuilder#newClient()} produces a vanilla JAX-RS {@code Client}.
- *       If you're inside a Dropwizard app you'd normally use
- *       {@code new io.dropwizard.client.JerseyClientBuilder(env).build(name)} so
- *       the client gets metrics, healthchecks, lifecycle, and the shared
- *       Jersey config — but a one-shot CLI command doesn't have an
- *       {@code Environment}, so the plain builder is enough here.</li>
+ *   <li>The HTTP {@link Client} is built with Dropwizard's
+ *       {@link JerseyClientBuilder} — the same builder you'd use from any
+ *       service that calls another service. That gives us metrics (under
+ *       {@code make-hat-cli.*} on the supplied {@code MetricRegistry}),
+ *       Apache HttpClient under the hood, and a {@link JerseyClientConfiguration}
+ *       knob set for timeouts/connection pool/gzip. We pass
+ *       {@code bootstrap.getMetricRegistry()} because Commands run before
+ *       the {@code Environment} exists; if you have an {@code Environment}
+ *       (i.e. you're inside a managed component) prefer the
+ *       {@code JerseyClientBuilder(Environment)} constructor so the client
+ *       also gets lifecycle management.</li>
  *   <li>{@link HaberdasherClient} is the codegen output. Its constructor
- *       registers the protobuf + JSON {@code MessageBodyReader}/
- *       {@code MessageBodyWriter} on the supplied {@code WebTarget}, so no
- *       extra Jersey wiring is required.</li>
+ *       takes any JAX-RS {@code WebTarget} — Dropwizard's Jersey client,
+ *       a vanilla {@code ClientBuilder.newClient()}, RestEasy, anything
+ *       JAX-RS — and registers the protobuf + JSON {@code MessageBodyReader}/
+ *       {@code MessageBodyWriter} on it. The generated code never depends
+ *       on Dropwizard.</li>
  *   <li>{@link TwirpException} is thrown for both wire-level errors (server
  *       returned a non-2xx Twirp error envelope) and transport failures
  *       (network unreachable, malformed body, …). The {@code ErrorCode} on
@@ -65,6 +76,7 @@ public class MakeHatCommand extends Command {
     public static final String DEFAULT_NAME = "make-hat";
     private static final String DEFAULT_DESCRIPTION =
             "Call the Haberdasher Twirp service using the generated HaberdasherClient.";
+    private static final String JERSEY_CLIENT_NAME = "make-hat-cli";
 
     private final PrintStream out;
     private final PrintStream err;
@@ -114,7 +126,7 @@ public class MakeHatCommand extends Command {
         //   0 = hat returned ok
         //   1 = remote returned a TwirpException (including transport failures
         //       which the client maps to ErrorCode.UNAVAILABLE)
-        int exitCode = call(url, inches, json);
+        int exitCode = call(bootstrap, url, inches, json);
         if (exitCode != 0) {
             // Don't call System.exit during tests — they share the JVM and
             // killing it would tank the test runner. The production main()
@@ -123,10 +135,28 @@ public class MakeHatCommand extends Command {
         }
     }
 
-    int call(String url, int inches, boolean json) {
-        // Use a try-with-resources so we don't leak the Jersey client / its
-        // connection pool when the command finishes.
-        try (Client client = ClientBuilder.newClient()) {
+    int call(Bootstrap<?> bootstrap, String url, int inches, boolean json) {
+        // dropwizard-client's JerseyClientBuilder is the same builder
+        // services use to talk to each other inside Dropwizard. For a
+        // Command we don't have an Environment yet, so we wire up the bits
+        // an Environment would otherwise provide:
+        //   * MetricRegistry comes from the Bootstrap so metrics still land
+        //     under "make-hat-cli.*".
+        //   * ExecutorService backs async invocations (we only call sync,
+        //     but the builder requires one when there's no Environment).
+        //   * ObjectMapper is Dropwizard's standard one (Java time + AfterburnerModule).
+        // Inside a managed component you'd just pass the Environment and
+        // these would be filled in for you — and you'd get Managed lifecycle
+        // for the client too. Here we close the executor + client by hand.
+        ExecutorService executor = Executors.newSingleThreadExecutor(r -> {
+            Thread t = new Thread(r, JERSEY_CLIENT_NAME);
+            t.setDaemon(true);
+            return t;
+        });
+        try (Client client = new JerseyClientBuilder(bootstrap.getMetricRegistry())
+                .using(new JerseyClientConfiguration())
+                .using(executor, Jackson.newObjectMapper())
+                .build(JERSEY_CLIENT_NAME)) {
             Haberdasher remote = json
                     ? new HaberdasherClient(client.target(url), TwirpMediaTypes.APPLICATION_JSON)
                     : new HaberdasherClient(client.target(url));
@@ -142,6 +172,8 @@ public class MakeHatCommand extends Command {
                 }
                 return 1;
             }
+        } finally {
+            executor.shutdownNow();
         }
     }
 
