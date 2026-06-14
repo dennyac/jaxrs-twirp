@@ -27,6 +27,15 @@
             <groupId>io.dropwizard.modules</groupId>
             <artifactId>dropwizard-twirp</artifactId>
         </dependency>
+        <!--
+            Needed for TwirpGenerateCommand. The protoc module is also wired
+            in below as a protocPlugin for build-time code generation; that
+            classpath entry is independent from this compile-scope dependency.
+        -->
+        <dependency>
+            <groupId>io.dropwizard.modules</groupId>
+            <artifactId>dropwizard-twirp-protoc</artifactId>
+        </dependency>
         <dependency>
             <groupId>com.google.protobuf</groupId>
             <artifactId>protobuf-java</artifactId>
@@ -45,6 +54,11 @@
         <dependency>
             <groupId>io.dropwizard</groupId>
             <artifactId>dropwizard-testing</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.dropwizard</groupId>
+            <artifactId>dropwizard-client</artifactId>
             <scope>test</scope>
         </dependency>
     </dependencies>

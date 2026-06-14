@@ -60,4 +60,30 @@ class OptionsTest {
         Map<String, String> raw = Options.parse(" prefix = /y , extra = z ").raw();
         assertThat(raw).containsEntry("prefix", "/y").containsEntry("extra", "z");
     }
+
+    @Test
+    void clientGenerationDefaultsToTrue() {
+        assertThat(Options.parse(null).generateClient()).isTrue();
+        assertThat(Options.parse("prefix=/foo").generateClient()).isTrue();
+    }
+
+    @Test
+    void clientGenerationCanBeDisabled() {
+        assertThat(Options.parse("client=false").generateClient()).isFalse();
+        assertThat(Options.parse("client=no").generateClient()).isFalse();
+        assertThat(Options.parse("client=0").generateClient()).isFalse();
+    }
+
+    @Test
+    void clientOptionAcceptsTruthyAliases() {
+        assertThat(Options.parse("client=true").generateClient()).isTrue();
+        assertThat(Options.parse("client=yes").generateClient()).isTrue();
+        assertThat(Options.parse("client=1").generateClient()).isTrue();
+    }
+
+    @Test
+    void clientOptionFallsBackOnGarbageValue() {
+        // unrecognized values fall back to default rather than throwing
+        assertThat(Options.parse("client=maybe").generateClient()).isTrue();
+    }
 }

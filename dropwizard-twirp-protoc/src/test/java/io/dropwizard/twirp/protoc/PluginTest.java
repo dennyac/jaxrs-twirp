@@ -40,7 +40,8 @@ class PluginTest {
                 .collect(Collectors.toMap(File::getName, File::getContent));
         assertThat(files).containsOnlyKeys(
                 "com/twitch/twirp/example/haberdasher/Haberdasher.java",
-                "com/twitch/twirp/example/haberdasher/HaberdasherResource.java");
+                "com/twitch/twirp/example/haberdasher/HaberdasherResource.java",
+                "com/twitch/twirp/example/haberdasher/HaberdasherClient.java");
 
         String iface = files.get("com/twitch/twirp/example/haberdasher/Haberdasher.java");
         assertThat(iface)
@@ -63,6 +64,56 @@ class PluginTest {
                 .contains("@Produces({TwirpMediaTypes.APPLICATION_PROTOBUF, TwirpMediaTypes.APPLICATION_JSON})")
                 .contains("public Hat makeHat(Size request) {")
                 .contains("return TwirpInvocations.invoke(\"MakeHat\", () -> service.makeHat(request));");
+
+        String client = files.get("com/twitch/twirp/example/haberdasher/HaberdasherClient.java");
+        assertThat(client)
+                .contains("package com.twitch.twirp.example.haberdasher;")
+                .contains("public final class HaberdasherClient implements Haberdasher {")
+                .contains("private final WebTarget target;")
+                .contains("private final String contentType;")
+                .contains("public HaberdasherClient(WebTarget baseTarget) {")
+                .contains("this(baseTarget, TwirpMediaTypes.APPLICATION_PROTOBUF);")
+                .contains("public HaberdasherClient(WebTarget baseTarget, String contentType) {")
+                .contains("TwirpClients.registerProviders(baseTarget);")
+                .contains("this.target = baseTarget.path(\"/twirp/twitch.twirp.example.Haberdasher\");")
+                .contains("@Override")
+                .contains("public Hat makeHat(Size request) throws TwirpException {")
+                .contains("return TwirpClients.invoke(")
+                .contains("target.path(\"/MakeHat\").request(contentType).accept(contentType),")
+                .contains("Entity.entity(request, contentType),")
+                .contains("Hat.class);");
+    }
+
+    @Test
+    void clientGenerationCanBeDisabledViaOption() {
+        CodeGeneratorRequest req = CodeGeneratorRequest.newBuilder()
+                .setParameter("client=false")
+                .addFileToGenerate("haberdasher.proto")
+                .addProtoFile(haberdasherFile(true))
+                .build();
+
+        List<String> names = new Plugin().generate(req).getFileList().stream()
+                .map(File::getName).toList();
+
+        assertThat(names).containsExactlyInAnyOrder(
+                "com/twitch/twirp/example/haberdasher/Haberdasher.java",
+                "com/twitch/twirp/example/haberdasher/HaberdasherResource.java");
+    }
+
+    @Test
+    void clientHonorsCustomPathPrefix() {
+        CodeGeneratorRequest req = CodeGeneratorRequest.newBuilder()
+                .setParameter("prefix=/rpc")
+                .addFileToGenerate("haberdasher.proto")
+                .addProtoFile(haberdasherFile(true))
+                .build();
+
+        String client = new Plugin().generate(req).getFileList().stream()
+                .filter(f -> f.getName().endsWith("HaberdasherClient.java"))
+                .findFirst().orElseThrow().getContent();
+
+        assertThat(client)
+                .contains("this.target = baseTarget.path(\"/rpc/twitch.twirp.example.Haberdasher\");");
     }
 
     @Test
@@ -134,7 +185,8 @@ class PluginTest {
 
         assertThat(names).containsExactlyInAnyOrder(
                 "com/twitch/twirp/example/haberdasher/Haberdasher.java",
-                "com/twitch/twirp/example/haberdasher/HaberdasherResource.java");
+                "com/twitch/twirp/example/haberdasher/HaberdasherResource.java",
+                "com/twitch/twirp/example/haberdasher/HaberdasherClient.java");
     }
 
     @Test

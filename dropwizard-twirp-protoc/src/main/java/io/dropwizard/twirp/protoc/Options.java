@@ -12,6 +12,10 @@ import java.util.Map;
  *   <li>{@code prefix} — the URL path prefix prepended to every generated
  *       {@code @Path}. Default: {@code /twirp}. Leading slash is normalized;
  *       trailing slash is stripped.</li>
+ *   <li>{@code client} — whether to generate a Jersey client stub alongside the
+ *       server resource. Accepts {@code true}/{@code false}. Default: {@code true}.
+ *       Set to {@code false} on the server side if you don't want a
+ *       {@code WebTarget} dependency on the server classpath.</li>
  * </ul>
  *
  * <p>Unknown keys are ignored so users on a newer plugin version can pass keys
@@ -20,17 +24,24 @@ import java.util.Map;
 public final class Options {
 
     public static final String DEFAULT_PREFIX = "/twirp";
+    public static final boolean DEFAULT_GENERATE_CLIENT = true;
 
     private final String pathPrefix;
+    private final boolean generateClient;
     private final Map<String, String> raw;
 
-    private Options(String pathPrefix, Map<String, String> raw) {
+    private Options(String pathPrefix, boolean generateClient, Map<String, String> raw) {
         this.pathPrefix = pathPrefix;
+        this.generateClient = generateClient;
         this.raw = Collections.unmodifiableMap(raw);
     }
 
     public String pathPrefix() {
         return pathPrefix;
+    }
+
+    public boolean generateClient() {
+        return generateClient;
     }
 
     public Map<String, String> raw() {
@@ -57,7 +68,8 @@ public final class Options {
             }
         }
         String prefix = raw.getOrDefault("prefix", DEFAULT_PREFIX);
-        return new Options(normalizePrefix(prefix), raw);
+        boolean client = parseBoolean(raw.get("client"), DEFAULT_GENERATE_CLIENT);
+        return new Options(normalizePrefix(prefix), client, raw);
     }
 
     static String normalizePrefix(String prefix) {
@@ -72,5 +84,18 @@ public final class Options {
             result = result.substring(0, result.length() - 1);
         }
         return result;
+    }
+
+    private static boolean parseBoolean(String value, boolean fallback) {
+        if (value == null || value.isEmpty()) {
+            return fallback;
+        }
+        if ("true".equalsIgnoreCase(value) || "yes".equalsIgnoreCase(value) || "1".equals(value)) {
+            return true;
+        }
+        if ("false".equalsIgnoreCase(value) || "no".equalsIgnoreCase(value) || "0".equals(value)) {
+            return false;
+        }
+        return fallback;
     }
 }

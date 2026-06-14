@@ -31,6 +31,7 @@ public final class Plugin {
 
         ServiceGenerator serviceGen = new ServiceGenerator(types);
         ResourceGenerator resourceGen = new ResourceGenerator(options, types);
+        ClientGenerator clientGen = new ClientGenerator(options, types);
 
         Map<String, FileDescriptorProto> byName = new HashMap<>();
         for (FileDescriptorProto file : protos) {
@@ -58,6 +59,11 @@ public final class Plugin {
                 response.addFile(buildFile(
                         resourceGen.generateResource(file, service, serviceInterface),
                         javaPackage));
+                if (options.generateClient()) {
+                    response.addFile(buildFile(
+                            clientGen.generateClient(file, service, serviceInterface),
+                            javaPackage));
+                }
             }
         }
 
