@@ -210,6 +210,14 @@ $ curl -X POST -H 'Content-Type: application/json' \
 {"inches":12,"color":"red","style_name":"fedora"}
 ```
 
+That's the **server** half end to end: proto → generated resource → running
+endpoint. For the **client** half — calling this service from another Java app
+with the generated stub — jump to
+[Calling a Twirp service from Java](#calling-a-twirp-service-from-java). For a
+complete runnable project that exercises both sides (plus `curl` recipes for
+each wire format), see the
+[`dropwizard-twirp-example`](dropwizard-twirp-example/README.md) module.
+
 ## Runtime API
 
 ### `TwirpBundle`
@@ -373,6 +381,46 @@ A common asymmetric setup splits client and server into separate modules:
 my-app-api/      # protos + 'server=false' → published as a thin client jar
 my-app-server/   # depends on my-app-api, generates 'client=false' → deployed
 ```
+
+## How this compares to Spring Boot / other Java Twirp options
+
+Twirp is Go-first; on the JVM it's a patchwork of community projects, so it's
+worth knowing where this one sits.
+
+| Project | Server it targets | Client | Codegen driver | On Maven Central |
+| ------- | ----------------- | ------ | -------------- | ---------------- |
+| **dropwizard-twirp** (this repo) | Dropwizard / Jersey (JAX-RS), on your existing Jetty connector | JAX-RS stub that decodes Twirp error envelopes back to `TwirpException` | `protoc` plugin (Maven or raw) | not yet (`0.1.0-SNAPSHOT`) |
+| [ngyewch/protoc-gen-twirp-java][ngyewch] | Helidon SE | Apache HttpClient | `protoc` plugin (Gradle) | yes |
+| Twitch's `protoc-gen-twirp_java` | — | — | experimental, never finished | no |
+
+### "Spring Boot has Twirp support" — sort of
+
+There is **no maintained Spring Boot Twirp starter** on Maven Central today. The
+`sgoertzen/twirp-spring-boot` repo that older blog posts point at is gone, and
+Twitch's own Java generator was never finished. In practice, "Twirp on Spring
+Boot" means assembling it yourself, usually one of:
+
+1. Run a Java Twirp generator (e.g. ngyewch's, which emits Helidon / Apache
+   HttpClient code) and hand-wire its handlers into `@RestController`s, **or**
+2. Generate only the protobuf messages and write the `@PostMapping("/twirp/…")`
+   controllers plus protobuf + JSON `HttpMessageConverter`s by hand.
+
+Either way you own the Twirp HTTP contract — the
+`/twirp/<pkg>.<Service>/<Rpc>` routing, the interchangeable protobuf+JSON
+bodies, and the always-JSON error envelope. That assembly is exactly what this
+module packages for Dropwizard: `TwirpBundle` ships the body providers and error
+mappers, and the generated resource is already bound to the spec'd path. The
+trade-off is ecosystem — you get this turnkey for Dropwizard, not Spring.
+
+If you're a Spring shop with no Dropwizard, this repo won't drop straight in: the
+generated resource is `jakarta.ws.rs` (JAX-RS), which runs on Jersey or RESTEasy
+but **not** Spring MVC. A Spring team that doesn't specifically need Twirp's
+HTTP/1.1-only simplicity is usually better served by gRPC +
+[grpc-spring][grpc-spring]. The case for Twirp anywhere is the same as the case
+for this module: plain HTTP/1.1, no second server, both wire formats on one URL.
+
+[ngyewch]: https://github.com/ngyewch/protoc-gen-twirp-java
+[grpc-spring]: https://github.com/grpc-ecosystem/grpc-spring
 
 ## Status
 
