@@ -2,6 +2,8 @@ syntax = "proto3";
 
 package io.dropwizard.twirp.testproto;
 
+import "google/protobuf/any.proto";
+
 option java_package = "io.dropwizard.twirp.testproto";
 option java_multiple_files = true;
 option java_outer_classname = "TestProtos";
@@ -18,4 +20,13 @@ message TestMessage {
 // Used to test that empty bodies / default values round-trip cleanly.
 message EmptyEcho {
   string note = 1;
+}
+
+// Carries a google.protobuf.Any so the codec tests can demonstrate the one
+// proto feature whose JSON mapping needs extra wiring: Any can only be printed
+// or parsed as JSON when the JsonFormat printer/parser is given a TypeRegistry
+// that knows the packed message type. Binary protobuf needs no such registry.
+message Parcel {
+  string label = 1;
+  google.protobuf.Any contents = 2;
 }

@@ -1,5 +1,6 @@
 package io.dropwizard.twirp;
 
+import com.google.protobuf.TypeRegistry;
 import com.google.protobuf.util.JsonFormat;
 import io.dropwizard.core.Configuration;
 import io.dropwizard.core.ConfiguredBundle;
@@ -41,6 +42,17 @@ import java.util.Objects;
  * <pre>{@code
  * bootstrap.addBundle(TwirpBundle.builder()
  *     .jsonPrinter(JsonFormat.printer().includingDefaultValueFields())
+ *     .build());
+ * }</pre>
+ *
+ * <p>If any of your messages embed a {@code google.protobuf.Any}, JSON
+ * serialization needs a {@link TypeRegistry} that knows the packed message
+ * types (binary protobuf does not). Supply one with {@link Builder#typeRegistry}:
+ * <pre>{@code
+ * bootstrap.addBundle(TwirpBundle.builder()
+ *     .typeRegistry(TypeRegistry.newBuilder()
+ *         .add(MyPackedMessage.getDescriptor())
+ *         .build())
  *     .build());
  * }</pre>
  *
@@ -93,6 +105,7 @@ public class TwirpBundle<C extends Configuration> implements ConfiguredBundle<C>
     public static final class Builder {
         private JsonFormat.Printer jsonPrinter = defaultPrinter();
         private JsonFormat.Parser jsonParser = defaultParser();
+        private TypeRegistry typeRegistry;
 
         private Builder() {
         }
@@ -107,8 +120,30 @@ public class TwirpBundle<C extends Configuration> implements ConfiguredBundle<C>
             return this;
         }
 
+        /**
+         * Register a {@link TypeRegistry} so that messages embedding a
+         * {@code google.protobuf.Any} can be serialized to and parsed from JSON.
+         * The registry is applied to both the printer and the parser at
+         * {@link #build} time, preserving their other settings.
+         *
+         * <p>Only needed for the JSON wire format — binary protobuf carries the
+         * {@code Any} type URL inline and needs no registry. Do not combine this
+         * with a custom {@link #jsonPrinter}/{@link #jsonParser} that already has
+         * a registry of its own; supply the registry through exactly one path.
+         */
+        public Builder typeRegistry(TypeRegistry registry) {
+            this.typeRegistry = Objects.requireNonNull(registry, "registry");
+            return this;
+        }
+
         public <C extends Configuration> TwirpBundle<C> build() {
-            return new TwirpBundle<>(jsonPrinter, jsonParser);
+            JsonFormat.Printer printer = jsonPrinter;
+            JsonFormat.Parser parser = jsonParser;
+            if (typeRegistry != null) {
+                printer = printer.usingTypeRegistry(typeRegistry);
+                parser = parser.usingTypeRegistry(typeRegistry);
+            }
+            return new TwirpBundle<>(printer, parser);
         }
     }
 }

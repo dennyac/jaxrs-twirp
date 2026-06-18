@@ -40,6 +40,31 @@ class JavaNamingTest {
     }
 
     @Test
+    void rpcNamesThatLowercaseToJavaKeywordsAreSuffixed() {
+        // An RPC named e.g. `Return`/`Import`/`Class` lowercases to a Java
+        // reserved word; the method name must be mangled so the generated
+        // interface/resource/client compile. The URL path keeps the raw name.
+        assertThat(JavaNaming.lowerCamelMethodName("Return")).isEqualTo("return_");
+        assertThat(JavaNaming.lowerCamelMethodName("Import")).isEqualTo("import_");
+        assertThat(JavaNaming.lowerCamelMethodName("Class")).isEqualTo("class_");
+        assertThat(JavaNaming.lowerCamelMethodName("Switch")).isEqualTo("switch_");
+    }
+
+    @Test
+    void reservedLiteralsAreAlsoSuffixed() {
+        // true/false/null are reserved literals, not valid identifiers either.
+        assertThat(JavaNaming.lowerCamelMethodName("True")).isEqualTo("true_");
+        assertThat(JavaNaming.lowerCamelMethodName("Null")).isEqualTo("null_");
+    }
+
+    @Test
+    void nonKeywordNamesAreNotSuffixed() {
+        // `returns`/`classes` merely start with a keyword; they are valid names.
+        assertThat(JavaNaming.lowerCamelMethodName("Returns")).isEqualTo("returns");
+        assertThat(JavaNaming.lowerCamelMethodName("MakeHat")).isEqualTo("makeHat");
+    }
+
+    @Test
     void defaultOuterClassNameStripsExtensionAndCapitalizes() {
         assertThat(JavaNaming.defaultOuterClassName("haberdasher.proto"))
                 .isEqualTo("Haberdasher");

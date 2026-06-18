@@ -249,6 +249,21 @@ The defaults match Twirp's Go reference server:
   "absent" from "default" for proto3 scalars
 - `omittingInsignificantWhitespace()` for compact responses
 
+If any of your messages embed a `google.protobuf.Any`, JSON serialization needs
+a `TypeRegistry` that knows the packed types (binary protobuf carries the type
+URL inline and needs no registry). Supply one via the builder:
+
+```java
+bootstrap.addBundle(TwirpBundle.builder()
+        .typeRegistry(TypeRegistry.newBuilder()
+                .add(MyPackedMessage.getDescriptor())
+                .build())
+        .<MyConfig>build());
+```
+
+See [Supported proto features & limitations](#supported-proto-features--limitations)
+for the full matrix of what the codegen and runtime handle.
+
 ### `TwirpException`
 
 Throw this from your service implementation to produce a structured Twirp
@@ -422,13 +437,65 @@ for this module: plain HTTP/1.1, no second server, both wire formats on one URL.
 [ngyewch]: https://github.com/ngyewch/protoc-gen-twirp-java
 [grpc-spring]: https://github.com/grpc-ecosystem/grpc-spring
 
+## Supported proto features & limitations
+
+Code generation works at the **service boundary** — the plugin only resolves the
+Java class names of each RPC's request/response message and leaves the actual
+field serialization to protoc's standard Java output and
+`com.google.protobuf.util.JsonFormat`. That means almost all message-level
+complexity is handled "for free" by the protobuf runtime, and the short list of
+real gaps below is about the *service* layer and JSON edge cases.
+
+The example in `dropwizard-twirp-example` exercises the rich-message path
+end-to-end: its `ListInventory` RPC returns an enum, a `repeated` nested message,
+and a `map<string, int32>`, asserted over both protobuf and JSON wire formats.
+
+### Handled
+
+| Feature / edge case | Status | Notes |
+|---|---|---|
+| Enums, nested messages, `repeated`, `map<k,v>`, `oneof` | ✅ | Pure protoc Java codegen; serialized per the proto3 JSON spec. Covered by the example's `ListInventory`. |
+| Imports / cross-file message references | ✅ | `TypeMapper` is built from *all* descriptors protoc passes (imports + well-known types), so an RPC can use a message from another `.proto` and still resolve to the right `java_package`. |
+| Multiple services in one `.proto` | ✅ | The plugin iterates every service in the file. |
+| Proto3 `optional` (field presence) | ✅ | Plugin advertises `FEATURE_PROTO3_OPTIONAL`. |
+| `google.protobuf.Empty` and other well-known types as request/response | ✅ | Resolved through the same transitive-descriptor mechanism. |
+| `Timestamp`, `Duration`, `Struct`, `Value`, `FieldMask`, wrappers in JSON | ✅ | `JsonFormat` renders these natively, no registry needed. |
+| Configurable URL prefix | ✅ | `pathPrefix` generator option (defaults to `/twirp`, per Twirp v7). |
+| JSON snake_case names / unknown-field tolerance / default-value emission | ✅ | Go-reference-compatible defaults; override via the `TwirpBundle` builder. |
+| RPC names that lowercase to a Java keyword (`Return`, `Import`, …) | ✅ | The generated Java method is suffixed with `_` (e.g. `return_`); the URL path keeps the original proto name, so wire compatibility is unaffected. |
+
+### Needs configuration
+
+| Feature / edge case | Status | What to do |
+|---|---|---|
+| `google.protobuf.Any` over **JSON** | ⚠️ | `JsonFormat` cannot resolve a packed `Any` to JSON without a `TypeRegistry`. Register the packed types with `TwirpBundle.builder().typeRegistry(...)` (see above). Binary protobuf needs nothing — the type URL travels inline. |
+
+### Not supported (by design or not yet)
+
+| Feature / edge case | Status | Notes |
+|---|---|---|
+| Streaming RPCs | ❌ by design | Twirp itself has no streaming — it's a non-goal of the protocol. The generator rejects streaming methods at codegen time with a clear error rather than emitting something that can't work over unary HTTP. Use gRPC if you need streaming. |
+| Protobuf **editions** (`edition = "2023"`) | ❌ not yet | The plugin does not yet declare `FEATURE_SUPPORTS_EDITIONS`, so protoc 25+ refuses to run it on editions files. Stay on `syntax = "proto3"` for now. (Editions appear to need no Twirp-specific codegen changes, so this is a declaration/testing gap, not a design limit.) |
+| `[json_name = "..."]` field option | ⚠️ intentionally ignored | With `preservingProtoFieldNames()` the raw proto field name wins, matching Go Twirp's `UseProtoNames: true`. If you need `json_name` honored, supply a custom `jsonPrinter`/`jsonParser` without name preservation — at the cost of diverging from the Go server. |
+| proto2 `required` field missing on decode | ⚠️ maps to `internal` | A missing `required` field throws after decode and surfaces as a Twirp `internal` (HTTP 500) rather than `malformed` (400). proto3 has no `required`, so this only affects proto2 schemas. |
+
+This matrix was assembled by auditing the generated code against the Twirp v7
+spec and the known issue trackers of the Go reference generator and the other
+JVM Twirp generators (`fajran/protoc-gen-twirp_java_jaxrs`,
+`ngyewch/protoc-gen-twirp-java`). The `Any`-over-JSON behavior is verified by
+`AnyJsonCodecTest`, and the keyword-mangling by `JavaNamingTest`.
+
 ## Status
 
 This is **0.1.0-SNAPSHOT**. The runtime, codegen, and generated client are all
-tested end-to-end (82 tests across the reactor) but the API is not yet frozen.
+tested end-to-end (91 tests across the reactor) but the API is not yet frozen.
 
 Roadmap ideas (not yet implemented):
 
+- Declare `FEATURE_SUPPORTS_EDITIONS` so protoc can run the plugin on
+  `edition = "2023"` files (see the limitations table above).
+- Map proto2 `required`-field validation failures to a Twirp `malformed` (400)
+  instead of the current `internal` (500).
 - A `NotFoundExceptionMapper` so unknown Twirp routes return a JSON
   `bad_route` error instead of Jersey's HTML 404.
 - Optional client interceptors for adding auth headers / tracing context

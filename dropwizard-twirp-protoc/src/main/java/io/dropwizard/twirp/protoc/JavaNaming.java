@@ -1,5 +1,7 @@
 package io.dropwizard.twirp.protoc;
 
+import javax.lang.model.SourceVersion;
+
 /**
  * Java naming conventions used when translating proto names to Java names.
  *
@@ -22,8 +24,18 @@ public final class JavaNaming {
      * lowercase letter (e.g. {@code HTTPSendBytes}), only the leading uppercase
      * run is lowercased up to the last uppercase letter before the lowercase one
      * ({@code httpSendBytes}). That mirrors common Java naming conventions.
+     *
+     * <p>If the result collides with a Java reserved word (e.g. an RPC named
+     * {@code Return} or {@code Import} lowercases to {@code return}/{@code import}),
+     * it is suffixed with an underscore so the generated source compiles. The
+     * Twirp URL path is unaffected — it always uses the original proto RPC name —
+     * so wire compatibility is preserved.
      */
     public static String lowerCamelMethodName(String name) {
+        return escapeJavaKeyword(toLowerCamel(name));
+    }
+
+    private static String toLowerCamel(String name) {
         if (name == null || name.isEmpty()) {
             return name;
         }
@@ -45,6 +57,18 @@ public final class JavaNaming {
         // the next "word", e.g. HTTPSendBytes -> httpSendBytes.
         int lowerUntil = upperRun - 1;
         return name.substring(0, lowerUntil).toLowerCase() + name.substring(lowerUntil);
+    }
+
+    /**
+     * Suffix {@code candidate} with {@code _} when it is a Java reserved word —
+     * a keyword or one of the reserved literals {@code true}/{@code false}/{@code null}.
+     * Other names are returned unchanged.
+     */
+    static String escapeJavaKeyword(String candidate) {
+        if (candidate != null && !candidate.isEmpty() && SourceVersion.isKeyword(candidate)) {
+            return candidate + "_";
+        }
+        return candidate;
     }
 
     /**
