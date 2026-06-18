@@ -206,6 +206,47 @@ Twirp errors are *always* JSON regardless of the request content type. That's
 the spec, and it's what lets thin clients decode errors without protobuf
 descriptors.
 
+### Richer messages: enums, arrays, and maps in JSON
+
+`MakeHat` is deliberately flat. The second RPC, `ListInventory`, returns a
+message with the three proto shapes whose JSON form differs most from protobuf:
+an **enum** (`HatStyle`), a **`repeated` nested message** (`StockItem`), and a
+**`map<string, int32>`** (`count_by_color`). No generator changes are needed for
+any of this — protoc's Java codegen plus `JsonFormat` handle it — which is the
+point of showing it.
+
+```bash
+$ curl -s -H 'Content-Type: application/json' \
+       -d '{"style": "FEDORA"}' \
+       http://localhost:8080/twirp/twitch.twirp.example.haberdasher.Haberdasher/ListInventory
+{
+  "items": [
+    {"style": "FEDORA", "inches": 11, "color": "grey"},
+    {"style": "FEDORA", "inches": 12, "color": "black"}
+  ],
+  "count_by_color": {"grey": 1, "black": 1}
+}
+```
+
+Things to notice in the JSON:
+
+- the enum serializes to its **name** (`"FEDORA"`), not its integer tag (`2`) —
+  on the protobuf wire it's the tag instead;
+- `items` is a JSON **array of objects** (the `repeated StockItem`);
+- the map field keeps its **snake_case** key `count_by_color`, because the Twirp
+  default printer preserves proto field names (map-entry key order is not
+  significant).
+
+Send the same request with `Content-Type: application/protobuf` and you get the
+identical data as packed protobuf bytes — `ListInventory` is asserted over both
+formats in
+[`ExampleApplicationIntegrationTest`](src/test/java/io/dropwizard/twirp/example/ExampleApplicationIntegrationTest.java).
+Leave `style` out (or set it to `HAT_STYLE_UNSPECIFIED`) to list the whole shop.
+
+See the top-level [Supported proto features & limitations][features] table for
+the complete matrix of what generation handles, what needs configuration
+(e.g. `google.protobuf.Any` over JSON), and what's out of scope (streaming).
+
 ## Tests
 
 ```bash
@@ -224,3 +265,4 @@ Two suites:
 [gen-client-test]: src/test/java/io/dropwizard/twirp/example/GeneratedClientIntegrationTest.java
 [dw-client]: https://www.dropwizard.io/en/stable/manual/client.html
 [raw-protoc]: ../README.md#code-generation-without-maven-raw-protoc-plugin
+[features]: ../README.md#supported-proto-features--limitations

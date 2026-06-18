@@ -8,6 +8,17 @@ option java_multiple_files = true;
 // The classic Twirp example: a service that makes hats.
 service Haberdasher {
     rpc MakeHat (Size) returns (Hat);
+
+    // A deliberately richer RPC. Where MakeHat keeps the request/response flat
+    // (ints and strings), ListInventory returns a message that exercises the
+    // proto features whose JSON mapping is most worth seeing next to the
+    // protobuf wire format:
+    //   - an enum        -> JSON string ("FEDORA")
+    //   - repeated msg   -> JSON array of objects
+    //   - map<string,..> -> JSON object
+    // The example's integration tests POST this over both application/protobuf
+    // and application/json against the same generated resource.
+    rpc ListInventory (InventoryRequest) returns (Inventory);
 }
 
 message Size {
@@ -25,4 +36,36 @@ message Hat {
     // serialization probe so the integration tests can verify the default
     // Twirp printer preserves proto field names.
     string style_name = 3;
+}
+
+// A hat style. Proto enums serialize to their *name* in JSON (e.g. "FEDORA"),
+// and to their integer tag on the protobuf wire — a nice side-by-side contrast
+// between the two formats.
+enum HatStyle {
+    HAT_STYLE_UNSPECIFIED = 0;
+    BOWLER = 1;
+    FEDORA = 2;
+    TOP_HAT = 3;
+}
+
+message InventoryRequest {
+    // Filter to a single style. Leave UNSPECIFIED (the zero value) to list the
+    // whole shop.
+    HatStyle style = 1;
+}
+
+message Inventory {
+    // Repeated nested message -> a JSON array of objects.
+    repeated StockItem items = 1;
+
+    // map<string, int32> -> a JSON object keyed by color. The snake_case key
+    // name is preserved in JSON because the Twirp default printer keeps proto
+    // field names.
+    map<string, int32> count_by_color = 2;
+}
+
+message StockItem {
+    HatStyle style = 1;
+    int32 inches = 2;
+    string color = 3;
 }

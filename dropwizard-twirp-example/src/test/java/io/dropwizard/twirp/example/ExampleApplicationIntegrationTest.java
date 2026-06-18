@@ -7,6 +7,9 @@ import io.dropwizard.testing.ResourceHelpers;
 import io.dropwizard.testing.junit5.DropwizardAppExtension;
 import io.dropwizard.testing.junit5.DropwizardExtensionsSupport;
 import io.dropwizard.twirp.example.haberdasher.Hat;
+import io.dropwizard.twirp.example.haberdasher.HatStyle;
+import io.dropwizard.twirp.example.haberdasher.Inventory;
+import io.dropwizard.twirp.example.haberdasher.InventoryRequest;
 import io.dropwizard.twirp.example.haberdasher.Size;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -42,6 +45,9 @@ class ExampleApplicationIntegrationTest {
 
     private static final String MAKE_HAT_PATH =
             "/twirp/twitch.twirp.example.haberdasher.Haberdasher/MakeHat";
+
+    private static final String LIST_INVENTORY_PATH =
+            "/twirp/twitch.twirp.example.haberdasher.Haberdasher/ListInventory";
 
     private final HttpClient http = HttpClient.newHttpClient();
     private final ObjectMapper mapper = new ObjectMapper();
@@ -224,6 +230,74 @@ class ExampleApplicationIntegrationTest {
                 .hasValueSatisfying(ct -> assertThat(ct).startsWith("application/json"));
         assertThat(mapper.readTree(jsonAgain.body()).get("style_name").asText())
                 .isEqualTo("fedora");
+    }
+
+    @Test
+    void listInventoryJsonExposesEnumsArraysAndMaps() throws Exception {
+        // Filter to fedoras. This RPC's response carries an enum, a repeated
+        // nested message, and a map — the three proto shapes whose JSON form is
+        // most distinct from the protobuf wire form. We assert the JSON document
+        // structure directly so the snake_case + enum-as-string + array + object
+        // mapping is visible.
+        String body = "{\"style\":\"FEDORA\"}";
+
+        HttpResponse<String> response = http.send(
+                HttpRequest.newBuilder(uri(LIST_INVENTORY_PATH))
+                        .header("Content-Type", "application/json")
+                        .header("Accept", "application/json")
+                        .POST(BodyPublishers.ofString(body, StandardCharsets.UTF_8))
+                        .build(),
+                BodyHandlers.ofString(StandardCharsets.UTF_8));
+
+        assertThat(response.statusCode()).isEqualTo(200);
+        assertThat(response.headers().firstValue("Content-Type"))
+                .hasValueSatisfying(ct -> assertThat(ct).startsWith("application/json"));
+
+        JsonNode node = mapper.readTree(response.body());
+
+        // repeated StockItem -> JSON array of objects.
+        JsonNode items = node.get("items");
+        assertThat(items.isArray()).isTrue();
+        assertThat(items).hasSize(2);
+        // enum -> JSON string (the name, not the integer tag).
+        assertThat(items.get(0).get("style").asText()).isEqualTo("FEDORA");
+        assertThat(items.get(0).get("inches").asInt()).isEqualTo(11);
+        assertThat(items.get(1).get("inches").asInt()).isEqualTo(12);
+
+        // map<string,int32> -> JSON object, snake_case field name preserved.
+        JsonNode countByColor = node.get("count_by_color");
+        assertThat(countByColor.isObject()).isTrue();
+        assertThat(countByColor.get("grey").asInt()).isEqualTo(1);
+        assertThat(countByColor.get("black").asInt()).isEqualTo(1);
+    }
+
+    @Test
+    void listInventoryProtobufRoundTripCarriesEnumsArraysAndMaps() throws Exception {
+        // Same RPC, protobuf wire format. Proves the richer message round-trips
+        // as binary against the very same generated resource.
+        InventoryRequest request = InventoryRequest.newBuilder()
+                .setStyle(HatStyle.BOWLER)
+                .build();
+
+        HttpResponse<byte[]> response = http.send(
+                HttpRequest.newBuilder(uri(LIST_INVENTORY_PATH))
+                        .header("Content-Type", "application/protobuf")
+                        .header("Accept", "application/protobuf")
+                        .POST(BodyPublishers.ofByteArray(request.toByteArray()))
+                        .build(),
+                BodyHandlers.ofByteArray());
+
+        assertThat(response.statusCode()).isEqualTo(200);
+        assertThat(response.headers().firstValue("Content-Type"))
+                .hasValue("application/protobuf");
+
+        Inventory inventory = Inventory.parseFrom(response.body());
+        assertThat(inventory.getItemsList()).hasSize(2);
+        assertThat(inventory.getItemsList())
+                .allSatisfy(item -> assertThat(item.getStyle()).isEqualTo(HatStyle.BOWLER));
+        assertThat(inventory.getCountByColorMap())
+                .containsEntry("black", 1)
+                .containsEntry("brown", 1);
     }
 
     private URI uri(String path) {

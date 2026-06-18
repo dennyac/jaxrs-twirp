@@ -12,6 +12,9 @@ import io.dropwizard.twirp.TwirpMediaTypes;
 import io.dropwizard.twirp.example.haberdasher.Haberdasher;
 import io.dropwizard.twirp.example.haberdasher.HaberdasherClient;
 import io.dropwizard.twirp.example.haberdasher.Hat;
+import io.dropwizard.twirp.example.haberdasher.HatStyle;
+import io.dropwizard.twirp.example.haberdasher.Inventory;
+import io.dropwizard.twirp.example.haberdasher.InventoryRequest;
 import io.dropwizard.twirp.example.haberdasher.Size;
 import jakarta.ws.rs.client.Client;
 import org.junit.jupiter.api.AfterAll;
@@ -101,6 +104,24 @@ class GeneratedClientIntegrationTest {
                     assertThat(ex.getMessage()).isEqualTo("inches must be > 0");
                     assertThat(ex.getMeta()).containsEntry("argument", "inches");
                 });
+    }
+
+    @Test
+    void listInventoryViaGeneratedClientCarriesEnumArrayAndMap() throws TwirpException {
+        // The richer RPC (enum + repeated nested message + map) goes through the
+        // exact same generated client. Exercise it in JSON mode to prove the
+        // structured response decodes back into typed protobuf objects.
+        Haberdasher remote = new HaberdasherClient(
+                CLIENT.target("http://localhost:" + APP.getLocalPort()),
+                TwirpMediaTypes.APPLICATION_JSON);
+
+        Inventory inventory = remote.listInventory(
+                InventoryRequest.newBuilder().setStyle(HatStyle.TOP_HAT).build());
+
+        assertThat(inventory.getItemsList()).hasSize(1);
+        assertThat(inventory.getItemsList().get(0).getStyle()).isEqualTo(HatStyle.TOP_HAT);
+        assertThat(inventory.getItemsList().get(0).getInches()).isEqualTo(14);
+        assertThat(inventory.getCountByColorMap()).containsEntry("black", 1);
     }
 
     @Test
