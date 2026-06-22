@@ -14,8 +14,10 @@
     <artifactId>dropwizard-twirp</artifactId>
     <name>Dropwizard Twirp Runtime</name>
     <description>
-        Bundle, MessageBodyReader/Writer providers, and ExceptionMapper that let
-        Dropwizard's Jersey runtime speak the Twirp RPC protocol (v7).
+        Dropwizard integration for Twirp: the TwirpBundle that wires the
+        framework-agnostic dropwizard-twirp-core providers into Dropwizard's
+        Jersey runtime, plus the managed TwirpClientBuilder. Install this module
+        in a Dropwizard application to serve and call Twirp services (v7).
     </description>
 
     <properties>
@@ -23,6 +25,11 @@
     </properties>
 
     <dependencies>
+        <!-- The framework-agnostic JAX-RS runtime this module adapts to Dropwizard. -->
+        <dependency>
+            <groupId>io.dropwizard.modules</groupId>
+            <artifactId>dropwizard-twirp-core</artifactId>
+        </dependency>
         <dependency>
             <groupId>io.dropwizard</groupId>
             <artifactId>dropwizard-core</artifactId>
@@ -35,6 +42,19 @@
             <groupId>jakarta.ws.rs</groupId>
             <artifactId>jakarta.ws.rs-api</artifactId>
         </dependency>
+        <!--
+            Optional: only TwirpClientBuilder.using(Environment, JerseyClientConfiguration)
+            needs dropwizard-client (to build a managed JAX-RS client). Marked optional so
+            server-only consumers don't pull it transitively; client-side consumers that use
+            the managed-builder overload add dropwizard-client to their own module. The
+            WebTarget / using(Client) paths work with just the JAX-RS API above.
+        -->
+        <dependency>
+            <groupId>io.dropwizard</groupId>
+            <artifactId>dropwizard-client</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <!-- TwirpBundle configures the JSON printer/parser and Any TypeRegistry. -->
         <dependency>
             <groupId>com.google.protobuf</groupId>
             <artifactId>protobuf-java</artifactId>
@@ -44,11 +64,6 @@
             <artifactId>protobuf-java-util</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>io.dropwizard</groupId>
-            <artifactId>dropwizard-testing</artifactId>
-            <scope>test</scope>
-        </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
@@ -73,18 +88,6 @@
                         </manifestEntries>
                     </archive>
                 </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.xolstice.maven.plugins</groupId>
-                <artifactId>protobuf-maven-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>test-compile</id>
-                        <goals>
-                            <goal>test-compile</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
         </plugins>
     </build>

@@ -8,6 +8,7 @@ import io.dropwizard.testing.junit5.DropwizardAppExtension;
 import io.dropwizard.testing.junit5.DropwizardExtensionsSupport;
 import io.dropwizard.twirp.ErrorCode;
 import io.dropwizard.twirp.TwirpException;
+import io.dropwizard.twirp.TwirpClientBuilder;
 import io.dropwizard.twirp.TwirpMediaTypes;
 import io.dropwizard.twirp.example.haberdasher.Haberdasher;
 import io.dropwizard.twirp.example.haberdasher.HaberdasherClient;
@@ -34,6 +35,13 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
  * <p>Verifies the full client round trip: provider registration on the supplied
  * {@code WebTarget}, protobuf and JSON wire formats, and structured Twirp error
  * decoding so callers see {@link TwirpException} instead of raw HTTP errors.
+ *
+ * <p>Also demonstrates the runtime {@link TwirpClientBuilder} — the "managed
+ * client builder" — which folds root-{@code WebTarget} resolution and content-type
+ * selection into a fluent call so callers don't hand-build the target. It accepts
+ * either a pre-built {@code Client} or an {@code Environment} + {@code
+ * JerseyClientConfiguration}, all at test scope here so the example module keeps
+ * {@code dropwizard-client} off its runtime classpath.
  */
 @ExtendWith(DropwizardExtensionsSupport.class)
 class GeneratedClientIntegrationTest {
@@ -135,5 +143,54 @@ class GeneratedClientIntegrationTest {
         assertThatThrownBy(() -> remote.makeHat(Size.newBuilder().setInches(7).build()))
                 .isInstanceOfSatisfying(TwirpException.class, ex ->
                         assertThat(ex.getErrorCode()).isEqualTo(ErrorCode.UNAVAILABLE));
+    }
+
+    @Test
+    void managedBuilderProtobufRoundTrip() throws TwirpException {
+        // The managed builder: hand it a Dropwizard-managed Client + a baseUri and
+        // it resolves the root WebTarget and content type for you. No need to know
+        // the generated constructor wants the *root* target — that footgun is gone.
+        Haberdasher remote = TwirpClientBuilder.forService(HaberdasherClient::new)
+                .using(CLIENT)
+                .baseUri("http://localhost:" + APP.getLocalPort())
+                .build();
+
+        Hat hat = remote.makeHat(Size.newBuilder().setInches(12).build());
+
+        assertThat(hat.getInches()).isEqualTo(12);
+        assertThat(hat.getStyleName()).isEqualTo("fedora");
+    }
+
+    @Test
+    void managedBuilderJsonRoundTrip() throws TwirpException {
+        // Same builder, JSON wire format selected fluently with .json().
+        Haberdasher remote = TwirpClientBuilder.forService(HaberdasherClient::new)
+                .using(CLIENT)
+                .baseUri("http://localhost:" + APP.getLocalPort())
+                .json()
+                .build();
+
+        Hat hat = remote.makeHat(Size.newBuilder().setInches(7).build());
+
+        assertThat(hat.getInches()).isEqualTo(7);
+        assertThat(hat.getStyleName()).isEqualTo("bowler");
+    }
+
+    @Test
+    void managedBuilderFromEnvironmentAndConfig() throws TwirpException {
+        // The ergonomics the builder ultimately targets: no pre-built Client at
+        // all. The builder spins up a Dropwizard-managed JerseyClient from the
+        // app's Environment + a JerseyClientConfiguration, then wires the stub —
+        // exactly HaberdasherClient.builder(environment, configuration) would do
+        // when codegen is run with clientBuilder=true.
+        Haberdasher remote = TwirpClientBuilder.forService(HaberdasherClient::new)
+                .using(APP.getEnvironment(), new JerseyClientConfiguration())
+                .baseUri("http://localhost:" + APP.getLocalPort())
+                .clientName("managed-builder-it")
+                .build();
+
+        Hat hat = remote.makeHat(Size.newBuilder().setInches(7).build());
+
+        assertThat(hat.getStyleName()).isEqualTo("bowler");
     }
 }

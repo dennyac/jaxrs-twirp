@@ -5,12 +5,6 @@ import com.google.protobuf.util.JsonFormat;
 import io.dropwizard.core.Configuration;
 import io.dropwizard.core.ConfiguredBundle;
 import io.dropwizard.core.setup.Environment;
-import io.dropwizard.twirp.codec.ProtobufJsonMessageBodyReader;
-import io.dropwizard.twirp.codec.ProtobufJsonMessageBodyWriter;
-import io.dropwizard.twirp.codec.ProtobufMessageBodyReader;
-import io.dropwizard.twirp.codec.ProtobufMessageBodyWriter;
-import io.dropwizard.twirp.errors.InvalidProtocolBufferExceptionMapper;
-import io.dropwizard.twirp.errors.TwirpExceptionMapper;
 
 import java.util.Objects;
 
@@ -74,12 +68,7 @@ public class TwirpBundle<C extends Configuration> implements ConfiguredBundle<C>
 
     @Override
     public void run(C configuration, Environment environment) {
-        environment.jersey().register(new ProtobufMessageBodyReader());
-        environment.jersey().register(new ProtobufMessageBodyWriter());
-        environment.jersey().register(new ProtobufJsonMessageBodyReader(jsonParser));
-        environment.jersey().register(new ProtobufJsonMessageBodyWriter(jsonPrinter));
-        environment.jersey().register(new TwirpExceptionMapper());
-        environment.jersey().register(new InvalidProtocolBufferExceptionMapper());
+        environment.jersey().register(new TwirpServerFeature(jsonPrinter, jsonParser));
     }
 
     /**
@@ -87,15 +76,12 @@ public class TwirpBundle<C extends Configuration> implements ConfiguredBundle<C>
      * field names, zero-value fields included, no insignificant whitespace.
      */
     public static JsonFormat.Printer defaultPrinter() {
-        return JsonFormat.printer()
-                .preservingProtoFieldNames()
-                .includingDefaultValueFields()
-                .omittingInsignificantWhitespace();
+        return TwirpJson.defaultPrinter();
     }
 
     /** The default JSON parser silently ignores unknown fields. */
     public static JsonFormat.Parser defaultParser() {
-        return JsonFormat.parser().ignoringUnknownFields();
+        return TwirpJson.defaultParser();
     }
 
     public static Builder builder() {

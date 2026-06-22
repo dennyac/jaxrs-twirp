@@ -6,6 +6,7 @@ import com.google.protobuf.DescriptorProtos.ServiceDescriptorProto;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.MethodSpec;
+import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeSpec;
 
 import javax.lang.model.element.Modifier;
@@ -30,6 +31,12 @@ import java.util.Objects;
  * <p>The default content type is {@code application/protobuf}; pass the
  * two-arg constructor with {@link io.dropwizard.twirp.TwirpMediaTypes#APPLICATION_JSON}
  * to switch to the JSON wire format.
+ *
+ * <p>When the {@code clientBuilder} option is enabled, the class also gains a
+ * static {@code builder(Environment, JerseyClientConfiguration)} factory that
+ * returns a {@link io.dropwizard.twirp.TwirpClientBuilder} wired to a managed
+ * {@code dropwizard-client}. It is off by default so the generated client stays
+ * dependency-light (the {@code WebTarget} constructors only need the JAX-RS API).
  */
 final class ClientGenerator {
 
@@ -43,6 +50,12 @@ final class ClientGenerator {
             ClassName.get("io.dropwizard.twirp", "TwirpException");
     private static final ClassName TWIRP_MEDIA_TYPES =
             ClassName.get("io.dropwizard.twirp", "TwirpMediaTypes");
+    private static final ClassName TWIRP_CLIENT_BUILDER =
+            ClassName.get("io.dropwizard.twirp", "TwirpClientBuilder");
+    private static final ClassName ENVIRONMENT =
+            ClassName.get("io.dropwizard.core.setup", "Environment");
+    private static final ClassName JERSEY_CLIENT_CONFIGURATION =
+            ClassName.get("io.dropwizard.client", "JerseyClientConfiguration");
     private static final ClassName STRING = ClassName.get(String.class);
     private static final ClassName OBJECTS = ClassName.get(Objects.class);
 
@@ -73,6 +86,32 @@ final class ClientGenerator {
                 Modifier.PRIVATE, Modifier.FINAL).build());
         cls.addField(FieldSpec.builder(STRING, "contentType",
                 Modifier.PRIVATE, Modifier.FINAL).build());
+
+        if (options.generateClientBuilder()) {
+            ClassName self = ClassName.get(serviceInterface.packageName(), clientName);
+            cls.addMethod(MethodSpec.methodBuilder("builder")
+                    .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
+                    .returns(ParameterizedTypeName.get(TWIRP_CLIENT_BUILDER, self))
+                    .addParameter(ENVIRONMENT, "environment")
+                    .addParameter(JERSEY_CLIENT_CONFIGURATION, "configuration")
+                    .addJavadoc("Start a fluent builder backed by a managed {@code dropwizard-client}.\n"
+                                    + "\n<p>Set the remote {@code baseUri} and (optionally) the wire format, then\n"
+                                    + "call {@code build()}:\n"
+                                    + "\n<pre>{@code\n"
+                                    + "$L client = $L.builder(environment, configuration)\n"
+                                    + "        .baseUri(\"https://host\")\n"
+                                    + "        .json()\n"
+                                    + "        .build();\n"
+                                    + "}</pre>\n"
+                                    + "\n<p>Requires {@code io.dropwizard:dropwizard-client} on the classpath. For a\n"
+                                    + "client you build yourself, use a constructor or {@link $T} directly.\n",
+                            clientName, clientName, TWIRP_CLIENT_BUILDER)
+                    .addStatement("return $T.forService($T::new)\n"
+                                    + "    .using(environment, configuration)\n"
+                                    + "    .clientName($S)",
+                            TWIRP_CLIENT_BUILDER, self, clientName)
+                    .build());
+        }
 
         cls.addMethod(MethodSpec.constructorBuilder()
                 .addModifiers(Modifier.PUBLIC)

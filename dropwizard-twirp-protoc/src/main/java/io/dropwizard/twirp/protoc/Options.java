@@ -20,6 +20,14 @@ import java.util.Map;
  *       {@code true}/{@code false}. Default: {@code true}. Set to {@code false}
  *       when emitting a client-only module (e.g. a shared client jar consumed
  *       by other services that doesn't need to bring a Jersey resource along).</li>
+ *   <li>{@code clientBuilder} — whether to emit a {@code <Service>Client.builder(
+ *       Environment, JerseyClientConfiguration)} convenience factory alongside the
+ *       client. Accepts {@code true}/{@code false}. Default: {@code false}. When
+ *       {@code true} the generated client gains a static managed-client builder,
+ *       which couples it to {@code dropwizard-client} at compile time. Leave it
+ *       off to keep the generated client dependency-light — callers can still use
+ *       the runtime {@link io.dropwizard.twirp.TwirpClientBuilder} directly. Has no
+ *       effect when {@code client=false}.</li>
  * </ul>
  *
  * <p>The service interface is always emitted — both the client and the resource
@@ -34,17 +42,20 @@ public final class Options {
     public static final String DEFAULT_PREFIX = "/twirp";
     public static final boolean DEFAULT_GENERATE_CLIENT = true;
     public static final boolean DEFAULT_GENERATE_SERVER = true;
+    public static final boolean DEFAULT_GENERATE_CLIENT_BUILDER = false;
 
     private final String pathPrefix;
     private final boolean generateClient;
     private final boolean generateServer;
+    private final boolean generateClientBuilder;
     private final Map<String, String> raw;
 
     private Options(String pathPrefix, boolean generateClient, boolean generateServer,
-                    Map<String, String> raw) {
+                    boolean generateClientBuilder, Map<String, String> raw) {
         this.pathPrefix = pathPrefix;
         this.generateClient = generateClient;
         this.generateServer = generateServer;
+        this.generateClientBuilder = generateClientBuilder;
         this.raw = Collections.unmodifiableMap(raw);
     }
 
@@ -58,6 +69,15 @@ public final class Options {
 
     public boolean generateServer() {
         return generateServer;
+    }
+
+    /**
+     * Whether to emit the {@code <Service>Client.builder(Environment,
+     * JerseyClientConfiguration)} managed-client factory. Only meaningful when
+     * {@link #generateClient()} is {@code true}.
+     */
+    public boolean generateClientBuilder() {
+        return generateClientBuilder;
     }
 
     public Map<String, String> raw() {
@@ -86,7 +106,8 @@ public final class Options {
         String prefix = raw.getOrDefault("prefix", DEFAULT_PREFIX);
         boolean client = parseBoolean(raw.get("client"), DEFAULT_GENERATE_CLIENT);
         boolean server = parseBoolean(raw.get("server"), DEFAULT_GENERATE_SERVER);
-        return new Options(normalizePrefix(prefix), client, server, raw);
+        boolean clientBuilder = parseBoolean(raw.get("clientBuilder"), DEFAULT_GENERATE_CLIENT_BUILDER);
+        return new Options(normalizePrefix(prefix), client, server, clientBuilder, raw);
     }
 
     static String normalizePrefix(String prefix) {

@@ -2,7 +2,7 @@
 
 Serve [Twirp](https://github.com/twitchtv/twirp) RPC endpoints from a
 [Dropwizard 5](https://www.dropwizard.io/) application using its existing
-Jetty/Jersey stack — no separate gRPC server, no HTTP/2, no extra port.
+Jetty/Jersey stack — no separate server, no HTTP/2, no extra port.
 
 ```text
 client                                 dropwizard
@@ -18,7 +18,7 @@ client                                 dropwizard
 ## What is Twirp?
 
 [Twirp](https://github.com/twitchtv/twirp) is a small RPC framework from
-Twitch. You describe your service in a `.proto` file just like gRPC, and a
+Twitch. You describe your service in a `.proto` file, and a
 codegen tool produces the client and server stubs. The wire format, however,
 is deliberately boring:
 
@@ -37,41 +37,40 @@ regular body, it slots cleanly into any HTTP stack — including Dropwizard's
 Jetty+Jersey one. You can hit a Twirp endpoint with `curl`, browse it with a
 JSON proxy, or wrap it in a CDN, and it just works.
 
-Comparison cheat sheet:
+If you're coming from **REST + Jackson**, Twirp keeps the same HTTP/1.1
+request/response shape but adds codegen and a strict `.proto` schema — so you
+stop hand-writing JSON DTOs and URL routing, and callers get a typed client stub
+for free.
 
-| You're used to … | Twirp gives you …                                                       |
-| ---------------- | ----------------------------------------------------------------------- |
-| REST + Jackson   | The same wire shape, but with codegen and a strict schema (no JSON-by-hand). |
-| gRPC             | Schema-first RPC over plain HTTP/1.1 — no HTTP/2, no separate server, no streaming. |
-
-If you need streaming or bidirectional RPC, Twirp isn't for you (use gRPC). If
+If you need streaming or bidirectional RPC, Twirp isn't for you. If
 you want strongly-typed RPC that still feels like an HTTP endpoint, it's
 hard to beat.
 
-## Why not gRPC?
+## How it fits Dropwizard
 
-gRPC on the JVM runs its own HTTP/2 server (Netty by default). Inside a
-Dropwizard app that means spinning up a **second** server next to Jetty, with a
-separate port, separate metrics/healthcheck/admin story, separate filters, and
-a duplicate of every cross-cutting concern.
+Twirp ships requests over plain HTTP/1.1 POST with `application/protobuf` or
+`application/json` bodies. That maps cleanly onto JAX-RS `@POST` resources with
+custom `MessageBodyReader` / `MessageBodyWriter` providers — so your RPC
+services ride on top of the same Jetty connector, with the same logging,
+metrics, admin endpoints, and filters as your REST endpoints.
 
-Twirp ditches the HTTP/2 framing and ships requests over plain HTTP/1.1 POST
-with `application/protobuf` or `application/json` bodies. That maps cleanly
-onto JAX-RS `@POST` resources with custom `MessageBodyReader` /
-`MessageBodyWriter` providers — so you get RPC services that ride on top of the
-same Jetty connector, with the same logging, the same metrics, the same admin
-endpoints, and the same filters as your REST endpoints.
-
-You lose: streaming RPCs (Twirp doesn't support them) and HTTP/2 multiplexing.
-You gain: one server, one port, one operational surface.
+You lose streaming RPCs (Twirp has none by design). You gain one server, one
+port, and one operational surface.
 
 ## Modules
 
 | Module                       | What it does                                                                                                                |
 | ---------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
-| `dropwizard-twirp`           | Runtime library: `TwirpBundle`, protobuf + JSON body providers, exception mappers, `TwirpException`, `ErrorCode`, `TwirpClients`. |
-| `dropwizard-twirp-protoc`    | Standalone `protoc` plugin (shaded fat-jar) that emits a Java service interface, a JAX-RS resource, and a portable JAX-RS client per service. |
+| `dropwizard-twirp-core`      | Framework-agnostic JAX-RS runtime: protobuf + JSON body providers, exception mappers, `TwirpServerFeature` (one-call server registration), `TwirpException`, `ErrorCode`, `TwirpClients`, `TwirpJson`. Depends only on the JAX-RS API (plus protobuf, Jackson, SLF4J) — **no Dropwizard**. |
+| `dropwizard-twirp`           | Dropwizard veneer over the core: `TwirpBundle` (registers the providers on Jersey) and the managed `TwirpClientBuilder`. This is the dependency a Dropwizard app adds; it pulls in the core transitively. |
+| `dropwizard-twirp-protoc`    | Standalone `protoc` plugin (shaded fat-jar) that emits a Java service interface, a JAX-RS resource, and a portable JAX-RS client per service. The generated code depends only on the core. |
 | `dropwizard-twirp-example`   | End-to-end example: a Dropwizard app exposing the canonical Haberdasher Twirp service over both wire formats. See [its README](dropwizard-twirp-example/README.md) for runnable server + client demos. |
+
+The runtime is split so the protocol/codec layer stays a plain JAX-RS library:
+generated server and client code, the codecs, and the error model all live in
+`dropwizard-twirp-core` and would run on any JAX-RS 3.1 container. `dropwizard-twirp`
+adds only the Dropwizard-specific glue. Apps depend on `dropwizard-twirp` and get
+the core transitively — there's nothing extra to wire up.
 
 ## Quickstart
 
@@ -264,6 +263,34 @@ bootstrap.addBundle(TwirpBundle.builder()
 See [Supported proto features & limitations](#supported-proto-features--limitations)
 for the full matrix of what the codegen and runtime handle.
 
+### Serving Twirp without Dropwizard (plain JAX-RS)
+
+`TwirpBundle` is a thin Dropwizard convenience — it just installs a
+`TwirpServerFeature` on the Jersey environment. That feature lives in
+`dropwizard-twirp-core` and carries no Dropwizard dependency, so any JAX-RS 3.1
+application (Jersey, RESTEasy, …) can serve the same generated resources by
+depending on the core directly and registering the feature itself:
+
+```java
+// dependency: io.dropwizard.modules:dropwizard-twirp-core
+ResourceConfig config = new ResourceConfig();
+config.register(new TwirpServerFeature());                 // codecs + error mappers
+config.register(new HaberdasherResource(new MyHaberdasher()));
+```
+
+`TwirpServerFeature` registers the four protobuf/JSON body providers plus the two
+exception mappers — the exact set `TwirpBundle` installs. Pass a custom
+`JsonFormat.Printer` / `Parser` to its two-arg constructor for the same
+field-presence or `TypeRegistry` customization the bundle's builder offers.
+
+The generated resource and the default generated client depend only on the core
+(`jakarta.ws.rs.*` plus the Twirp runtime helpers), so the protobuf wire format,
+the JSON wire format, and the error model all work with no Dropwizard on the
+classpath. The only opt-in that reaches back into the Dropwizard veneer is the
+`clientBuilder` codegen flag (the managed `TwirpClientBuilder`); leave it off and
+the generated client stays pure JAX-RS too — see
+[Calling a Twirp service from Java](#calling-a-twirp-service-from-java).
+
 ### `TwirpException`
 
 Throw this from your service implementation to produce a structured Twirp
@@ -344,6 +371,49 @@ generated stub itself doesn't depend on Dropwizard. If you ever want to call
 the same service from a non-Dropwizard app, drop the generated jar in and
 hand it a vanilla `ClientBuilder.newClient()`.
 
+### The managed client builder (optional)
+
+The raw constructor wants the **root** `WebTarget` (the bare remote origin) — it
+appends the Twirp path itself. That's easy to get subtly wrong (passing an
+already-pathed target double-prefixes the URL). The runtime ships a fluent
+`TwirpClientBuilder` that removes the footgun: hand it a managed `Client` (or an
+`Environment` + `JerseyClientConfiguration`) plus a `baseUri`, and it resolves
+the root target and content type for you.
+
+```java
+// From a Client you already built (e.g. shared across stubs):
+Haberdasher remote = TwirpClientBuilder.forService(HaberdasherClient::new)
+        .using(client)
+        .baseUri("https://hats.example.com")
+        .json()                 // or .protobuf() (default)
+        .build();
+
+// Or let the builder create a managed JerseyClient from Dropwizard config:
+Haberdasher remote = TwirpClientBuilder.forService(HaberdasherClient::new)
+        .using(environment, new JerseyClientConfiguration())
+        .baseUri("https://hats.example.com")
+        .build();
+```
+
+`TwirpClientBuilder` lives in the `dropwizard-twirp` runtime and is always
+available. The `using(environment, configuration)` overload needs
+`io.dropwizard:dropwizard-client`, which the runtime declares as an **optional**
+dependency — server-only apps never pull it onto their classpath, and you only
+add it yourself when you actually build clients this way.
+
+If you'd rather call `HaberdasherClient.builder(environment, configuration)`
+directly — the sugar form — run codegen with `clientBuilder=true` and the
+generator emits that static factory on the client (it just delegates to
+`TwirpClientBuilder`). It's **off by default** because it bakes a compile-time
+reference to `dropwizard-client` into the generated client; leaving it off keeps
+the generated stub dependency-light (JAX-RS API only). Either way the raw
+`WebTarget` constructors stay as the escape hatch.
+
+```xml
+<!-- in the protoc-gen-twirp_java plugin invocation -->
+<pluginParameter>clientBuilder=true</pluginParameter>
+```
+
 ## Code generation without Maven (raw `protoc` plugin)
 
 The `dropwizard-twirp-protoc` shaded jar is a self-contained `protoc` plugin,
@@ -374,6 +444,7 @@ Plugin options are passed as `--twirp_java_out=<key>=<value>,<key>=<value>:OUT`:
 | `prefix` | `/twirp` | URL path prefix prepended to every `@Path` annotation.                                       |
 | `client` | `true`   | Emit a JAX-RS `<Service>Client`. Set to `false` for server-only deploys.                     |
 | `server` | `true`   | Emit a JAX-RS `<Service>Resource`. Set to `false` for client-only modules (shared client jar consumed by other apps). |
+| `clientBuilder` | `false` | Also emit a static `<Service>Client.builder(Environment, JerseyClientConfiguration)` factory. Couples the generated client to `dropwizard-client`; off by default. The runtime `TwirpClientBuilder` gives the same ergonomics without the coupling. |
 
 Setting both `client=false` and `server=false` is rejected — the only thing
 that would be emitted is the service interface, which is rarely what you want
@@ -430,12 +501,11 @@ trade-off is ecosystem — you get this turnkey for Dropwizard, not Spring.
 If you're a Spring shop with no Dropwizard, this repo won't drop straight in: the
 generated resource is `jakarta.ws.rs` (JAX-RS), which runs on Jersey or RESTEasy
 but **not** Spring MVC. A Spring team that doesn't specifically need Twirp's
-HTTP/1.1-only simplicity is usually better served by gRPC +
-[grpc-spring][grpc-spring]. The case for Twirp anywhere is the same as the case
-for this module: plain HTTP/1.1, no second server, both wire formats on one URL.
+HTTP/1.1-only simplicity won't get much from this module. The case for Twirp
+anywhere is the same as the case for this module: plain HTTP/1.1, no second
+server, both wire formats on one URL.
 
 [ngyewch]: https://github.com/ngyewch/protoc-gen-twirp-java
-[grpc-spring]: https://github.com/grpc-ecosystem/grpc-spring
 
 ## Supported proto features & limitations
 
@@ -460,7 +530,7 @@ and a `map<string, int32>`, asserted over both protobuf and JSON wire formats.
 | Proto3 `optional` (field presence) | ✅ | Plugin advertises `FEATURE_PROTO3_OPTIONAL`. |
 | `google.protobuf.Empty` and other well-known types as request/response | ✅ | Resolved through the same transitive-descriptor mechanism. |
 | `Timestamp`, `Duration`, `Struct`, `Value`, `FieldMask`, wrappers in JSON | ✅ | `JsonFormat` renders these natively, no registry needed. |
-| Configurable URL prefix | ✅ | `pathPrefix` generator option (defaults to `/twirp`, per Twirp v7). |
+| Configurable URL prefix | ✅ | `prefix` generator option (defaults to `/twirp`, per Twirp v7). |
 | JSON snake_case names / unknown-field tolerance / default-value emission | ✅ | Go-reference-compatible defaults; override via the `TwirpBundle` builder. |
 | RPC names that lowercase to a Java keyword (`Return`, `Import`, …) | ✅ | The generated Java method is suffixed with `_` (e.g. `return_`); the URL path keeps the original proto name, so wire compatibility is unaffected. |
 
@@ -474,7 +544,7 @@ and a `map<string, int32>`, asserted over both protobuf and JSON wire formats.
 
 | Feature / edge case | Status | Notes |
 |---|---|---|
-| Streaming RPCs | ❌ by design | Twirp itself has no streaming — it's a non-goal of the protocol. The generator rejects streaming methods at codegen time with a clear error rather than emitting something that can't work over unary HTTP. Use gRPC if you need streaming. |
+| Streaming RPCs | ❌ by design | Twirp itself has no streaming — it's a non-goal of the protocol. The generator rejects streaming methods at codegen time with a clear error rather than emitting something that can't work over unary HTTP. |
 | Protobuf **editions** (`edition = "2023"`) | ❌ not yet | The plugin does not yet declare `FEATURE_SUPPORTS_EDITIONS`, so protoc 25+ refuses to run it on editions files. Stay on `syntax = "proto3"` for now. (Editions appear to need no Twirp-specific codegen changes, so this is a declaration/testing gap, not a design limit.) |
 | `[json_name = "..."]` field option | ⚠️ intentionally ignored | With `preservingProtoFieldNames()` the raw proto field name wins, matching Go Twirp's `UseProtoNames: true`. If you need `json_name` honored, supply a custom `jsonPrinter`/`jsonParser` without name preservation — at the cost of diverging from the Go server. |
 | proto2 `required` field missing on decode | ⚠️ maps to `internal` | A missing `required` field throws after decode and surfaces as a Twirp `internal` (HTTP 500) rather than `malformed` (400). proto3 has no `required`, so this only affects proto2 schemas. |
@@ -488,7 +558,7 @@ JVM Twirp generators (`fajran/protoc-gen-twirp_java_jaxrs`,
 ## Status
 
 This is **0.1.0-SNAPSHOT**. The runtime, codegen, and generated client are all
-tested end-to-end (91 tests across the reactor) but the API is not yet frozen.
+tested end-to-end (105 tests across the reactor) but the API is not yet frozen.
 
 Roadmap ideas (not yet implemented):
 
@@ -512,3 +582,9 @@ $ mvn clean install
 Requires JDK 17+ and Maven 3.9+. The xolstice plugin pulls protoc and the
 relevant libprotoc native binary from Maven Central, so you don't need a
 system protoc.
+
+## License
+
+Licensed under the [Apache License 2.0](LICENSE); see [`NOTICE`](NOTICE) for
+attribution. This is an independent implementation and is not affiliated with or
+endorsed by Twitch.

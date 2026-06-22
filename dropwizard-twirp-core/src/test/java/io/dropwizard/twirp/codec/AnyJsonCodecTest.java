@@ -4,7 +4,7 @@ import com.google.protobuf.Any;
 import com.google.protobuf.Message;
 import com.google.protobuf.TypeRegistry;
 import com.google.protobuf.util.JsonFormat;
-import io.dropwizard.twirp.TwirpBundle;
+import io.dropwizard.twirp.TwirpJson;
 import io.dropwizard.twirp.TwirpMediaTypes;
 import io.dropwizard.twirp.testproto.Parcel;
 import io.dropwizard.twirp.testproto.TestMessage;
@@ -27,7 +27,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
  * {@code Any} field when they have been given a {@link TypeRegistry} that knows
  * the packed message type. Without one, JSON serialization fails; binary
  * protobuf is unaffected. These tests both document that limitation and prove
- * that {@link TwirpBundle.Builder#typeRegistry} (and, equivalently, supplying a
+ * that {@code TwirpBundle.Builder.typeRegistry} (and, equivalently, supplying a
  * registry-equipped printer/parser to the body providers) resolves it.
  */
 class AnyJsonCodecTest {
@@ -73,8 +73,8 @@ class AnyJsonCodecTest {
 
     @Test
     void anyFieldRoundTripsAsJsonWithARegistry() throws Exception {
-        JsonFormat.Printer printer = TwirpBundle.defaultPrinter().usingTypeRegistry(REGISTRY);
-        JsonFormat.Parser parser = TwirpBundle.defaultParser().usingTypeRegistry(REGISTRY);
+        JsonFormat.Printer printer = TwirpJson.defaultPrinter().usingTypeRegistry(REGISTRY);
+        JsonFormat.Parser parser = TwirpJson.defaultParser().usingTypeRegistry(REGISTRY);
 
         ProtobufJsonMessageBodyWriter writer = new ProtobufJsonMessageBodyWriter(printer);
         ByteArrayOutputStream out = new ByteArrayOutputStream();

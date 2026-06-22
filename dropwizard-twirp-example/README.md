@@ -75,6 +75,22 @@ app, [`dropwizard-client`][dw-client]'s `JerseyClientBuilder` gives you
 metrics, Apache HttpClient, and `JerseyClientConfiguration` for timeouts —
 [`GeneratedClientIntegrationTest`][gen-client-test] shows exactly that wiring.
 
+For a less footgun-prone construction, the runtime `TwirpClientBuilder` folds
+root-`WebTarget` resolution and wire-format selection into one fluent call (also
+demonstrated in that test):
+
+```java
+Haberdasher hats = TwirpClientBuilder.forService(HaberdasherClient::new)
+        .using(environment, new JerseyClientConfiguration())
+        .baseUri("https://hats.example.com")
+        .json()              // or .protobuf() (default)
+        .build();
+```
+
+See the top-level README's "managed client builder" section for the optional
+`clientBuilder=true` codegen flag that emits `HaberdasherClient.builder(...)`
+sugar directly on the client.
+
 ### Asymmetric setups: client-only or server-only
 
 Sometimes you want to split client and server across modules — the canonical
@@ -258,7 +274,7 @@ Two suites:
 | Suite                                | What it covers                                                                                                          |
 | ------------------------------------ | ----------------------------------------------------------------------------------------------------------------------- |
 | `ExampleApplicationIntegrationTest`  | Raw HTTP roundtrips — protobuf and JSON, success and error envelopes, both formats interleaved on one resource.         |
-| `GeneratedClientIntegrationTest`     | The generated `HaberdasherClient` against the live server, including JSON-mode construction and error-envelope decoding. **Read this for the canonical client-side wiring pattern** (`dropwizard-client`'s `JerseyClientBuilder` + the generated stub). |
+| `GeneratedClientIntegrationTest`     | The generated `HaberdasherClient` against the live server, including JSON-mode construction, the runtime `TwirpClientBuilder` (managed builder), and error-envelope decoding. **Read this for the canonical client-side wiring pattern** (`dropwizard-client`'s `JerseyClientBuilder` + the generated stub). |
 
 [Haberdasher]: https://github.com/twitchtv/twirp/blob/main/example/service.proto
 [protobuf-maven-plugin]: https://www.xolstice.org/protobuf-maven-plugin/

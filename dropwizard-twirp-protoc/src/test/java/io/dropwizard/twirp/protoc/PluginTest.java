@@ -85,6 +85,36 @@ class PluginTest {
                 .contains("target.path(\"/MakeHat\").request(contentType).accept(contentType),")
                 .contains("Entity.entity(request, contentType),")
                 .contains("Hat.class);");
+
+        // The managed-client builder is opt-in (clientBuilder option); it must
+        // NOT appear by default so the generated client stays dependency-light.
+        assertThat(client)
+                .doesNotContain("TwirpClientBuilder")
+                .doesNotContain("builder(Environment");
+    }
+
+    @Test
+    void clientBuilderFactoryEmittedWhenEnabled() {
+        CodeGeneratorRequest req = CodeGeneratorRequest.newBuilder()
+                .setParameter("clientBuilder=true")
+                .addFileToGenerate("haberdasher.proto")
+                .addProtoFile(haberdasherFile(true))
+                .build();
+
+        String client = new Plugin().generate(req).getFileList().stream()
+                .filter(f -> f.getName().endsWith("HaberdasherClient.java"))
+                .findFirst().orElseThrow().getContent();
+
+        assertThat(client)
+                .contains("import io.dropwizard.twirp.TwirpClientBuilder;")
+                .contains("import io.dropwizard.core.setup.Environment;")
+                .contains("import io.dropwizard.client.JerseyClientConfiguration;")
+                .contains("public static TwirpClientBuilder<HaberdasherClient> builder(")
+                .contains("Environment environment")
+                .contains("JerseyClientConfiguration configuration")
+                .contains("return TwirpClientBuilder.forService(HaberdasherClient::new)")
+                .contains(".using(environment, configuration)")
+                .contains(".clientName(\"HaberdasherClient\");");
     }
 
     @Test

@@ -27,6 +27,7 @@
     </licenses>
 
     <modules>
+        <module>dropwizard-twirp-core</module>
         <module>dropwizard-twirp</module>
         <module>dropwizard-twirp-protoc</module>
         <module>dropwizard-twirp-example</module>
@@ -90,6 +91,11 @@
             </dependency>
 
             <!-- Project modules. -->
+            <dependency>
+                <groupId>io.dropwizard.modules</groupId>
+                <artifactId>dropwizard-twirp-core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
             <dependency>
                 <groupId>io.dropwizard.modules</groupId>
                 <artifactId>dropwizard-twirp</artifactId>

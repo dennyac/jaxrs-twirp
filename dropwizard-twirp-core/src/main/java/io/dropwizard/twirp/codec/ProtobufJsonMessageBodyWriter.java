@@ -2,6 +2,7 @@ package io.dropwizard.twirp.codec;
 
 import com.google.protobuf.Message;
 import com.google.protobuf.util.JsonFormat;
+import io.dropwizard.twirp.TwirpJson;
 import io.dropwizard.twirp.TwirpMediaTypes;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.WebApplicationException;
@@ -39,10 +40,7 @@ public class ProtobufJsonMessageBodyWriter implements MessageBodyWriter<Message>
     private final JsonFormat.Printer printer;
 
     public ProtobufJsonMessageBodyWriter() {
-        this(JsonFormat.printer()
-                .preservingProtoFieldNames()
-                .includingDefaultValueFields()
-                .omittingInsignificantWhitespace());
+        this(TwirpJson.defaultPrinter());
     }
 
     public ProtobufJsonMessageBodyWriter(JsonFormat.Printer printer) {

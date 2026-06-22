@@ -114,4 +114,19 @@ class OptionsTest {
         assertThat(clientOnly.generateClient()).isTrue();
         assertThat(clientOnly.generateServer()).isFalse();
     }
+
+    @Test
+    void clientBuilderDefaultsToFalse() {
+        // Off by default so the generated client stays dependency-light (no
+        // compile-time coupling to dropwizard-client unless explicitly opted in).
+        assertThat(Options.parse(null).generateClientBuilder()).isFalse();
+        assertThat(Options.parse("client=true").generateClientBuilder()).isFalse();
+    }
+
+    @Test
+    void clientBuilderCanBeEnabled() {
+        assertThat(Options.parse("clientBuilder=true").generateClientBuilder()).isTrue();
+        assertThat(Options.parse("clientBuilder=yes").generateClientBuilder()).isTrue();
+        assertThat(Options.parse("clientBuilder=1").generateClientBuilder()).isTrue();
+    }
 }

@@ -2,6 +2,7 @@ package io.dropwizard.twirp.codec;
 
 import com.google.protobuf.Message;
 import com.google.protobuf.util.JsonFormat;
+import io.dropwizard.twirp.TwirpJson;
 import io.dropwizard.twirp.TwirpMediaTypes;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.WebApplicationException;
@@ -31,7 +32,7 @@ public class ProtobufJsonMessageBodyReader implements MessageBodyReader<Message>
     private final JsonFormat.Parser parser;
 
     public ProtobufJsonMessageBodyReader() {
-        this(JsonFormat.parser().ignoringUnknownFields());
+        this(TwirpJson.defaultParser());
     }
 
     public ProtobufJsonMessageBodyReader(JsonFormat.Parser parser) {

@@ -18,8 +18,8 @@ import java.util.Collections;
 import java.util.Objects;
 
 /**
- * Client-side companion to {@link TwirpBundle}. Provides helpers for
- * generated Jersey clients to talk Twirp:
+ * Client-side companion to the server-side {@code TwirpBundle}. Provides helpers
+ * for generated Jersey clients to talk Twirp:
  *
  * <ul>
  *   <li>{@link #registerProviders(Configurable)} attaches the
@@ -65,7 +65,7 @@ public final class TwirpClients {
      * with the same target is safe but redundant.
      */
     public static void registerProviders(Configurable<?> target) {
-        registerProviders(target, TwirpBundle.defaultPrinter(), TwirpBundle.defaultParser());
+        registerProviders(target, TwirpJson.defaultPrinter(), TwirpJson.defaultParser());
     }
 
     /**

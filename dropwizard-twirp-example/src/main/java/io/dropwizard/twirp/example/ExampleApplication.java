@@ -31,7 +31,7 @@ import io.dropwizard.twirp.example.haberdasher.HaberdasherResource;
  *             {@link #run}, passing it an implementation of the generated
  *             service interface.</li>
  *       </ol>
- *       That's the whole story — no separate server like with gRPC.</li>
+ *       That's the whole story — no separate server.</li>
  * </ul>
  */
 public class ExampleApplication extends Application<ExampleConfiguration> {
