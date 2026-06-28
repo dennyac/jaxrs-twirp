@@ -18,7 +18,7 @@ import io.dropwizard.twirp.example.haberdasher.HaberdasherResource;
  *       Twirp service interface, JAX-RS resource, and JAX-RS client into
  *       {@code target/generated-sources/protobuf/java/}. See
  *       {@code README.md} for the configuration and for how non-Maven
- *       users can drive {@code dropwizard-twirp-protoc} as a raw protoc
+ *       users can drive {@code twirp-protoc} as a raw protoc
  *       plugin instead.</li>
  *
  *   <li>The <b>runtime wiring</b> for a Twirp service in a Dropwizard app

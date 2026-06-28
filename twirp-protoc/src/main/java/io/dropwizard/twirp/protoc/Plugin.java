@@ -33,7 +33,7 @@ public final class Plugin {
             // is rarely useful and is better served by plain `protoc` with no
             // Twirp plugin at all.
             return CodeGeneratorResponse.newBuilder()
-                    .setError("dropwizard-twirp-protoc: client=false and server=false "
+                    .setError("twirp-protoc: client=false and server=false "
                             + "cannot both be set; nothing useful would be generated.")
                     .build();
         }

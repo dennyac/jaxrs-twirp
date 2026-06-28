@@ -21,7 +21,7 @@ public final class Main {
         } catch (Exception e) {
             // Report errors through the protoc response rather than crashing so
             // protoc surfaces a clean error message to the user.
-            StringBuilder sb = new StringBuilder("dropwizard-twirp-protoc failed: ")
+            StringBuilder sb = new StringBuilder("twirp-protoc failed: ")
                     .append(e.getClass().getSimpleName())
                     .append(": ")
                     .append(e.getMessage());
