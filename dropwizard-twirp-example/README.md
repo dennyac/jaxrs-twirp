@@ -27,7 +27,7 @@ from it.
 
 ## Code generation
 
-The example's [`pom.xml`](pom.xml) wires `dropwizard-twirp-protoc` into
+The example's [`pom.xml`](pom.xml) wires `twirp-protoc` into
 [`protobuf-maven-plugin`][protobuf-maven-plugin] as a `<protocPlugin>`. Every
 `mvn compile` (re)generates protobuf message classes **and** Twirp stubs into
 `target/generated-sources/protobuf/java/`:
@@ -45,7 +45,7 @@ The example's [`pom.xml`](pom.xml) wires `dropwizard-twirp-protoc` into
           <protocPlugin>
             <id>twirp_java</id>
             <groupId>io.dropwizard.modules</groupId>
-            <artifactId>dropwizard-twirp-protoc</artifactId>
+            <artifactId>twirp-protoc</artifactId>
             <version>${project.version}</version>
             <mainClass>io.dropwizard.twirp.protoc.Main</mainClass>
           </protocPlugin>
@@ -126,7 +126,7 @@ expressed as "I want protoc-built java messages, not Twirp".)
 
 ### Not using Maven?
 
-`dropwizard-twirp-protoc` is a regular `protoc` plugin — the Maven wiring is
+`twirp-protoc` is a regular `protoc` plugin — the Maven wiring is
 a convenience. Gradle, Bazel, or a `protoc` shell invocation drive the same
 shaded jar via a one-line shim; see the parent README's
 [code-generation-without-Maven section][raw-protoc] for the recipe and full

@@ -15,7 +15,7 @@
     <name>Dropwizard Twirp Runtime</name>
     <description>
         Dropwizard integration for Twirp: the TwirpBundle that wires the
-        framework-agnostic dropwizard-twirp-core providers into Dropwizard's
+        framework-agnostic jaxrs-twirp-core providers into Dropwizard's
         Jersey runtime, plus the managed TwirpClientBuilder. Install this module
         in a Dropwizard application to serve and call Twirp services (v7).
     </description>
@@ -28,7 +28,7 @@
         <!-- The framework-agnostic JAX-RS runtime this module adapts to Dropwizard. -->
         <dependency>
             <groupId>io.dropwizard.modules</groupId>
-            <artifactId>dropwizard-twirp-core</artifactId>
+            <artifactId>jaxrs-twirp-core</artifactId>
         </dependency>
         <dependency>
             <groupId>io.dropwizard</groupId>

@@ -11,12 +11,12 @@
         <version>0.1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>dropwizard-twirp-protoc</artifactId>
-    <name>Dropwizard Twirp protoc plugin</name>
+    <artifactId>twirp-protoc</artifactId>
+    <name>Twirp protoc plugin</name>
     <description>
         Standalone protoc plugin that emits idiomatic JAX-RS resource classes
         plus service interfaces for the Twirp v7 protocol, ready to be served
-        by dropwizard-twirp.
+        by any JAX-RS 3.1 app (Dropwizard, plain Jersey, RESTEasy).
     </description>
 
     <properties>

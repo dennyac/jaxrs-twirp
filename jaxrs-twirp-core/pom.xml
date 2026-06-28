@@ -11,8 +11,8 @@
         <version>0.1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>dropwizard-twirp-core</artifactId>
-    <name>Dropwizard Twirp Core</name>
+    <artifactId>jaxrs-twirp-core</artifactId>
+    <name>JAX-RS Twirp Core</name>
     <description>
         Framework-agnostic JAX-RS runtime for the Twirp RPC protocol (v7):
         protobuf/JSON MessageBody providers, the Twirp error model and exception

@@ -27,9 +27,9 @@
     </licenses>
 
     <modules>
-        <module>dropwizard-twirp-core</module>
+        <module>jaxrs-twirp-core</module>
         <module>dropwizard-twirp</module>
-        <module>dropwizard-twirp-protoc</module>
+        <module>twirp-protoc</module>
         <module>dropwizard-twirp-example</module>
     </modules>
 
@@ -93,7 +93,7 @@
             <!-- Project modules. -->
             <dependency>
                 <groupId>io.dropwizard.modules</groupId>
-                <artifactId>dropwizard-twirp-core</artifactId>
+                <artifactId>jaxrs-twirp-core</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -103,7 +103,7 @@
             </dependency>
             <dependency>
                 <groupId>io.dropwizard.modules</groupId>
-                <artifactId>dropwizard-twirp-protoc</artifactId>
+                <artifactId>twirp-protoc</artifactId>
                 <version>${project.version}</version>
             </dependency>
         </dependencies>

@@ -61,14 +61,14 @@ port, and one operational surface.
 
 | Module                       | What it does                                                                                                                |
 | ---------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
-| `dropwizard-twirp-core`      | Framework-agnostic JAX-RS runtime: protobuf + JSON body providers, exception mappers, `TwirpServerFeature` (one-call server registration), `TwirpException`, `ErrorCode`, `TwirpClients`, `TwirpJson`. Depends only on the JAX-RS API (plus protobuf, Jackson, SLF4J) — **no Dropwizard**. |
+| `jaxrs-twirp-core`           | Framework-agnostic JAX-RS runtime: protobuf + JSON body providers, exception mappers, `TwirpServerFeature` (one-call server registration), `TwirpException`, `ErrorCode`, `TwirpClients`, `TwirpJson`. Depends only on the JAX-RS API (plus protobuf, Jackson, SLF4J) — **no Dropwizard**. |
 | `dropwizard-twirp`           | Dropwizard veneer over the core: `TwirpBundle` (registers the providers on Jersey) and the managed `TwirpClientBuilder`. This is the dependency a Dropwizard app adds; it pulls in the core transitively. |
-| `dropwizard-twirp-protoc`    | Standalone `protoc` plugin (shaded fat-jar) that emits a Java service interface, a JAX-RS resource, and a portable JAX-RS client per service. The generated code depends only on the core. |
+| `twirp-protoc`               | Standalone `protoc` plugin (shaded fat-jar) that emits a Java service interface, a JAX-RS resource, and a portable JAX-RS client per service. The generated code depends only on the core. |
 | `dropwizard-twirp-example`   | End-to-end example: a Dropwizard app exposing the canonical Haberdasher Twirp service over both wire formats. See [its README](dropwizard-twirp-example/README.md) for runnable server + client demos. |
 
 The runtime is split so the protocol/codec layer stays a plain JAX-RS library:
 generated server and client code, the codecs, and the error model all live in
-`dropwizard-twirp-core` and would run on any JAX-RS 3.1 container. `dropwizard-twirp`
+`jaxrs-twirp-core` and would run on any JAX-RS 3.1 container. `dropwizard-twirp`
 adds only the Dropwizard-specific glue. Apps depend on `dropwizard-twirp` and get
 the core transitively — there's nothing extra to wire up.
 
@@ -140,7 +140,7 @@ and tell it about our plugin:
                             <protocPlugin>
                                 <id>twirp_java</id>
                                 <groupId>io.dropwizard.modules</groupId>
-                                <artifactId>dropwizard-twirp-protoc</artifactId>
+                                <artifactId>twirp-protoc</artifactId>
                                 <version>0.1.0-SNAPSHOT</version>
                                 <mainClass>io.dropwizard.twirp.protoc.Main</mainClass>
                             </protocPlugin>
@@ -267,12 +267,12 @@ for the full matrix of what the codegen and runtime handle.
 
 `TwirpBundle` is a thin Dropwizard convenience — it just installs a
 `TwirpServerFeature` on the Jersey environment. That feature lives in
-`dropwizard-twirp-core` and carries no Dropwizard dependency, so any JAX-RS 3.1
+`jaxrs-twirp-core` and carries no Dropwizard dependency, so any JAX-RS 3.1
 application (Jersey, RESTEasy, …) can serve the same generated resources by
 depending on the core directly and registering the feature itself:
 
 ```java
-// dependency: io.dropwizard.modules:dropwizard-twirp-core
+// dependency: io.dropwizard.modules:jaxrs-twirp-core
 ResourceConfig config = new ResourceConfig();
 config.register(new TwirpServerFeature());                 // codecs + error mappers
 config.register(new HaberdasherResource(new MyHaberdasher()));
@@ -329,7 +329,7 @@ without protobuf descriptors.
 
 ## Calling a Twirp service from Java
 
-`dropwizard-twirp-protoc` also emits a `<Service>Client` per service, e.g.
+`twirp-protoc` also emits a `<Service>Client` per service, e.g.
 `HaberdasherClient`, that implements the same service interface. Give it a
 Jersey `WebTarget` rooted at the remote app:
 
@@ -417,7 +417,7 @@ the generated stub dependency-light (JAX-RS API only). Either way the raw
 
 ## Code generation without Maven (raw `protoc` plugin)
 
-The `dropwizard-twirp-protoc` shaded jar is a self-contained `protoc` plugin,
+The `twirp-protoc` shaded jar is a self-contained `protoc` plugin,
 so any build system that can invoke `protoc` (Gradle, Bazel, Make, plain
 shell) can drive it. There's nothing Dropwizard-specific about generation
 itself — `protoc` just needs to find an executable named
@@ -427,7 +427,7 @@ jar:
 ```bash
 $ cat > protoc-gen-twirp_java <<'EOF'
 #!/usr/bin/env sh
-exec java -jar /opt/dropwizard-twirp-protoc-0.1.0-SNAPSHOT.jar
+exec java -jar /opt/twirp-protoc-0.1.0-SNAPSHOT.jar
 EOF
 $ chmod +x protoc-gen-twirp_java
 $ PATH=$PWD:$PATH protoc \
