@@ -300,6 +300,48 @@ class ExampleApplicationIntegrationTest {
                 .containsEntry("brown", 1);
     }
 
+    @Test
+    void unknownUrlReturnsBadRoute() throws Exception {
+        HttpResponse<String> response = http.send(
+                HttpRequest.newBuilder(uri("/twirp/twitch.twirp.example.haberdasher.Haberdasher/Nope"))
+                        .header("Content-Type", "application/json")
+                        .POST(BodyPublishers.ofString("{\"inches\":7}", StandardCharsets.UTF_8))
+                        .build(),
+                BodyHandlers.ofString(StandardCharsets.UTF_8));
+
+        assertThat(response.statusCode()).isEqualTo(404);
+        JsonNode node = mapper.readTree(response.body());
+        assertThat(node.get("code").asText()).isEqualTo("bad_route");
+    }
+
+    @Test
+    void nonPostMethodReturnsBadRoute() throws Exception {
+        HttpResponse<String> response = http.send(
+                HttpRequest.newBuilder(uri(MAKE_HAT_PATH))
+                        .header("Content-Type", "application/json")
+                        .GET()
+                        .build(),
+                BodyHandlers.ofString(StandardCharsets.UTF_8));
+
+        assertThat(response.statusCode()).isEqualTo(404);
+        JsonNode node = mapper.readTree(response.body());
+        assertThat(node.get("code").asText()).isEqualTo("bad_route");
+    }
+
+    @Test
+    void unsupportedContentTypeReturnsBadRoute() throws Exception {
+        HttpResponse<String> response = http.send(
+                HttpRequest.newBuilder(uri(MAKE_HAT_PATH))
+                        .header("Content-Type", "text/plain")
+                        .POST(BodyPublishers.ofString("hello", StandardCharsets.UTF_8))
+                        .build(),
+                BodyHandlers.ofString(StandardCharsets.UTF_8));
+
+        assertThat(response.statusCode()).isEqualTo(404);
+        JsonNode node = mapper.readTree(response.body());
+        assertThat(node.get("code").asText()).isEqualTo("bad_route");
+    }
+
     private URI uri(String path) {
         return URI.create("http://localhost:" + APP.getLocalPort() + path);
     }

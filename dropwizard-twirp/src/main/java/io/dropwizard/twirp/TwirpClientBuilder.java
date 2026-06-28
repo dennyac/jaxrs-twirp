@@ -70,7 +70,7 @@ public final class TwirpClientBuilder<T> {
 
     private String contentType = TwirpMediaTypes.APPLICATION_PROTOBUF;
     private String baseUri;
-    private String clientName = "twirp-client";
+    private String clientName;
 
     // Exactly one client source is used by build(): a caller-supplied client
     // wins; otherwise an environment + configuration pair builds a managed one.
@@ -145,8 +145,10 @@ public final class TwirpClientBuilder<T> {
     /**
      * Name used when this builder creates a managed client via
      * {@link #using(Environment, JerseyClientConfiguration)}; surfaces in
-     * Dropwizard client metrics and thread names. Ignored when an existing
-     * client is supplied through {@link #using(Client)}.
+     * Dropwizard client metrics and thread names. Must be unique per managed
+     * client — if you build several stubs from one {@code Environment}, give each
+     * a distinct name. When unset, a name is derived from the {@code baseUri}.
+     * Ignored when an existing client is supplied through {@link #using(Client)}.
      */
     public TwirpClientBuilder<T> clientName(String clientName) {
         this.clientName = Objects.requireNonNull(clientName, "clientName");
@@ -171,10 +173,23 @@ public final class TwirpClientBuilder<T> {
             return client;
         }
         if (environment != null && configuration != null) {
-            return new JerseyClientBuilder(environment).using(configuration).build(clientName);
+            return new JerseyClientBuilder(environment).using(configuration).build(resolveClientName());
         }
         throw new IllegalStateException(
                 "No HTTP client configured: call using(Client) or "
                         + "using(Environment, JerseyClientConfiguration) before build()");
+    }
+
+    /**
+     * The Dropwizard client name must be unique per managed client. If the caller
+     * didn't set one, derive it from the baseUri so two stubs pointed at different
+     * hosts don't collide on metric/thread names; fall back to a constant only when
+     * no baseUri is available (build() requires one, so that's effectively never).
+     */
+    private String resolveClientName() {
+        if (clientName != null) {
+            return clientName;
+        }
+        return baseUri == null ? "twirp-client" : "twirp-client-" + baseUri;
     }
 }

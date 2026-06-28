@@ -6,7 +6,10 @@ import io.dropwizard.twirp.codec.ProtobufJsonMessageBodyWriter;
 import io.dropwizard.twirp.codec.ProtobufMessageBodyReader;
 import io.dropwizard.twirp.codec.ProtobufMessageBodyWriter;
 import io.dropwizard.twirp.errors.InvalidProtocolBufferExceptionMapper;
+import io.dropwizard.twirp.errors.MethodNotAllowedExceptionMapper;
+import io.dropwizard.twirp.errors.NotFoundExceptionMapper;
 import io.dropwizard.twirp.errors.TwirpExceptionMapper;
+import io.dropwizard.twirp.errors.UnsupportedMediaTypeExceptionMapper;
 import jakarta.ws.rs.core.Feature;
 import jakarta.ws.rs.core.FeatureContext;
 
@@ -26,6 +29,10 @@ import java.util.Objects;
  *       wire-format JSON error</li>
  *   <li>{@link InvalidProtocolBufferExceptionMapper} — renders malformed
  *       request bytes as a Twirp {@code malformed} 400</li>
+ *   <li>{@link NotFoundExceptionMapper} / {@link MethodNotAllowedExceptionMapper}
+ *       / {@link UnsupportedMediaTypeExceptionMapper} — render unroutable
+ *       requests (wrong URL, non-POST, unsupported content type) as Twirp
+ *       {@code bad_route} 404s instead of the container's default HTML</li>
  * </ul>
  *
  * <p>Register it on your application's {@code Configurable} (for example a Jersey
@@ -72,6 +79,9 @@ public final class TwirpServerFeature implements Feature {
         context.register(new ProtobufJsonMessageBodyWriter(jsonPrinter));
         context.register(new TwirpExceptionMapper());
         context.register(new InvalidProtocolBufferExceptionMapper());
+        context.register(new NotFoundExceptionMapper());
+        context.register(new MethodNotAllowedExceptionMapper());
+        context.register(new UnsupportedMediaTypeExceptionMapper());
         return true;
     }
 }

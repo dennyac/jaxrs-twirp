@@ -53,6 +53,17 @@
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
         </dependency>
+        <!--
+            protobuf-java-util's JsonFormat references Guava (ImmutableSet,
+            Preconditions). The parent BOM excludes Guava from protobuf-java-util
+            to avoid an old transitive version, so re-add the BOM-aligned Guava
+            here as a real runtime dependency; without it a pure-JAX-RS consumer
+            hits NoClassDefFoundError the first time JSON is read/written.
+        -->
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+        </dependency>
 
         <!--
             Test-only: dropwizard-testing's ResourceExtension is a convenient

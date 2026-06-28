@@ -5,7 +5,10 @@ import io.dropwizard.twirp.codec.ProtobufJsonMessageBodyWriter;
 import io.dropwizard.twirp.codec.ProtobufMessageBodyReader;
 import io.dropwizard.twirp.codec.ProtobufMessageBodyWriter;
 import io.dropwizard.twirp.errors.InvalidProtocolBufferExceptionMapper;
+import io.dropwizard.twirp.errors.MethodNotAllowedExceptionMapper;
+import io.dropwizard.twirp.errors.NotFoundExceptionMapper;
 import io.dropwizard.twirp.errors.TwirpExceptionMapper;
+import io.dropwizard.twirp.errors.UnsupportedMediaTypeExceptionMapper;
 import jakarta.ws.rs.core.Configuration;
 import jakarta.ws.rs.core.FeatureContext;
 import org.junit.jupiter.api.Test;
@@ -34,7 +37,10 @@ class TwirpServerFeatureTest {
                         ProtobufJsonMessageBodyReader.class,
                         ProtobufJsonMessageBodyWriter.class,
                         TwirpExceptionMapper.class,
-                        InvalidProtocolBufferExceptionMapper.class);
+                        InvalidProtocolBufferExceptionMapper.class,
+                        NotFoundExceptionMapper.class,
+                        MethodNotAllowedExceptionMapper.class,
+                        UnsupportedMediaTypeExceptionMapper.class);
     }
 
     @Test

@@ -357,8 +357,9 @@ A few useful properties:
   `WebTarget` for you — no extra Jersey wiring is required.
 - Twirp error responses (any non-2xx with a JSON body) are decoded into
   `TwirpException` with the original `ErrorCode`, message, and meta map.
-  Unknown wire codes fall back to `ErrorCode.UNKNOWN` with a snippet of the
-  body in `meta["body"]`.
+  Bodies that aren't a recognizable Twirp envelope fall back to
+  `ErrorCode.UNKNOWN`, with the HTTP status and a body snippet folded into the
+  exception message.
 - Transport failures (connection refused, DNS, …) surface as
   `ErrorCode.UNAVAILABLE`; bodies that can't be parsed as a Twirp error
   surface as `ErrorCode.MALFORMED` rather than leaking
@@ -533,6 +534,7 @@ and a `map<string, int32>`, asserted over both protobuf and JSON wire formats.
 | Configurable URL prefix | ✅ | `prefix` generator option (defaults to `/twirp`, per Twirp v7). |
 | JSON snake_case names / unknown-field tolerance / default-value emission | ✅ | Go-reference-compatible defaults; override via the `TwirpBundle` builder. |
 | RPC names that lowercase to a Java keyword (`Return`, `Import`, …) | ✅ | The generated Java method is suffixed with `_` (e.g. `return_`); the URL path keeps the original proto name, so wire compatibility is unaffected. |
+| Unroutable requests (unknown URL, non-`POST`, unsupported content type) | ✅ | Returned as a Twirp `bad_route` JSON error (HTTP 404) rather than the container's HTML 404/405/415. Mappers ship in `TwirpServerFeature`. |
 
 ### Needs configuration
 
@@ -553,12 +555,13 @@ This matrix was assembled by auditing the generated code against the Twirp v7
 spec and the known issue trackers of the Go reference generator and the other
 JVM Twirp generators (`fajran/protoc-gen-twirp_java_jaxrs`,
 `ngyewch/protoc-gen-twirp-java`). The `Any`-over-JSON behavior is verified by
-`AnyJsonCodecTest`, and the keyword-mangling by `JavaNamingTest`.
+`AnyJsonCodecTest`, the keyword-mangling by `JavaNamingTest`, and the
+`bad_route` mappers by `ExampleApplicationIntegrationTest`.
 
 ## Status
 
 This is **0.1.0-SNAPSHOT**. The runtime, codegen, and generated client are all
-tested end-to-end (105 tests across the reactor) but the API is not yet frozen.
+tested end-to-end (108 tests across the reactor) but the API is not yet frozen.
 
 Roadmap ideas (not yet implemented):
 
@@ -566,8 +569,6 @@ Roadmap ideas (not yet implemented):
   `edition = "2023"` files (see the limitations table above).
 - Map proto2 `required`-field validation failures to a Twirp `malformed` (400)
   instead of the current `internal` (500).
-- A `NotFoundExceptionMapper` so unknown Twirp routes return a JSON
-  `bad_route` error instead of Jersey's HTML 404.
 - Optional client interceptors for adding auth headers / tracing context
   without subclassing the generated client.
 - Server-side request validation hooks (currently the generated resource
