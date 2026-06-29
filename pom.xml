@@ -5,7 +5,7 @@
              http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>io.dropwizard.modules</groupId>
+    <groupId>com.dennyac.twirp</groupId>
     <artifactId>dropwizard-twirp-parent</artifactId>
     <version>0.1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
@@ -92,17 +92,17 @@
 
             <!-- Project modules. -->
             <dependency>
-                <groupId>io.dropwizard.modules</groupId>
+                <groupId>com.dennyac.twirp</groupId>
                 <artifactId>jaxrs-twirp-core</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>io.dropwizard.modules</groupId>
+                <groupId>com.dennyac.twirp</groupId>
                 <artifactId>dropwizard-twirp</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>io.dropwizard.modules</groupId>
+                <groupId>com.dennyac.twirp</groupId>
                 <artifactId>twirp-protoc</artifactId>
                 <version>${project.version}</version>
             </dependency>

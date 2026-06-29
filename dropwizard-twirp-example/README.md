@@ -44,10 +44,10 @@ The example's [`pom.xml`](pom.xml) wires `twirp-protoc` into
         <protocPlugins>
           <protocPlugin>
             <id>twirp_java</id>
-            <groupId>io.dropwizard.modules</groupId>
+            <groupId>com.dennyac.twirp</groupId>
             <artifactId>twirp-protoc</artifactId>
             <version>${project.version}</version>
-            <mainClass>io.dropwizard.twirp.protoc.Main</mainClass>
+            <mainClass>com.dennyac.twirp.protoc.Main</mainClass>
           </protocPlugin>
         </protocPlugins>
       </configuration>
@@ -149,7 +149,7 @@ $ java -jar target/dropwizard-twirp-example-*.jar server src/main/resources/exam
 Or during development:
 
 ```bash
-$ mvn exec:java -Dexec.mainClass=io.dropwizard.twirp.example.ExampleApplication \
+$ mvn exec:java -Dexec.mainClass=com.dennyac.twirp.example.ExampleApplication \
                 -Dexec.args="server src/main/resources/example.yml"
 ```
 
@@ -196,7 +196,7 @@ the Twirp v7 routing spec — every Twirp service uses it, regardless of wire
 format.
 
 The `bothWireFormatsCoexistOnTheSameResource` test in
-[`ExampleApplicationIntegrationTest`](src/test/java/io/dropwizard/twirp/example/ExampleApplicationIntegrationTest.java)
+[`ExampleApplicationIntegrationTest`](src/test/java/com/dennyac/twirp/example/ExampleApplicationIntegrationTest.java)
 interleaves JSON → protobuf → JSON against the same listener to prove
 this isn't an accident.
 
@@ -256,7 +256,7 @@ Things to notice in the JSON:
 Send the same request with `Content-Type: application/protobuf` and you get the
 identical data as packed protobuf bytes — `ListInventory` is asserted over both
 formats in
-[`ExampleApplicationIntegrationTest`](src/test/java/io/dropwizard/twirp/example/ExampleApplicationIntegrationTest.java).
+[`ExampleApplicationIntegrationTest`](src/test/java/com/dennyac/twirp/example/ExampleApplicationIntegrationTest.java).
 Leave `style` out (or set it to `HAT_STYLE_UNSPECIFIED`) to list the whole shop.
 
 See the top-level [Supported proto features & limitations][features] table for
@@ -278,7 +278,7 @@ Two suites:
 
 [Haberdasher]: https://github.com/twitchtv/twirp/blob/main/example/service.proto
 [protobuf-maven-plugin]: https://www.xolstice.org/protobuf-maven-plugin/
-[gen-client-test]: src/test/java/io/dropwizard/twirp/example/GeneratedClientIntegrationTest.java
+[gen-client-test]: src/test/java/com/dennyac/twirp/example/GeneratedClientIntegrationTest.java
 [dw-client]: https://www.dropwizard.io/en/stable/manual/client.html
 [raw-protoc]: ../README.md#code-generation-without-maven-raw-protoc-plugin
 [features]: ../README.md#supported-proto-features--limitations

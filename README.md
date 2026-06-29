@@ -78,7 +78,7 @@ the core transitively — there's nothing extra to wire up.
 
 ```xml
 <dependency>
-    <groupId>io.dropwizard.modules</groupId>
+    <groupId>com.dennyac.twirp</groupId>
     <artifactId>dropwizard-twirp</artifactId>
     <version>0.1.0-SNAPSHOT</version>
 </dependency>
@@ -139,10 +139,10 @@ and tell it about our plugin:
                         <protocPlugins>
                             <protocPlugin>
                                 <id>twirp_java</id>
-                                <groupId>io.dropwizard.modules</groupId>
+                                <groupId>com.dennyac.twirp</groupId>
                                 <artifactId>twirp-protoc</artifactId>
                                 <version>0.1.0-SNAPSHOT</version>
-                                <mainClass>io.dropwizard.twirp.protoc.Main</mainClass>
+                                <mainClass>com.dennyac.twirp.protoc.Main</mainClass>
                             </protocPlugin>
                         </protocPlugins>
                     </configuration>
@@ -272,7 +272,7 @@ application (Jersey, RESTEasy, …) can serve the same generated resources by
 depending on the core directly and registering the feature itself:
 
 ```java
-// dependency: io.dropwizard.modules:jaxrs-twirp-core
+// dependency: com.dennyac.twirp:jaxrs-twirp-core
 ResourceConfig config = new ResourceConfig();
 config.register(new TwirpServerFeature());                 // codecs + error mappers
 config.register(new HaberdasherResource(new MyHaberdasher()));

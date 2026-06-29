@@ -6,7 +6,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>io.dropwizard.modules</groupId>
+        <groupId>com.dennyac.twirp</groupId>
         <artifactId>dropwizard-twirp-parent</artifactId>
         <version>0.1.0-SNAPSHOT</version>
     </parent>
@@ -23,11 +23,11 @@
     <properties>
         <!--
             Distinct automatic-module name from the dropwizard-twirp veneer. Both
-            jars share the io.dropwizard.twirp package (a deliberate split package)
+            jars share the com.dennyac.twirp package (a deliberate split package)
             so they are designed for the classpath, not the JPMS module path; the
             name here is advisory only.
         -->
-        <module.name>io.dropwizard.twirp.core</module.name>
+        <module.name>com.dennyac.twirp.core</module.name>
     </properties>
 
     <dependencies>

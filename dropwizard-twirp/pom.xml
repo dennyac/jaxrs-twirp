@@ -6,7 +6,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>io.dropwizard.modules</groupId>
+        <groupId>com.dennyac.twirp</groupId>
         <artifactId>dropwizard-twirp-parent</artifactId>
         <version>0.1.0-SNAPSHOT</version>
     </parent>
@@ -21,13 +21,13 @@
     </description>
 
     <properties>
-        <module.name>io.dropwizard.twirp</module.name>
+        <module.name>com.dennyac.twirp</module.name>
     </properties>
 
     <dependencies>
         <!-- The framework-agnostic JAX-RS runtime this module adapts to Dropwizard. -->
         <dependency>
-            <groupId>io.dropwizard.modules</groupId>
+            <groupId>com.dennyac.twirp</groupId>
             <artifactId>jaxrs-twirp-core</artifactId>
         </dependency>
         <dependency>

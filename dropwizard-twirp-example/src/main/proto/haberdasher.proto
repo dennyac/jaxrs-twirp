@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package twitch.twirp.example.haberdasher;
 
-option java_package = "io.dropwizard.twirp.example.haberdasher";
+option java_package = "com.dennyac.twirp.example.haberdasher";
 option java_multiple_files = true;
 
 // The classic Twirp example: a service that makes hats.
