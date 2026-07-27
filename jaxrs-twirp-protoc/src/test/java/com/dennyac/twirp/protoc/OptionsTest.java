@@ -129,4 +129,30 @@ class OptionsTest {
         assertThat(Options.parse("clientBuilder=yes").generateClientBuilder()).isTrue();
         assertThat(Options.parse("clientBuilder=1").generateClientBuilder()).isTrue();
     }
+
+    @Test
+    void contextDefaultsToFalse() {
+        assertThat(Options.parse(null).generateContext()).isFalse();
+        assertThat(Options.parse("prefix=/foo").generateContext()).isFalse();
+    }
+
+    @Test
+    void contextCanBeEnabled() {
+        assertThat(Options.parse("context=true").generateContext()).isTrue();
+        assertThat(Options.parse("context=yes").generateContext()).isTrue();
+        assertThat(Options.parse("context=1").generateContext()).isTrue();
+    }
+
+    @Test
+    void contextOptionFallsBackOnGarbageValue() {
+        assertThat(Options.parse("context=maybe").generateContext()).isFalse();
+    }
+
+    @Test
+    void contextParsesIndependentlyOfOtherFlags() {
+        Options options = Options.parse("context=true,client=false");
+        assertThat(options.generateContext()).isTrue();
+        assertThat(options.generateClient()).isFalse();
+        assertThat(options.generateServer()).isTrue();
+    }
 }

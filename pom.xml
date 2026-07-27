@@ -6,16 +6,16 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.dennyac.twirp</groupId>
-    <artifactId>dropwizard-twirp-parent</artifactId>
+    <artifactId>jaxrs-twirp-parent</artifactId>
     <version>0.1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
-    <name>Dropwizard Twirp Parent</name>
+    <name>JAX-RS Twirp Parent</name>
     <description>
-        Serve Twirp RPC endpoints from a Dropwizard application using its existing
-        Jetty/Jersey stack — no separate server required.
+        Generate and run Twirp clients and servers on JAX-RS, with a first-class
+        Dropwizard integration.
     </description>
-    <url>https://github.com/dennyac/dropwizard-twirp</url>
+    <url>https://github.com/dennyac/jaxrs-twirp</url>
     <inceptionYear>2026</inceptionYear>
 
     <licenses>
@@ -29,7 +29,7 @@
     <modules>
         <module>jaxrs-twirp-core</module>
         <module>dropwizard-twirp</module>
-        <module>twirp-protoc</module>
+        <module>jaxrs-twirp-protoc</module>
         <module>dropwizard-twirp-example</module>
     </modules>
 
@@ -103,7 +103,7 @@
             </dependency>
             <dependency>
                 <groupId>com.dennyac.twirp</groupId>
-                <artifactId>twirp-protoc</artifactId>
+                <artifactId>jaxrs-twirp-protoc</artifactId>
                 <version>${project.version}</version>
             </dependency>
         </dependencies>

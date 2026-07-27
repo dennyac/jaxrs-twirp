@@ -1,6 +1,13 @@
 package com.dennyac.twirp;
 
+import jakarta.ws.rs.client.Invocation;
 import org.junit.jupiter.api.Test;
+
+import java.lang.reflect.Proxy;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -78,5 +85,51 @@ class TwirpClientsTest {
         assertThat(ex.getErrorCode()).isEqualTo(ErrorCode.UNKNOWN);
         assertThat(ex.getMessage()).contains("xxx").endsWith("...");
     }
-}
 
+    @Test
+    void applyHeadersIgnoresInboundServerHeaders() {
+        Map<String, List<String>> applied = new LinkedHashMap<>();
+        Invocation.Builder request = recordingBuilder(applied);
+        TwirpContext inbound = TwirpContext.of(
+                Map.of("Authorization", List.of("******")), null);
+
+        TwirpClients.applyHeaders(request, inbound);
+
+        assertThat(applied).isEmpty();
+    }
+
+    @Test
+    void applyHeadersCopiesOnlyExplicitOutboundHeaders() {
+        Map<String, List<String>> applied = new LinkedHashMap<>();
+        Invocation.Builder request = recordingBuilder(applied);
+        TwirpContext outbound = TwirpContext.ofOutboundHeaders(Map.of(
+                "Authorization", List.of("******"),
+                "traceparent", List.of("00-abc-def-01")));
+
+        TwirpClients.applyHeaders(request, outbound);
+
+        assertThat(applied)
+                .containsEntry("Authorization", List.of("******"))
+                .containsEntry("traceparent", List.of("00-abc-def-01"));
+    }
+
+    private static Invocation.Builder recordingBuilder(Map<String, List<String>> applied) {
+        Object[] proxyHolder = new Object[1];
+        Invocation.Builder proxy = (Invocation.Builder) Proxy.newProxyInstance(
+                TwirpClientsTest.class.getClassLoader(),
+                new Class<?>[]{Invocation.Builder.class},
+                (ignored, method, args) -> {
+                    if ("header".equals(method.getName())) {
+                        applied.computeIfAbsent((String) args[0], key -> new ArrayList<>())
+                                .add((String) args[1]);
+                        return proxyHolder[0];
+                    }
+                    if ("toString".equals(method.getName())) {
+                        return "recording Invocation.Builder";
+                    }
+                    throw new UnsupportedOperationException(method.getName());
+                });
+        proxyHolder[0] = proxy;
+        return proxy;
+    }
+}

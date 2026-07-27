@@ -19,6 +19,11 @@ service Haberdasher {
     // The example's integration tests POST this over both application/protobuf
     // and application/json against the same generated resource.
     rpc ListInventory (InventoryRequest) returns (Inventory);
+
+    // Secured endpoint demonstrating the opt-in context codegen option. The
+    // implementation reads the authenticated principal and role from
+    // TwirpContext rather than from the request body.
+    rpc WhoAmI (WhoAmIRequest) returns (WhoAmIResponse);
 }
 
 message Size {
@@ -68,4 +73,11 @@ message StockItem {
     HatStyle style = 1;
     int32 inches = 2;
     string color = 3;
+}
+
+message WhoAmIRequest {}
+
+message WhoAmIResponse {
+    string subject = 1;
+    bool admin = 2;
 }

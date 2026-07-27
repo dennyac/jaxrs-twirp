@@ -33,14 +33,14 @@ public final class Plugin {
             // is rarely useful and is better served by plain `protoc` with no
             // Twirp plugin at all.
             return CodeGeneratorResponse.newBuilder()
-                    .setError("twirp-protoc: client=false and server=false "
+                    .setError("jaxrs-twirp-protoc: client=false and server=false "
                             + "cannot both be set; nothing useful would be generated.")
                     .build();
         }
         List<FileDescriptorProto> protos = request.getProtoFileList();
         TypeMapper types = TypeMapper.fromFiles(protos);
 
-        ServiceGenerator serviceGen = new ServiceGenerator(types);
+        ServiceGenerator serviceGen = new ServiceGenerator(options, types);
         ResourceGenerator resourceGen = new ResourceGenerator(options, types);
         ClientGenerator clientGen = new ClientGenerator(options, types);
 

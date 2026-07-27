@@ -7,12 +7,12 @@
 
     <parent>
         <groupId>com.dennyac.twirp</groupId>
-        <artifactId>dropwizard-twirp-parent</artifactId>
+        <artifactId>jaxrs-twirp-parent</artifactId>
         <version>0.1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>twirp-protoc</artifactId>
-    <name>Twirp protoc plugin</name>
+    <artifactId>jaxrs-twirp-protoc</artifactId>
+    <name>JAX-RS Twirp protoc plugin</name>
     <description>
         Standalone protoc plugin that emits idiomatic JAX-RS resource classes
         plus service interfaces for the Twirp v7 protocol, ready to be served

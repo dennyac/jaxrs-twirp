@@ -1,6 +1,7 @@
 package com.dennyac.twirp.example;
 
 import com.dennyac.twirp.ErrorCode;
+import com.dennyac.twirp.TwirpContext;
 import com.dennyac.twirp.TwirpException;
 import com.dennyac.twirp.example.haberdasher.Haberdasher;
 import com.dennyac.twirp.example.haberdasher.HatStyle;
@@ -9,7 +10,10 @@ import com.dennyac.twirp.example.haberdasher.Inventory;
 import com.dennyac.twirp.example.haberdasher.InventoryRequest;
 import com.dennyac.twirp.example.haberdasher.Size;
 import com.dennyac.twirp.example.haberdasher.StockItem;
+import com.dennyac.twirp.example.haberdasher.WhoAmIRequest;
+import com.dennyac.twirp.example.haberdasher.WhoAmIResponse;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -41,7 +45,7 @@ public class HaberdasherImpl implements Haberdasher {
             stockItem(HatStyle.TOP_HAT, 14, "black"));
 
     @Override
-    public Hat makeHat(Size request) throws TwirpException {
+    public Hat makeHat(Size request, TwirpContext context) throws TwirpException {
         if (request.getInches() <= 0) {
             throw TwirpException.builder(ErrorCode.INVALID_ARGUMENT)
                     .message("inches must be > 0")
@@ -58,7 +62,7 @@ public class HaberdasherImpl implements Haberdasher {
     }
 
     @Override
-    public Inventory listInventory(InventoryRequest request) throws TwirpException {
+    public Inventory listInventory(InventoryRequest request, TwirpContext context) throws TwirpException {
         HatStyle filter = request.getStyle();
         List<StockItem> items = STOCK.stream()
                 .filter(item -> filter == HatStyle.HAT_STYLE_UNSPECIFIED || item.getStyle() == filter)
@@ -73,6 +77,15 @@ public class HaberdasherImpl implements Haberdasher {
         return Inventory.newBuilder()
                 .addAllItems(items)
                 .putAllCountByColor(countByColor)
+                .build();
+    }
+
+    @Override
+    public WhoAmIResponse whoAmI(WhoAmIRequest request, TwirpContext context) throws TwirpException {
+        String subject = context.principal().map(Principal::getName).orElse("");
+        return WhoAmIResponse.newBuilder()
+                .setSubject(subject)
+                .setAdmin(context.isUserInRole("admin"))
                 .build();
     }
 

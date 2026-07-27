@@ -15,6 +15,8 @@ import jakarta.ws.rs.core.Response;
 
 import java.io.IOException;
 import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -66,6 +68,35 @@ public final class TwirpClients {
      */
     public static void registerProviders(Configurable<?> target) {
         registerProviders(target, TwirpJson.defaultPrinter(), TwirpJson.defaultParser());
+    }
+
+    /**
+     * Copy the explicitly outbound headers carried by a {@link TwirpContext} onto an outbound
+     * {@link Invocation.Builder}, returning the builder to chain.
+     *
+     * <p>Generated clients call this when code generation is run with the
+     * {@code context} option, so a caller can propagate headers such as an
+     * authorization token or request ID to the remote service. This is the
+     * client-side mirror of the server populating a {@code TwirpContext} from
+     * the inbound request, analogous to Go's
+     * {@code twirp.WithHTTPRequestHeaders}.
+     *
+     * <p>Contexts created from an inbound server request do not propagate their
+     * headers. Callers must use {@link TwirpContext#ofOutboundHeaders(Map)} to
+     * select metadata deliberately. Transport-controlled headers are rejected
+     * by that factory. A {@code null} context is a no-op.
+     */
+    public static Invocation.Builder applyHeaders(Invocation.Builder request, TwirpContext context) {
+        Objects.requireNonNull(request, "request");
+        if (context == null) {
+            return request;
+        }
+        for (Map.Entry<String, List<String>> entry : context.outboundHeaders().entrySet()) {
+            for (String value : entry.getValue()) {
+                request = request.header(entry.getKey(), value);
+            }
+        }
+        return request;
     }
 
     /**

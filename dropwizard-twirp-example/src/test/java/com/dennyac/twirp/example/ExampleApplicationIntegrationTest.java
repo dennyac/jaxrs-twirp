@@ -342,6 +342,43 @@ class ExampleApplicationIntegrationTest {
         assertThat(node.get("code").asText()).isEqualTo("bad_route");
     }
 
+    @Test
+    void unrelatedRestNotFoundKeepsItsNormalStatusAndBody() throws Exception {
+        HttpResponse<String> response = http.send(
+                HttpRequest.newBuilder(uri("/api/missing"))
+                        .GET()
+                        .build(),
+                BodyHandlers.ofString(StandardCharsets.UTF_8));
+
+        assertThat(response.statusCode()).isEqualTo(404);
+        assertThat(response.body()).doesNotContain("\"code\":\"bad_route\"");
+    }
+
+    @Test
+    void unrelatedRestMethodNotAllowedStays405() throws Exception {
+        HttpResponse<String> response = http.send(
+                HttpRequest.newBuilder(uri("/api/greeting"))
+                        .method("DELETE", BodyPublishers.noBody())
+                        .build(),
+                BodyHandlers.ofString(StandardCharsets.UTF_8));
+
+        assertThat(response.statusCode()).isEqualTo(405);
+        assertThat(response.body()).doesNotContain("\"code\":\"bad_route\"");
+    }
+
+    @Test
+    void unrelatedRestUnsupportedMediaTypeStays415() throws Exception {
+        HttpResponse<String> response = http.send(
+                HttpRequest.newBuilder(uri("/api/greeting"))
+                        .header("Content-Type", "text/plain")
+                        .POST(BodyPublishers.ofString("hello", StandardCharsets.UTF_8))
+                        .build(),
+                BodyHandlers.ofString(StandardCharsets.UTF_8));
+
+        assertThat(response.statusCode()).isEqualTo(415);
+        assertThat(response.body()).doesNotContain("\"code\":\"bad_route\"");
+    }
+
     private URI uri(String path) {
         return URI.create("http://localhost:" + APP.getLocalPort() + path);
     }

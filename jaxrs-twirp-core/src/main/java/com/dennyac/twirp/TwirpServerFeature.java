@@ -6,13 +6,11 @@ import com.dennyac.twirp.codec.ProtobufJsonMessageBodyWriter;
 import com.dennyac.twirp.codec.ProtobufMessageBodyReader;
 import com.dennyac.twirp.codec.ProtobufMessageBodyWriter;
 import com.dennyac.twirp.errors.InvalidProtocolBufferExceptionMapper;
-import com.dennyac.twirp.errors.MethodNotAllowedExceptionMapper;
-import com.dennyac.twirp.errors.NotFoundExceptionMapper;
 import com.dennyac.twirp.errors.TwirpExceptionMapper;
-import com.dennyac.twirp.errors.UnsupportedMediaTypeExceptionMapper;
 import jakarta.ws.rs.core.Feature;
 import jakarta.ws.rs.core.FeatureContext;
 
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -29,10 +27,10 @@ import java.util.Objects;
  *       wire-format JSON error</li>
  *   <li>{@link InvalidProtocolBufferExceptionMapper} — renders malformed
  *       request bytes as a Twirp {@code malformed} 400</li>
- *   <li>{@link NotFoundExceptionMapper} / {@link MethodNotAllowedExceptionMapper}
- *       / {@link UnsupportedMediaTypeExceptionMapper} — render unroutable
- *       requests (wrong URL, non-POST, unsupported content type) as Twirp
- *       {@code bad_route} 404s instead of the container's default HTML</li>
+ *   <li>a route-aware response filter that renders unroutable requests beneath
+ *       the configured Twirp path prefix (wrong URL, non-POST, unsupported
+ *       content type) as Twirp {@code bad_route} 404s without changing ordinary
+ *       REST error responses</li>
  * </ul>
  *
  * <p>Register it on your application's {@code Configurable} (for example a Jersey
@@ -54,21 +52,38 @@ import java.util.Objects;
  * <p>To customize the JSON printer/parser (field-presence semantics, a
  * {@link com.google.protobuf.TypeRegistry} for {@code google.protobuf.Any}, etc.)
  * supply them through the {@linkplain #TwirpServerFeature(JsonFormat.Printer,
- * JsonFormat.Parser) two-arg constructor}.
+ * JsonFormat.Parser) two-arg constructor}. When code generation uses a custom
+ * path prefix, pass the same value to {@link #TwirpServerFeature(String...)} or
+ * the three-arg constructor.
  */
 public final class TwirpServerFeature implements Feature {
 
+    public static final String DEFAULT_PATH_PREFIX = "/twirp";
+
     private final JsonFormat.Printer jsonPrinter;
     private final JsonFormat.Parser jsonParser;
+    private final List<String> pathPrefixes;
 
     /** Uses the default Twirp JSON printer/parser (see {@link TwirpJson}). */
     public TwirpServerFeature() {
-        this(TwirpJson.defaultPrinter(), TwirpJson.defaultParser());
+        this(TwirpJson.defaultPrinter(), TwirpJson.defaultParser(), DEFAULT_PATH_PREFIX);
+    }
+
+    /** Uses the default JSON configuration for the supplied Twirp path prefixes. */
+    public TwirpServerFeature(String... pathPrefixes) {
+        this(TwirpJson.defaultPrinter(), TwirpJson.defaultParser(), pathPrefixes);
     }
 
     public TwirpServerFeature(JsonFormat.Printer jsonPrinter, JsonFormat.Parser jsonParser) {
+        this(jsonPrinter, jsonParser, DEFAULT_PATH_PREFIX);
+    }
+
+    public TwirpServerFeature(JsonFormat.Printer jsonPrinter,
+                              JsonFormat.Parser jsonParser,
+                              String... pathPrefixes) {
         this.jsonPrinter = Objects.requireNonNull(jsonPrinter, "jsonPrinter");
         this.jsonParser = Objects.requireNonNull(jsonParser, "jsonParser");
+        this.pathPrefixes = TwirpBadRouteFilter.normalizePrefixes(pathPrefixes);
     }
 
     @Override
@@ -79,9 +94,7 @@ public final class TwirpServerFeature implements Feature {
         context.register(new ProtobufJsonMessageBodyWriter(jsonPrinter));
         context.register(new TwirpExceptionMapper());
         context.register(new InvalidProtocolBufferExceptionMapper());
-        context.register(new NotFoundExceptionMapper());
-        context.register(new MethodNotAllowedExceptionMapper());
-        context.register(new UnsupportedMediaTypeExceptionMapper());
+        context.register(new TwirpBadRouteFilter(pathPrefixes));
         return true;
     }
 }

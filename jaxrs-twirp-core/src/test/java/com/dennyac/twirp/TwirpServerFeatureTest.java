@@ -5,10 +5,7 @@ import com.dennyac.twirp.codec.ProtobufJsonMessageBodyWriter;
 import com.dennyac.twirp.codec.ProtobufMessageBodyReader;
 import com.dennyac.twirp.codec.ProtobufMessageBodyWriter;
 import com.dennyac.twirp.errors.InvalidProtocolBufferExceptionMapper;
-import com.dennyac.twirp.errors.MethodNotAllowedExceptionMapper;
-import com.dennyac.twirp.errors.NotFoundExceptionMapper;
 import com.dennyac.twirp.errors.TwirpExceptionMapper;
-import com.dennyac.twirp.errors.UnsupportedMediaTypeExceptionMapper;
 import jakarta.ws.rs.core.Configuration;
 import jakarta.ws.rs.core.FeatureContext;
 import org.junit.jupiter.api.Test;
@@ -18,12 +15,13 @@ import java.util.List;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
 import static org.assertj.core.api.Assertions.assertThatNullPointerException;
 
 class TwirpServerFeatureTest {
 
     @Test
-    void registersBodyProvidersAndExceptionMappers() {
+    void registersBodyProvidersExceptionMappersAndRouteFilter() {
         RecordingFeatureContext context = new RecordingFeatureContext();
 
         boolean enabled = new TwirpServerFeature().configure(context);
@@ -38,9 +36,7 @@ class TwirpServerFeatureTest {
                         ProtobufJsonMessageBodyWriter.class,
                         TwirpExceptionMapper.class,
                         InvalidProtocolBufferExceptionMapper.class,
-                        NotFoundExceptionMapper.class,
-                        MethodNotAllowedExceptionMapper.class,
-                        UnsupportedMediaTypeExceptionMapper.class);
+                        TwirpBadRouteFilter.class);
     }
 
     @Test
@@ -49,6 +45,34 @@ class TwirpServerFeatureTest {
                 .isThrownBy(() -> new TwirpServerFeature(null, TwirpJson.defaultParser()));
         assertThatNullPointerException()
                 .isThrownBy(() -> new TwirpServerFeature(TwirpJson.defaultPrinter(), null));
+    }
+
+    @Test
+    void routeFilterUsesConfiguredPrefixesWithoutPartialSegmentMatches() {
+        RecordingFeatureContext context = new RecordingFeatureContext();
+        new TwirpServerFeature("/rpc/", "internal/twirp").configure(context);
+
+        TwirpBadRouteFilter filter = context.registered.stream()
+                .filter(TwirpBadRouteFilter.class::isInstance)
+                .map(TwirpBadRouteFilter.class::cast)
+                .findFirst()
+                .orElseThrow();
+
+        assertThat(filter.matchesPath("/rpc/example.Service/Call")).isTrue();
+        assertThat(filter.matchesPath("/internal/twirp/example.Service/Call")).isTrue();
+        assertThat(filter.matchesPath("/rpcish/example.Service/Call")).isFalse();
+        assertThat(filter.matchesPath("/api/users")).isFalse();
+        assertThat(filter.shouldRewrite("/rpc/example.Service/Call", null)).isTrue();
+        assertThat(filter.shouldRewrite(
+                "/rpc/example.Service/Call",
+                TwirpError.of(ErrorCode.NOT_FOUND, "missing"))).isFalse();
+    }
+
+    @Test
+    void rejectsMissingPathPrefixes() {
+        assertThatIllegalArgumentException()
+                .isThrownBy(() -> new TwirpServerFeature(new String[0]))
+                .withMessageContaining("at least one");
     }
 
     /** Minimal {@link FeatureContext} that records {@code register(...)} calls. */

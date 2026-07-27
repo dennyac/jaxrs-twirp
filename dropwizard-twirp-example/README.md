@@ -2,7 +2,7 @@
 
 A minimal, runnable Dropwizard 5 application that exposes the canonical
 [Haberdasher][] Twirp service over HTTP. It's the reference for everything in
-the parent [`dropwizard-twirp`](../README.md) repo, but the **primary thing
+the parent [`jaxrs-twirp`](../README.md) repo, but the **primary thing
 this module exists to demonstrate is code generation** — how you go from a
 `.proto` to a JAX-RS resource you can register with `environment.jersey()` and
 a Jersey client your other services can call.
@@ -13,8 +13,9 @@ If you've never seen Twirp before, the parent README has a short
 ## What's in here
 
 ```
-src/main/proto/haberdasher.proto                    # the schema (one RPC, two messages)
-src/main/java/.../ExampleApplication.java           # bundle registration
+src/main/proto/haberdasher.proto                    # schema, including secured WhoAmI
+src/main/java/.../ExampleApplication.java           # bundle + dropwizard-auth wiring
+src/main/java/.../ExampleRestResource.java           # ordinary REST coexistence
 src/main/java/.../HaberdasherImpl.java              # business logic (server side)
 src/main/resources/example.yml                      # dropwizard config
 src/test/java/.../ExampleApplicationIntegrationTest.java  # raw HTTP (curl-equivalent)
@@ -23,11 +24,12 @@ src/test/java/.../GeneratedClientIntegrationTest.java     # generated client →
 
 `haberdasher.proto` is the **only** thing you hand-write that's protocol-shaped.
 Everything else either depends on it (your impl, your tests) or is generated
-from it.
+from it. This module enables `context=true` and uses `TwirpContext` to carry
+authentication into the secured `WhoAmI` RPC.
 
 ## Code generation
 
-The example's [`pom.xml`](pom.xml) wires `twirp-protoc` into
+The example's [`pom.xml`](pom.xml) wires `jaxrs-twirp-protoc` into
 [`protobuf-maven-plugin`][protobuf-maven-plugin] as a `<protocPlugin>`. Every
 `mvn compile` (re)generates protobuf message classes **and** Twirp stubs into
 `target/generated-sources/protobuf/java/`:
@@ -45,9 +47,12 @@ The example's [`pom.xml`](pom.xml) wires `twirp-protoc` into
           <protocPlugin>
             <id>twirp_java</id>
             <groupId>com.dennyac.twirp</groupId>
-            <artifactId>twirp-protoc</artifactId>
+            <artifactId>jaxrs-twirp-protoc</artifactId>
             <version>${project.version}</version>
             <mainClass>com.dennyac.twirp.protoc.Main</mainClass>
+            <args>
+              <arg>context=true</arg>
+            </args>
           </protocPlugin>
         </protocPlugins>
       </configuration>
@@ -102,21 +107,21 @@ my-app-api/      # protos + 'server=false' → published as a thin client jar
 my-app-server/   # depends on my-app-api, generates 'client=false' → deployed
 ```
 
-Pass either knob via `<pluginParameter>` on the `<protocPlugin>` element:
+Pass either option through `<args>` on the `<protocPlugin>` element:
 
 ```xml
 <!-- in my-app-api/pom.xml: only emit the interface + JAX-RS client -->
 <protocPlugin>
   <id>twirp_java</id>
   ...
-  <pluginParameter>server=false</pluginParameter>
+  <args><arg>server=false</arg></args>
 </protocPlugin>
 
 <!-- in my-app-server/pom.xml: only emit the JAX-RS resource (interface comes from -api) -->
 <protocPlugin>
   <id>twirp_java</id>
   ...
-  <pluginParameter>client=false</pluginParameter>
+  <args><arg>client=false</arg></args>
 </protocPlugin>
 ```
 
@@ -126,7 +131,7 @@ expressed as "I want protoc-built java messages, not Twirp".)
 
 ### Not using Maven?
 
-`twirp-protoc` is a regular `protoc` plugin — the Maven wiring is
+`jaxrs-twirp-protoc` is a regular `protoc` plugin — the Maven wiring is
 a convenience. Gradle, Bazel, or a `protoc` shell invocation drive the same
 shaded jar via a one-line shim; see the parent README's
 [code-generation-without-Maven section][raw-protoc] for the recipe and full
@@ -263,6 +268,64 @@ See the top-level [Supported proto features & limitations][features] table for
 the complete matrix of what generation handles, what needs configuration
 (e.g. `google.protobuf.Any` over JSON), and what's out of scope (streaming).
 
+<a id="request-context--auth"></a>
+
+## Request context and auth
+
+The example generates with `context=true`, so every method takes a trailing
+`TwirpContext`. The hat RPCs ignore it; `WhoAmI` reads its authenticated
+principal and role:
+
+```java
+@Override
+public WhoAmIResponse whoAmI(WhoAmIRequest request, TwirpContext context) {
+    String subject = context.principal().map(Principal::getName).orElse("");
+    return WhoAmIResponse.newBuilder()
+            .setSubject(subject)
+            .setAdmin(context.isUserInRole("admin"))
+            .build();
+}
+```
+
+Dropwizard's `@Auth` injection only applies to resource methods that declare an
+`@Auth` parameter. Generated Twirp methods do not, so `ExampleApplication`
+binds an `OAuthCredentialAuthFilter` to the generated proto RPC with:
+
+```java
+environment.jersey().register(TwirpAuthFeature.forRpcs(
+        authFilter,
+        HaberdasherResource.class,
+        "WhoAmI"));
+```
+
+`TwirpAuthFeature` validates the RPC name against the generated method's
+`@Path` during startup. The filter then populates the JAX-RS `SecurityContext`,
+which the generated resource places in `TwirpContext`.
+
+The demo recognizes two bearer tokens:
+
+```bash
+# principal "admin", admin role
+curl -s -H 'Content-Type: application/json' \
+  -H 'Authorization: Bearer admin-token' -d '{}' \
+  http://localhost:8080/twirp/twitch.twirp.example.haberdasher.Haberdasher/WhoAmI
+
+# principal "alice", no admin role
+curl -s -H 'Content-Type: application/json' \
+  -H 'Authorization: Bearer user-token' -d '{}' \
+  http://localhost:8080/twirp/twitch.twirp.example.haberdasher.Haberdasher/WhoAmI
+```
+
+Generated clients send explicit context headers:
+
+```java
+TwirpContext context = TwirpContext.ofOutboundHeaders(
+        Map.of("Authorization", List.of("Bearer admin-token")));
+WhoAmIResponse me = client.whoAmI(WhoAmIRequest.getDefaultInstance(), context);
+```
+
+Use `TwirpContext.empty()` when an RPC has no metadata to send.
+
 ## Tests
 
 ```bash
@@ -273,8 +336,8 @@ Two suites:
 
 | Suite                                | What it covers                                                                                                          |
 | ------------------------------------ | ----------------------------------------------------------------------------------------------------------------------- |
-| `ExampleApplicationIntegrationTest`  | Raw HTTP roundtrips — protobuf and JSON, success and error envelopes, both formats interleaved on one resource.         |
-| `GeneratedClientIntegrationTest`     | The generated `HaberdasherClient` against the live server, including JSON-mode construction, the runtime `TwirpClientBuilder` (managed builder), and error-envelope decoding. **Read this for the canonical client-side wiring pattern** (`dropwizard-client`'s `JerseyClientBuilder` + the generated stub). |
+| `ExampleApplicationIntegrationTest`  | Raw HTTP roundtrips — protobuf and JSON, success and errors, both formats interleaved, and REST/Twirp routing failures coexisting. |
+| `GeneratedClientIntegrationTest`     | The generated `HaberdasherClient` against the live server, including JSON mode, managed-client construction, error decoding, context header forwarding, and dropwizard-auth principal/role handling. |
 
 [Haberdasher]: https://github.com/twitchtv/twirp/blob/main/example/service.proto
 [protobuf-maven-plugin]: https://www.xolstice.org/protobuf-maven-plugin/

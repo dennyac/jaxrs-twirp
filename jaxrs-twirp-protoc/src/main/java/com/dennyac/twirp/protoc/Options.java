@@ -28,6 +28,13 @@ import java.util.Map;
  *       off to keep the generated client dependency-light — callers can still use
  *       the runtime {@link com.dennyac.twirp.TwirpClientBuilder} directly. Has no
  *       effect when {@code client=false}.</li>
+ *   <li>{@code context} — whether to give every generated service method a
+ *       trailing {@link com.dennyac.twirp.TwirpContext} parameter carrying the
+ *       request headers and JAX-RS {@code SecurityContext} (principal + roles).
+ *       Accepts {@code true}/{@code false}. Default: {@code false}. When
+ *       {@code true} the generated resource populates it from {@code @Context}
+ *       injectables and the generated client forwards its headers on the wire.
+ *       Off by default so the interface stays proto-only.</li>
  * </ul>
  *
  * <p>The service interface is always emitted — both the client and the resource
@@ -43,19 +50,22 @@ public final class Options {
     public static final boolean DEFAULT_GENERATE_CLIENT = true;
     public static final boolean DEFAULT_GENERATE_SERVER = true;
     public static final boolean DEFAULT_GENERATE_CLIENT_BUILDER = false;
+    public static final boolean DEFAULT_GENERATE_CONTEXT = false;
 
     private final String pathPrefix;
     private final boolean generateClient;
     private final boolean generateServer;
     private final boolean generateClientBuilder;
+    private final boolean generateContext;
     private final Map<String, String> raw;
 
     private Options(String pathPrefix, boolean generateClient, boolean generateServer,
-                    boolean generateClientBuilder, Map<String, String> raw) {
+                    boolean generateClientBuilder, boolean generateContext, Map<String, String> raw) {
         this.pathPrefix = pathPrefix;
         this.generateClient = generateClient;
         this.generateServer = generateServer;
         this.generateClientBuilder = generateClientBuilder;
+        this.generateContext = generateContext;
         this.raw = Collections.unmodifiableMap(raw);
     }
 
@@ -78,6 +88,16 @@ public final class Options {
      */
     public boolean generateClientBuilder() {
         return generateClientBuilder;
+    }
+
+    /**
+     * Whether every generated service method gains a trailing
+     * {@link com.dennyac.twirp.TwirpContext} parameter (request headers and
+     * {@code SecurityContext}). Off by default so the generated interface stays
+     * proto-only.
+     */
+    public boolean generateContext() {
+        return generateContext;
     }
 
     public Map<String, String> raw() {
@@ -107,7 +127,8 @@ public final class Options {
         boolean client = parseBoolean(raw.get("client"), DEFAULT_GENERATE_CLIENT);
         boolean server = parseBoolean(raw.get("server"), DEFAULT_GENERATE_SERVER);
         boolean clientBuilder = parseBoolean(raw.get("clientBuilder"), DEFAULT_GENERATE_CLIENT_BUILDER);
-        return new Options(normalizePrefix(prefix), client, server, clientBuilder, raw);
+        boolean context = parseBoolean(raw.get("context"), DEFAULT_GENERATE_CONTEXT);
+        return new Options(normalizePrefix(prefix), client, server, clientBuilder, context, raw);
     }
 
     static String normalizePrefix(String prefix) {

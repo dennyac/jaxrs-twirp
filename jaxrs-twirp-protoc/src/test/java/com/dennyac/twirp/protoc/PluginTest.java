@@ -118,6 +118,58 @@ class PluginTest {
     }
 
     @Test
+    void contextParameterEmittedWhenEnabled() {
+        CodeGeneratorRequest req = CodeGeneratorRequest.newBuilder()
+                .setParameter("context=true")
+                .addFileToGenerate("haberdasher.proto")
+                .addProtoFile(haberdasherFile(true))
+                .build();
+
+        var files = new Plugin().generate(req).getFileList().stream()
+                .collect(Collectors.toMap(File::getName, File::getContent));
+
+        String iface = files.get("com/twitch/twirp/example/haberdasher/Haberdasher.java");
+        assertThat(iface)
+                .contains("import com.dennyac.twirp.TwirpContext;")
+                .contains("Hat makeHat(Size request, TwirpContext context) throws TwirpException;");
+
+        String resource = files.get("com/twitch/twirp/example/haberdasher/HaberdasherResource.java");
+        assertThat(resource)
+                .contains("import com.dennyac.twirp.TwirpContext;")
+                .contains("import jakarta.ws.rs.core.SecurityContext;")
+                .contains("@Context HttpHeaders headers")
+                .contains("@Context SecurityContext security")
+                .contains("TwirpContext context = TwirpContext.from(headers, security);")
+                .contains("service.makeHat(request, context)");
+
+        String client = files.get("com/twitch/twirp/example/haberdasher/HaberdasherClient.java");
+        assertThat(client)
+                .contains("import com.dennyac.twirp.TwirpContext;")
+                .contains("public Hat makeHat(Size request, TwirpContext context) throws TwirpException {")
+                .contains("TwirpClients.applyHeaders("
+                        + "target.path(\"/MakeHat\").request(contentType).accept(contentType), context)");
+    }
+
+    @Test
+    void contextParameterAbsentByDefault() {
+        CodeGeneratorRequest req = CodeGeneratorRequest.newBuilder()
+                .addFileToGenerate("haberdasher.proto")
+                .addProtoFile(haberdasherFile(true))
+                .build();
+
+        var files = new Plugin().generate(req).getFileList().stream()
+                .collect(Collectors.toMap(File::getName, File::getContent));
+
+        assertThat(files.get("com/twitch/twirp/example/haberdasher/Haberdasher.java"))
+                .doesNotContain("TwirpContext");
+        assertThat(files.get("com/twitch/twirp/example/haberdasher/HaberdasherResource.java"))
+                .doesNotContain("TwirpContext")
+                .doesNotContain("SecurityContext");
+        assertThat(files.get("com/twitch/twirp/example/haberdasher/HaberdasherClient.java"))
+                .doesNotContain("TwirpContext");
+    }
+
+    @Test
     void clientGenerationCanBeDisabledViaOption() {
         CodeGeneratorRequest req = CodeGeneratorRequest.newBuilder()
                 .setParameter("client=false")
