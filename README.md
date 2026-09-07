@@ -80,6 +80,10 @@ the core transitively — there's nothing extra to wire up.
 
 ### 1. Add the runtime dependency
 
+> **Not published yet.** These artifacts aren't on Maven Central, so this
+> coordinate won't resolve until you build them locally — clone this repo and
+> run `mvn clean install` first (see [Building from source](#building-from-source)).
+
 ```xml
 <dependency>
     <groupId>com.dennyac.twirp</groupId>

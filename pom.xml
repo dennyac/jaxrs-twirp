@@ -26,6 +26,22 @@
         </license>
     </licenses>
 
+    <developers>
+        <developer>
+            <id>dennyac</id>
+            <name>Denny Abraham Cheriyan</name>
+            <email>dennyac@gmail.com</email>
+            <url>https://github.com/dennyac</url>
+        </developer>
+    </developers>
+
+    <scm>
+        <connection>scm:git:https://github.com/dennyac/jaxrs-twirp.git</connection>
+        <developerConnection>scm:git:git@github.com:dennyac/jaxrs-twirp.git</developerConnection>
+        <url>https://github.com/dennyac/jaxrs-twirp</url>
+        <tag>HEAD</tag>
+    </scm>
+
     <modules>
         <module>jaxrs-twirp-core</module>
         <module>dropwizard-twirp</module>
@@ -51,6 +67,12 @@
         <maven-surefire-plugin.version>3.5.5</maven-surefire-plugin.version>
         <protobuf-maven-plugin.version>0.6.1</protobuf-maven-plugin.version>
         <os-maven-plugin.version>1.7.1</os-maven-plugin.version>
+
+        <!-- Release tooling (used by the `release` profile; see PUBLISHING.md). -->
+        <maven-source-plugin.version>3.3.1</maven-source-plugin.version>
+        <maven-javadoc-plugin.version>3.11.2</maven-javadoc-plugin.version>
+        <maven-gpg-plugin.version>3.2.7</maven-gpg-plugin.version>
+        <central-publishing-maven-plugin.version>0.7.0</central-publishing-maven-plugin.version>
     </properties>
 
     <dependencyManagement>
@@ -153,4 +175,76 @@
             </extension>
         </extensions>
     </build>
+
+    <profiles>
+        <!--
+            Release profile: attaches sources + javadoc jars, GPG-signs all
+            artifacts, and publishes to Maven Central via the Central Portal.
+            Activate only when cutting a release: `mvn -Prelease deploy`.
+            Full runbook (accounts, keys, namespace verification) in PUBLISHING.md.
+        -->
+        <profile>
+            <id>release</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-source-plugin</artifactId>
+                        <version>${maven-source-plugin.version}</version>
+                        <executions>
+                            <execution>
+                                <id>attach-sources</id>
+                                <goals>
+                                    <goal>jar-no-fork</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <version>${maven-javadoc-plugin.version}</version>
+                        <executions>
+                            <execution>
+                                <id>attach-javadocs</id>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <!-- Java 17 doclint is strict; don't let it block a release. -->
+                            <doclint>none</doclint>
+                            <quiet>true</quiet>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>${maven-gpg-plugin.version}</version>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.sonatype.central</groupId>
+                        <artifactId>central-publishing-maven-plugin</artifactId>
+                        <version>${central-publishing-maven-plugin.version}</version>
+                        <extensions>true</extensions>
+                        <configuration>
+                            <publishingServerId>central</publishingServerId>
+                            <!-- Land as a validated deployment; click Publish in the portal. -->
+                            <autoPublish>false</autoPublish>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>

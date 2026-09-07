@@ -9,7 +9,8 @@ import java.util.concurrent.Callable;
  *
  * <p>{@link TwirpException}s thrown by the service are re-raised unchanged.
  * {@code InterruptedException}s reset the thread's interrupted status. Any
- * other {@link Throwable} is wrapped in {@code TwirpException(ErrorCode.INTERNAL, ...)}.
+ * other {@link Exception} is wrapped in {@code TwirpException(ErrorCode.INTERNAL, ...)};
+ * {@link Error}s and other non-{@code Exception} throwables propagate untouched.
  */
 public final class TwirpInvocations {
 
