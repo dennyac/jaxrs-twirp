@@ -92,9 +92,9 @@ Haberdasher hats = TwirpClientBuilder.forService(HaberdasherClient::new)
         .build();
 ```
 
-See the top-level README's "managed client builder" section for the optional
-`clientBuilder=true` codegen flag that emits `HaberdasherClient.builder(...)`
-sugar directly on the client.
+See the [`dropwizard-twirp` README](../dropwizard-twirp/README.md#twirpclientbuilder)
+for the optional `clientBuilder=true` codegen flag that emits
+`HaberdasherClient.builder(...)` sugar directly on the client.
 
 ### Asymmetric setups: client-only or server-only
 
