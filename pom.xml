@@ -12,8 +12,7 @@
 
     <name>JAX-RS Twirp Parent</name>
     <description>
-        Generate and run Twirp clients and servers on JAX-RS, with a first-class
-        Dropwizard integration.
+        JAX-RS client and server code generation for Twirp RPC.
     </description>
     <url>https://github.com/dennyac/jaxrs-twirp</url>
     <inceptionYear>2026</inceptionYear>
