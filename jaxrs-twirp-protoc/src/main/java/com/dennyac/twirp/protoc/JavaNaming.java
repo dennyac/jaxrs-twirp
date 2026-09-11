@@ -72,25 +72,24 @@ public final class JavaNaming {
     }
 
     /**
-     * Compute the default {@code java_outer_classname} for a proto file when
-     * the option is not explicitly set. protoc takes the basename of the file
-     * (without {@code .proto}), converts snake_case to UpperCamelCase, then
-     * suffixes {@code Proto} if a top-level message/enum/service collides with
-     * the bare name.
+     * Infer the Java wrapper name from the file's basename, stripping
+     * {@code .proto} or {@code .protodevel} and converting to UpperCamelCase.
      *
-     * <p>We use the suffix-free form because the bare name is what users see
-     * in their proto file; if there's a collision protoc emits the generated
-     * Java files for us anyway — we never embed this name in generated code,
-     * we only use it for nesting decisions handled in {@link TypeMapper}.
+     * <p>{@link TypeMapper} appends {@code OuterClass} when this name matches
+     * a message, enum or service declared in the file, including nested types.
+     * With {@code java_multiple_files=false}, message references in generated
+     * Java code are nested inside that resolved wrapper.
      */
     public static String defaultOuterClassName(String fileName) {
         String base = fileName;
-        int slash = Math.max(base.lastIndexOf('/'), base.lastIndexOf('\\'));
+        int slash = base.lastIndexOf('/');
         if (slash >= 0) {
             base = base.substring(slash + 1);
         }
         if (base.endsWith(".proto")) {
             base = base.substring(0, base.length() - ".proto".length());
+        } else if (base.endsWith(".protodevel")) {
+            base = base.substring(0, base.length() - ".protodevel".length());
         }
         return underscoresToCamelCase(base, true);
     }
@@ -100,17 +99,21 @@ public final class JavaNaming {
         boolean cap = capNext;
         for (int i = 0; i < input.length(); i++) {
             char ch = input.charAt(i);
-            if (ch == '_') {
-                cap = true;
-            } else if (Character.isDigit(ch)) {
-                result.append(ch);
-                cap = true;
-            } else if (cap) {
-                result.append(Character.toUpperCase(ch));
+            if (ch >= 'a' && ch <= 'z') {
+                result.append(cap ? Character.toUpperCase(ch) : ch);
                 cap = false;
-            } else {
+            } else if (ch >= 'A' && ch <= 'Z') {
+                result.append(i == 0 && !cap ? Character.toLowerCase(ch) : ch);
+                cap = false;
+            } else if (ch >= '0' && ch <= '9') {
                 result.append(ch);
+                cap = true;
+            } else {
+                cap = true;
             }
+        }
+        if (input.endsWith("#")) {
+            result.append('_');
         }
         return result.toString();
     }

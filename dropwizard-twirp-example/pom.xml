@@ -83,6 +83,7 @@
                             <!-- 'compile' invokes protoc's built-in java output plus
                                  any pure-Java plugins declared in protocPlugins. -->
                             <goal>compile</goal>
+                            <goal>test-compile</goal>
                         </goals>
                         <configuration>
                             <protocPlugins>

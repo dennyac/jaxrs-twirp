@@ -12,10 +12,14 @@ import com.google.protobuf.compiler.PluginProtos.CodeGeneratorRequest;
 import com.google.protobuf.compiler.PluginProtos.CodeGeneratorResponse;
 import com.google.protobuf.compiler.PluginProtos.CodeGeneratorResponse.File;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -253,26 +257,41 @@ class PluginTest {
                 .contains("@Path(\"/rpc/twitch.twirp.example.Haberdasher\")");
     }
 
-    @Test
-    void nestedMessageTypesUseOuterClassWhenJavaMultipleFilesFalse() {
-        // With java_multiple_files=false, the generated Hat/Size types live as
-        // nested classes inside an outer class. Verify our resolver names them
-        // correctly in the generated method signatures.
-        FileDescriptorProto file = haberdasherFile(false);
+    @ParameterizedTest
+    @MethodSource("singleFileDescriptors")
+    void singleFileMessagesUseProtocWrapper(FileDescriptorProto file, String outerClass) {
         CodeGeneratorRequest req = CodeGeneratorRequest.newBuilder()
-                .addFileToGenerate("haberdasher.proto")
+                .addFileToGenerate(file.getName())
                 .addProtoFile(file)
                 .build();
 
-        String resource = new Plugin().generate(req).getFileList().stream()
-                .filter(f -> f.getName().endsWith("HaberdasherResource.java"))
-                .findFirst().orElseThrow().getContent();
+        Map<String, String> files = new Plugin().generate(req).getFileList().stream()
+                .collect(Collectors.toMap(File::getName, File::getContent));
 
-        // The outer class lives in the same package as the resource, so JavaPoet
-        // qualifies the nested type rather than emitting a static import.
-        assertThat(resource)
-                .contains("public Response makeHat(HaberdasherProto.Size request, @Context HttpHeaders headers) {")
+        assertThat(files.get("com/twitch/twirp/example/haberdasher/Haberdasher.java"))
+                .containsIgnoringWhitespaces(
+                        outerClass + ".Hat makeHat(" + outerClass + ".Size request) throws TwirpException;");
+        assertThat(files.get("com/twitch/twirp/example/haberdasher/HaberdasherResource.java"))
+                .contains("public Response makeHat(" + outerClass + ".Size request, @Context HttpHeaders headers) {")
+                .contains(outerClass + ".Hat result = TwirpInvocations.invoke(")
+                .contains("@Path(\"/twirp/twitch.twirp.example.Haberdasher\")")
+                .contains("@Path(\"/MakeHat\")")
                 .contains("private final Haberdasher service;");
+        assertThat(files.get("com/twitch/twirp/example/haberdasher/HaberdasherClient.java"))
+                .containsIgnoringWhitespaces(
+                        "public " + outerClass + ".Hat makeHat(" + outerClass + ".Size request) throws TwirpException {")
+                .contains(outerClass + ".Hat.class);")
+                .contains("target.path(\"/MakeHat\")");
+    }
+
+    private static Stream<Arguments> singleFileDescriptors() {
+        FileDescriptorProto file = haberdasherFile(false);
+        return Stream.of(
+                Arguments.of(file, "HaberdasherOuterClass"),
+                Arguments.of(file.toBuilder().setName("messages.proto").build(), "Messages"),
+                Arguments.of(file.toBuilder()
+                        .setOptions(file.getOptions().toBuilder().setJavaOuterClassname("HaberdasherProto"))
+                        .build(), "HaberdasherProto"));
     }
 
     @Test
@@ -382,9 +401,6 @@ class PluginTest {
         FileOptions.Builder options = FileOptions.newBuilder()
                 .setJavaPackage("com.twitch.twirp.example.haberdasher")
                 .setJavaMultipleFiles(multipleFiles);
-        if (!multipleFiles) {
-            options.setJavaOuterClassname("HaberdasherProto");
-        }
         return FileDescriptorProto.newBuilder()
                 .setName("haberdasher.proto")
                 .setPackage("twitch.twirp.example")

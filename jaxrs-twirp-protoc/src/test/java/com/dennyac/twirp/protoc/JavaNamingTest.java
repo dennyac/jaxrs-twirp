@@ -1,6 +1,8 @@
 package com.dennyac.twirp.protoc;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -72,5 +74,18 @@ class JavaNamingTest {
                 .isEqualTo("MyService");
         assertThat(JavaNaming.defaultOuterClassName("foo_bar_baz.proto"))
                 .isEqualTo("FooBarBaz");
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+            "rpc-messages.v2.proto, RpcMessagesV2",
+            "path/to/my_service.protodevel, MyService",
+            "HTTP_service2file.proto, HTTPService2File",
+            "foo--BAR.proto, FooBAR",
+            "foo#.proto, Foo_",
+            "path\\to\\foo.proto, PathToFoo"
+    })
+    void defaultOuterClassNameUsesProtocFilenameRules(String fileName, String expected) {
+        assertThat(JavaNaming.defaultOuterClassName(fileName)).isEqualTo(expected);
     }
 }

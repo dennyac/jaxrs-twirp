@@ -107,6 +107,17 @@ public final class TypeMapper {
         if (options.hasJavaOuterClassname() && !options.getJavaOuterClassname().isEmpty()) {
             return options.getJavaOuterClassname();
         }
-        return JavaNaming.defaultOuterClassName(file.getName());
+        String outer = JavaNaming.defaultOuterClassName(file.getName());
+        boolean conflicts = file.getMessageTypeList().stream()
+                .anyMatch(message -> hasConflictingClassName(message, outer))
+                || file.getEnumTypeList().stream().anyMatch(enumeration -> outer.equals(enumeration.getName()))
+                || file.getServiceList().stream().anyMatch(service -> outer.equals(service.getName()));
+        return conflicts ? outer + "OuterClass" : outer;
+    }
+
+    private static boolean hasConflictingClassName(DescriptorProto message, String name) {
+        return name.equals(message.getName())
+                || message.getEnumTypeList().stream().anyMatch(enumeration -> name.equals(enumeration.getName()))
+                || message.getNestedTypeList().stream().anyMatch(nested -> hasConflictingClassName(nested, name));
     }
 }
