@@ -1,3 +1,6 @@
+# Copyright 2026 the jaxrs-twirp authors
+# SPDX-License-Identifier: Apache-2.0
+
 # Minimal Dropwizard configuration for the example.
 # Server listens on a random port for testing; override via env or yml in production.
 server:

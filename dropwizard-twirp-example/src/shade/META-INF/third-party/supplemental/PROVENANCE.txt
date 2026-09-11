@@ -1,0 +1,246 @@
+Supplemental legal material: provenance
+======================================
+
+All paths below are relative to META-INF/third-party/supplemental/.
+References to original dependency binary entries such as META-INF/LICENSE.md
+or NOTICE.markdown identify members retained under
+META-INF/third-party/<groupId path>/<artifactId>/<version>/<original entry>,
+with dots in groupId replaced by slashes, not the shaded jar's top-level
+project LICENSE/NOTICE.
+Raw legal files are preserved byte-for-byte. Source-header compilations retain
+the original legal comment text and identify its source member; repeated
+identical comments within an artifact are included once. No project Apache
+header is added to a third-party legal text.
+
+RUNTIME-SOURCES.tsv records the exact external runtime binary/source archives.
+All external dependency versions here are releases, not Maven snapshots.
+Source archive URLs use the published group/artifact/version coordinates.
+SHA256SUMS records the packaged supplemental files and ../../THIRD-PARTY.txt.
+
+Verbatim upstream legal files
+----------------------------
+
+File: dropwizard-5.0.2-NOTICE
+Source: https://raw.githubusercontent.com/dropwizard/dropwizard/v5.0.2/NOTICE
+
+File: hibernate-validator-8.0.3.Final-COPYRIGHT.txt
+Source: https://raw.githubusercontent.com/hibernate/hibernate-validator/8.0.3.Final/copyright.txt
+
+File: jakarta.validation-api-3.0.2-NOTICE.md
+Source: https://raw.githubusercontent.com/jakartaee/validation/3.0.2/NOTICE.md
+
+File: jakarta.validation-api-3.0.2-COPYRIGHT.txt
+Source: https://raw.githubusercontent.com/jakartaee/validation/3.0.2/copyright.txt
+
+File: profiler-1.1.1-LICENSE
+Source: https://raw.githubusercontent.com/phax/profiler/profiler-1.1.1/LICENSE
+
+File: logback-1.5.33-LICENSE.txt
+Source: https://raw.githubusercontent.com/qos-ch/logback/v_1.5.33/logback-core/LICENSE.txt
+Also identical: https://raw.githubusercontent.com/qos-ch/logback/v_1.5.33/logback-classic/LICENSE.txt
+
+File: logback-access-2.0.12-LICENSE.txt
+Source: https://raw.githubusercontent.com/qos-ch/logback-access/v_2.0.12/LICENSE.txt
+
+File: EPL-2.0.txt
+Source: https://www.eclipse.org/org/documents/epl-2.0/EPL-2.0.txt
+
+File: expressly-5.0.0-LICENSE.md
+Source: https://raw.githubusercontent.com/eclipse-ee4j/expressly/5.0.0-RELEASE/LICENSE.md
+
+File: expressly-5.0.0-NOTICE.md
+Source: https://raw.githubusercontent.com/eclipse-ee4j/expressly/5.0.0-RELEASE/NOTICE.md
+
+File: jakarta.servlet-api-6.0.0-LICENSE.md
+Source: https://raw.githubusercontent.com/jakartaee/servlet/6.0.0-RELEASE/LICENSE.md
+
+File: jakarta.servlet-api-6.0.0-NOTICE.md
+Source: https://raw.githubusercontent.com/jakartaee/servlet/6.0.0-RELEASE/NOTICE.md
+
+File: osgi-resource-locator-1.0.3-LICENSE.md
+Source: https://raw.githubusercontent.com/eclipse-ee4j/glassfish-hk2-extra/1.0.3-RELEASE/LICENSE.md
+
+File: osgi-resource-locator-1.0.3-NOTICE.md
+Source: https://raw.githubusercontent.com/eclipse-ee4j/glassfish-hk2-extra/1.0.3-RELEASE/NOTICE.md
+
+File: argparse4j-0.9.0-LICENSE.txt
+Source: https://raw.githubusercontent.com/argparse4j/argparse4j/argparse4j-0.9.0/LICENSE.txt
+
+File: javassist-3.31.0-GA-License.html
+Source: https://raw.githubusercontent.com/jboss-javassist/javassist/rel_3_31_0_ga/License.html
+
+File: jetty-12.1.9-NOTICE.txt
+Source: https://raw.githubusercontent.com/jetty/jetty.project/jetty-12.1.9/NOTICE.txt
+
+File: jna-5.14.0-libffi-LICENSE
+Source: https://raw.githubusercontent.com/java-native-access/jna/5.14.0/native/libffi/LICENSE
+
+File: CC0-1.0.html
+Source: https://raw.githubusercontent.com/creativecommons/cc-legal-tools-data/6d7046ff3146bbc034e88d9c87854e43d2a28e32/legacy/legalcode/zero_1.0.html
+
+File: CC-BY-2.5.html
+Source: https://raw.githubusercontent.com/creativecommons/cc-legal-tools-data/6d7046ff3146bbc034e88d9c87854e43d2a28e32/legacy/legalcode/by_2.5.html
+
+Excerpts and source-header compilations
+--------------------------------------
+
+metrics-4.2.39-COPYRIGHT.txt is the copyright and license notice following
+the Apache-2.0 appendix in:
+https://raw.githubusercontent.com/dropwizard/metrics/v4.2.39/LICENSE
+
+logback-throttling-appender-1.5.3-COPYRIGHT.txt is the copyright and license
+notice following the Apache-2.0 appendix in:
+https://raw.githubusercontent.com/dropwizard/logback-throttling-appender/logback-throttling-appender-1.5.3/LICENSE
+
+apache-source-NOTICES.txt contains unique legal comments preceding Java
+package declarations from the resolved source archives of:
+  org.hibernate.validator:hibernate-validator:8.0.3.Final
+  org.yaml:snakeyaml:2.5
+  com.google.errorprone:error_prone_annotations:2.42.0
+  org.jspecify:jspecify:1.0.0
+  jakarta.validation:jakarta.validation-api:3.0.2
+  org.jboss.logging:jboss-logging:3.6.3.Final
+  com.google.code.gson:gson:2.8.9
+  com.google.j2objc:j2objc-annotations:2.8
+  org.slf4j:jcl-over-slf4j:2.0.18
+  org.slf4j:log4j-over-slf4j:2.0.18
+It also retains the Apache-licensed comments from the Servlet 6.0.0 sources,
+Javassist 3.31.0-GA's alternate-license/copyright comments, and the Apache
+comments on Jersey 3.1.11's Guava, monitoring, and Hibernate-derived code.
+Each excerpt names its source-archive URL and member.
+
+argparse4j-0.9.0-NOTICES.txt contains the eight distinct leading license
+comments from the resolved source archive's Java files. They cover Tatsuhiro
+Tsujikawa, Adam Parkin, and Andrew January's MIT notices and the Apache
+headers of FileArgumentType and TerminalWidth. Those Apache headers were
+already present when those files entered the Argparse4j repository:
+https://github.com/argparse4j/argparse4j/commit/2d2385e1e8a115bdb56249f1b2cbd53eb9c93bb0
+https://github.com/argparse4j/argparse4j/commit/1879e7a802284274ac776f39c3de36ce389a2ae2
+Source: https://repo.maven.apache.org/maven2/net/sourceforge/argparse4j/argparse4j/0.9.0/argparse4j-0.9.0-sources.jar
+
+jetty-12.1.9-UnixCrypt-NOTICE.txt contains the leading comments of
+org/eclipse/jetty/util/security/UnixCrypt.java, including its permission
+notice and the attributed April 2001 modifications.
+Source: https://repo.maven.apache.org/maven2/org/eclipse/jetty/jetty-util/12.1.9/jetty-util-12.1.9-sources.jar
+
+jersey-server-3.1.11-ASM-LICENSE.txt contains the leading comment from
+jersey/repackaged/org/objectweb/asm/AnnotationVisitor.java. The same
+BSD-3-Clause comment is present in all 32 bundled ASM Java source files;
+the preserved Jersey Server NOTICE.markdown identifies ASM 9.8.
+Source: https://repo.maven.apache.org/maven2/org/glassfish/jersey/core/jersey-server/3.1.11/jersey-server-3.1.11-sources.jar
+
+jersey-common-3.1.11-JSR166-NOTICE.txt contains the leading comment from
+org/glassfish/jersey/internal/jsr166/Flow.java. The companion CC0 text is
+the Creative Commons 1.0 legal code at the pinned upstream commit above.
+Other JSR-166-derived classes with Eclipse headers retain those licenses.
+Source: https://repo.maven.apache.org/maven2/org/glassfish/jersey/core/jersey-common/3.1.11/jersey-common-3.1.11-sources.jar
+
+jsr305-3.0.2-NOTICES.txt retains the common leading CC-BY-2.5 comment from
+javax/annotation/concurrent/GuardedBy.java, Immutable.java,
+NotThreadSafe.java, and ThreadSafe.java in the resolved source archive.
+Source: https://repo.maven.apache.org/maven2/com/google/code/findbugs/jsr305/3.0.2/jsr305-3.0.2-sources.jar
+
+jsr305-3.0.2-origin-LICENSE is the unchanged member
+jsr-305/trunk/ri/LICENSE of the original project's archived sources:
+https://storage.googleapis.com/google-code-archive-source/v2/code.google.com/jsr-305/source-archive.zip
+Archive SHA-256: 4f29730ba2229df8af699ee139486bf5593052d2fcc2bd0fc3cfe121fd76025b
+The archive's annotation sources were compared with the resolved 3.0.2
+sources: the original RI code is present, with later documentation/code
+changes. This archive is an origin record, not a substitute for the exact
+3.0.2 source archive. Its BSD notice and the explicit CC-BY source headers
+are retained in addition to the Apache license declared by the published
+3.0.2 POM.
+
+jna-5.14.0-native-NOTICES.txt retains distinct native license comments
+from the JNA 5.14.0 source tree:
+https://github.com/java-native-access/jna/tree/5.14.0/native
+Each excerpt gives its exact raw source URL. The source selection is the
+JNA dispatch/callback C headers and libffi's common sources, headers, and
+the aarch64, arm, loongarch64, mips, powerpc, riscv, s390, sparc, and x86
+directories corresponding to platforms present in jna-jpms-5.14.0.jar.
+Darwin PowerPC assembly and Windows ARM32 assembly are excluded because
+those platforms are absent. Build tools, tests, and documentation are
+excluded. The dlmalloc public-domain statement is copied without its
+unrelated implementation documentation. The snapshot identifies libffi
+3.4.4 in configure.ac:
+https://raw.githubusercontent.com/java-native-access/jna/5.14.0/native/libffi/configure.ac
+This describes the legal notices in the JNA release's native source tree;
+it does not claim to reconstruct each prebuilt native library's toolchain.
+
+Apache license evidence where no additional project NOTICE is supplied
+---------------------------------------------------------------------
+
+Dropwizard's project license and Metrics/appender license appendices:
+https://raw.githubusercontent.com/dropwizard/dropwizard/v5.0.2/LICENSE
+https://raw.githubusercontent.com/dropwizard/metrics/v4.2.39/LICENSE
+https://raw.githubusercontent.com/dropwizard/logback-throttling-appender/logback-throttling-appender-1.5.3/LICENSE
+
+The following version-specific upstream files corroborate the Apache
+source comments or supply the license for sources without file headers:
+https://raw.githubusercontent.com/hibernate/hibernate-validator/8.0.3.Final/license.txt
+https://api.bitbucket.org/2.0/repositories/snakeyaml/snakeyaml/src/snakeyaml-2.5/LICENSE.txt
+https://raw.githubusercontent.com/google/error-prone/v2.42.0/COPYING
+https://raw.githubusercontent.com/jspecify/jspecify/v1.0.0/LICENSE
+https://raw.githubusercontent.com/jakartaee/validation/3.0.2/license.txt
+https://raw.githubusercontent.com/jboss-logging/jboss-logging/v3.6.3.Final/LICENSE.txt
+https://raw.githubusercontent.com/google/gson/gson-parent-2.8.9/LICENSE
+https://raw.githubusercontent.com/google/j2objc/2.8/LICENSE
+https://raw.githubusercontent.com/FasterXML/jackson-modules-base/jackson-modules-base-2.21.4/LICENSE
+https://raw.githubusercontent.com/qos-ch/slf4j/v_2.0.18/jcl-over-slf4j/LICENSE.txt
+https://raw.githubusercontent.com/qos-ch/slf4j/v_2.0.18/log4j-over-slf4j/LICENSE.txt
+
+The two SLF4J bridge module licenses and their resolved source headers
+specify Apache-2.0 even though their binary jars contain the generic
+SLF4J MIT LICENSE.txt. Both the original binary metadata and the source
+notices are preserved; the complete Apache text is in META-INF/LICENSE.
+
+The two supplied Protobuf 4.32.1 license files, outside this supplemental
+directory, come from the Java runtime's corresponding upstream release:
+https://raw.githubusercontent.com/protocolbuffers/protobuf/v32.1/LICENSE
+
+The additional Protobuf Java copyright entry is:
+META-INF/third-party/com/google/protobuf/protobuf-java/4.32.1/COPYRIGHT
+It retains Copyright 2008 Google Inc. from the BSD license,
+Copyright 2023 Google Inc. from java_features.proto in the binary jar,
+and Copyright 2024 Google LLC. from GeneratedMessageV3.java,
+RepeatedFieldBuilderV3.java, and SingleFieldBuilderV3.java in the source jar.
+The exact binary and source archives are:
+https://repo.maven.apache.org/maven2/com/google/protobuf/protobuf-java/4.32.1/protobuf-java-4.32.1.jar
+https://repo.maven.apache.org/maven2/com/google/protobuf/protobuf-java/4.32.1/protobuf-java-4.32.1-sources.jar
+Protobuf Java Util has its BSD LICENSE only, not this additional COPYRIGHT.
+
+EPL source distributions
+------------------------
+
+These version-specific upstream archives provide the source and build files.
+The matching published -sources.jar archives are in RUNTIME-SOURCES.tsv.
+
+Logback Core and Classic 1.5.33:
+https://github.com/qos-ch/logback/archive/refs/tags/v_1.5.33.tar.gz
+
+Logback Access Common and Jetty12 2.0.12:
+https://github.com/qos-ch/logback-access/archive/refs/tags/v_2.0.12.tar.gz
+
+Expressly 5.0.0:
+https://github.com/eclipse-ee4j/expressly/archive/refs/tags/5.0.0-RELEASE.tar.gz
+
+Jakarta Servlet 6.0.0:
+https://github.com/jakartaee/servlet/archive/refs/tags/6.0.0-RELEASE.tar.gz
+
+OSGi Resource Locator 1.0.3:
+https://github.com/eclipse-ee4j/glassfish-hk2-extra/archive/refs/tags/1.0.3-RELEASE.tar.gz
+
+HK2 API, Locator, Utils, and AOP Alliance repackaging 3.0.6:
+https://github.com/eclipse-ee4j/glassfish-hk2/archive/refs/tags/3.0.6-RELEASE.tar.gz
+
+Jersey 3.1.11:
+https://github.com/eclipse-ee4j/jersey/archive/refs/tags/3.1.11.tar.gz
+
+Jakarta REST API 3.1.0:
+https://github.com/jakartaee/rest/archive/refs/tags/3.1.0.tar.gz
+
+Jakarta Expression Language API 5.0.1:
+https://github.com/jakartaee/expression-language/archive/refs/tags/5.0.1-RELEASE-api.tar.gz
+
+Jakarta Annotation API 2.1.1:
+https://github.com/jakartaee/common-annotations-api/archive/refs/tags/2.1.1.tar.gz

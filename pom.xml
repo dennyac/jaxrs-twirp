@@ -1,4 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Copyright 2026 the jaxrs-twirp authors
+    SPDX-License-Identifier: Apache-2.0
+-->
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
@@ -52,6 +56,9 @@
         <maven.compiler.release>17</maven.compiler.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <license.directory>${project.basedir}/..</license.directory>
+        <notice.directory>${project.basedir}/..</notice.directory>
+        <javadoc.output.directory>${project.build.directory}/reports</javadoc.output.directory>
 
         <dropwizard.version>5.0.2</dropwizard.version>
         <protobuf.version>4.32.1</protobuf.version>
@@ -62,6 +69,8 @@
 
         <maven-compiler-plugin.version>3.14.1</maven-compiler-plugin.version>
         <maven-jar-plugin.version>3.4.2</maven-jar-plugin.version>
+        <maven-resources-plugin.version>3.3.1</maven-resources-plugin.version>
+        <maven-dependency-plugin.version>3.9.0</maven-dependency-plugin.version>
         <maven-shade-plugin.version>3.6.0</maven-shade-plugin.version>
         <maven-surefire-plugin.version>3.5.5</maven-surefire-plugin.version>
         <protobuf-maven-plugin.version>0.6.1</protobuf-maven-plugin.version>
@@ -131,6 +140,25 @@
     </dependencyManagement>
 
     <build>
+        <resources>
+            <resource>
+                <directory>${project.basedir}/src/main/resources</directory>
+            </resource>
+            <resource>
+                <directory>${license.directory}</directory>
+                <targetPath>META-INF</targetPath>
+                <includes>
+                    <include>LICENSE</include>
+                </includes>
+            </resource>
+            <resource>
+                <directory>${notice.directory}</directory>
+                <targetPath>META-INF</targetPath>
+                <includes>
+                    <include>NOTICE</include>
+                </includes>
+            </resource>
+        </resources>
         <pluginManagement>
             <plugins>
                 <plugin>
@@ -148,8 +176,58 @@
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-resources-plugin</artifactId>
+                    <version>${maven-resources-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-dependency-plugin</artifactId>
+                    <version>${maven-dependency-plugin.version}</version>
+                    <executions>
+                        <execution>
+                            <id>bundled-dependency-legal</id>
+                            <phase>prepare-package</phase>
+                            <goals>
+                                <goal>unpack-dependencies</goal>
+                            </goals>
+                            <configuration>
+                                <includeScope>runtime</includeScope>
+                                <excludeGroupIds>${project.groupId}</excludeGroupIds>
+                                <outputDirectory>${project.build.outputDirectory}/META-INF/third-party</outputDirectory>
+                                <useRepositoryLayout>true</useRepositoryLayout>
+                                <includes>**/*LICENSE*,**/*LICENCE*,**/*NOTICE*,**/*COPYING*,**/*COPYRIGHT*,**/*license*,**/*licence*,**/*notice*,**/*copying*,**/*copyright*,**/*License*,**/*Notice*,**/licenses/**,**/legal/**,**/*THIRD-PARTY*,META-INF/DEPENDENCIES</includes>
+                                <excludes>**/*.class</excludes>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-shade-plugin</artifactId>
                     <version>${maven-shade-plugin.version}</version>
+                    <configuration>
+                        <filters>
+                            <filter>
+                                <artifact>*:*</artifact>
+                                <excludes>
+                                    <exclude>META-INF/LICENSE*</exclude>
+                                    <exclude>META-INF/NOTICE*</exclude>
+                                    <exclude>LICENSE*</exclude>
+                                    <exclude>NOTICE*</exclude>
+                                </excludes>
+                            </filter>
+                        </filters>
+                        <transformers>
+                            <transformer implementation="org.apache.maven.plugins.shade.resource.IncludeResourceTransformer">
+                                <resource>META-INF/LICENSE</resource>
+                                <file>${license.directory}/LICENSE</file>
+                            </transformer>
+                            <transformer implementation="org.apache.maven.plugins.shade.resource.IncludeResourceTransformer">
+                                <resource>META-INF/NOTICE</resource>
+                                <file>${notice.directory}/NOTICE</file>
+                            </transformer>
+                        </transformers>
+                    </configuration>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -188,6 +266,38 @@
                 <plugins>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-resources-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>javadoc-legal-resources</id>
+                                <phase>prepare-package</phase>
+                                <goals>
+                                    <goal>copy-resources</goal>
+                                </goals>
+                                <configuration>
+                                    <outputDirectory>${javadoc.output.directory}/apidocs</outputDirectory>
+                                    <resources>
+                                        <resource>
+                                            <directory>${license.directory}</directory>
+                                            <targetPath>META-INF</targetPath>
+                                            <includes>
+                                                <include>LICENSE</include>
+                                            </includes>
+                                        </resource>
+                                        <resource>
+                                            <directory>${notice.directory}</directory>
+                                            <targetPath>META-INF</targetPath>
+                                            <includes>
+                                                <include>NOTICE</include>
+                                            </includes>
+                                        </resource>
+                                    </resources>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-source-plugin</artifactId>
                         <version>${maven-source-plugin.version}</version>
                         <executions>
@@ -212,6 +322,7 @@
                             </execution>
                         </executions>
                         <configuration>
+                            <outputDirectory>${javadoc.output.directory}</outputDirectory>
                             <!-- Java 17 doclint is strict; don't let it block a release. -->
                             <doclint>none</doclint>
                             <quiet>true</quiet>

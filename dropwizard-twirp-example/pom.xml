@@ -1,4 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Copyright 2026 the jaxrs-twirp authors
+    SPDX-License-Identifier: Apache-2.0
+-->
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
@@ -19,6 +23,7 @@
     </description>
 
     <properties>
+        <notice.directory>${project.basedir}</notice.directory>
         <!-- This module is a runnable demo, not a published library artifact. -->
         <maven.deploy.skip>true</maven.deploy.skip>
     </properties>
@@ -73,6 +78,46 @@
     <build>
         <plugins>
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>bundled-legal-supplements</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.outputDirectory}</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>${project.basedir}/src/shade</directory>
+                                </resource>
+                                <resource>
+                                    <directory>${project.basedir}/../third-party/protobuf</directory>
+                                    <targetPath>META-INF/third-party/com/google/protobuf/protobuf-java/${protobuf.version}</targetPath>
+                                    <includes>
+                                        <include>LICENSE</include>
+                                        <include>COPYRIGHT</include>
+                                    </includes>
+                                </resource>
+                                <resource>
+                                    <directory>${project.basedir}/../third-party/protobuf</directory>
+                                    <targetPath>META-INF/third-party/com/google/protobuf/protobuf-java-util/${protobuf.version}</targetPath>
+                                    <includes>
+                                        <include>LICENSE</include>
+                                    </includes>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
                 <groupId>org.xolstice.maven.plugins</groupId>
                 <artifactId>protobuf-maven-plugin</artifactId>
                 <extensions>true</extensions>
@@ -120,7 +165,7 @@
                         </goals>
                         <configuration>
                             <createDependencyReducedPom>true</createDependencyReducedPom>
-                            <filters>
+                            <filters combine.children="append">
                                 <filter>
                                     <artifact>*:*</artifact>
                                     <excludes>
@@ -137,7 +182,7 @@
                                     </excludes>
                                 </filter>
                             </filters>
-                            <transformers>
+                            <transformers combine.children="append">
                                 <transformer
                                     implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
                                 <transformer

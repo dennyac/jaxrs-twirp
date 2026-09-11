@@ -1,3 +1,9 @@
+// Copyright 2018 Twitch Interactive, Inc. All Rights Reserved.
+// Copyright 2026 the jaxrs-twirp authors
+// SPDX-License-Identifier: Apache-2.0
+//
+// Adapted from Twirp's example/service.proto with Java options and additional RPCs.
+
 syntax = "proto3";
 
 package twitch.twirp.example.haberdasher;

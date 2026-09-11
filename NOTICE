@@ -1,13 +1,2 @@
 jaxrs-twirp
 Copyright 2026 the jaxrs-twirp authors
-
-Licensed under the Apache License, Version 2.0.
-
-This product includes ideas inspired by the following projects:
-  * twitchtv/twirp (Apache 2.0) — the Twirp RPC protocol itself.
-  * github/flit    (Apache 2.0) — for the JavaPoet-based protoc-plugin
-                                  approach to generating Java Twirp servers.
-  * fajran/protoc-gen-twirp_java_jaxrs (MIT) — earlier JAX-RS proof of
-                                  concept.
-
-No source code from these projects is included verbatim.
