@@ -2,21 +2,22 @@
 
 This project publishes to **Maven Central** through the
 [Central Portal](https://central.sonatype.com) using the
-`central-publishing-maven-plugin`. Everything Maven-side is already wired into
-the root `pom.xml` behind a `release` profile (sources jar, javadoc jar, GPG
-signing, and the Central publisher). What's left is **account and key setup**,
-which is specific to you and must never live in the repo.
+`central-publishing-maven-plugin`. The root `pom.xml` configures sources,
+javadocs, GPG signing, and the Central publisher in its `release` profile.
+Keep account credentials and private keys outside the repo.
 
-The published artifacts are the three library modules:
+Publish the parent POM and the three library modules together. The library POMs
+inherit from the parent, so consumers need it on Central too.
 
-| Module | Coordinates |
+| Artifact | Coordinates |
 | --- | --- |
+| Parent POM | `com.dennyac.twirp:jaxrs-twirp-parent` |
 | `jaxrs-twirp-core` | `com.dennyac.twirp:jaxrs-twirp-core` |
 | `dropwizard-twirp` | `com.dennyac.twirp:dropwizard-twirp` |
 | `jaxrs-twirp-protoc` | `com.dennyac.twirp:jaxrs-twirp-protoc` |
 
-`dropwizard-twirp-example` is a runnable demo and is **not** published
-(`maven.deploy.skip=true` in its POM).
+`dropwizard-twirp-example` is a runnable demo, not a release artifact. The
+deployment command below excludes it explicitly.
 
 ---
 
@@ -29,8 +30,7 @@ The published artifacts are the three library modules:
    Because this is a domain-based namespace, the portal asks you to prove you
    own `dennyac.com`: it shows a verification code, and you add a **DNS `TXT`
    record** containing that code to `dennyac.com`. Once DNS propagates, click
-   *Verify*. (You own the domain, so this is the right path — no `io.github.*`
-   fallback needed.)
+   *Verify*.
 
 ### 2. Central user token
 
@@ -89,54 +89,106 @@ Put credentials *outside* the repo. Minimal version:
 
 ## Cutting a release
 
-The repo stays on a `-SNAPSHOT` version during development. A release is just:
-bump → deploy → publish → tag → bump back.
+The repo stays on a `-SNAPSHOT` version during development. Commit the release
+versions before building: the tag must identify the committed source used to
+produce the published artifacts, not the preceding SNAPSHOT commit.
+
+Run these steps from the repo root in the same shell, substituting the release
+and next-development versions as needed. These commands assume direct pushes
+to `main` are allowed. Stop on any failure; never force-push or move a release
+tag.
+
+### 1. Start from a clean, current `main`
+
+Use a dedicated checkout with no uncommitted files or unpublished commits. Both
+`test` commands below must succeed before proceeding.
 
 ```bash
-# 0. Make sure the tree is clean and tests pass.
+test -z "$(git status --porcelain)" &&
+git fetch origin &&
+git switch main &&
+git merge --ff-only origin/main &&
+test "$(git rev-parse HEAD)" = "$(git rev-parse origin/main)" &&
 mvn clean verify
-
-# 1. Drop the -SNAPSHOT for the release (updates every module POM).
-mvn versions:set -DnewVersion=0.1.0 -DgenerateBackupPoms=false
-
-# 2. Build signed artifacts and upload them to the Central Portal.
-#    The `release` profile attaches sources+javadoc, signs with GPG, and
-#    invokes the Central publisher. Credentials come from settings.xml.
-mvn -Prelease clean deploy
-
-# 3. Finish in the portal:
-#    autoPublish is false, so the upload lands as a "validated" deployment you
-#    review and click **Publish** on at https://central.sonatype.com/publishing.
-#    (Set <autoPublish>true</autoPublish> in the root POM's release profile to
-#    skip this manual step on future releases.)
-
-# 4. Tag the release.
-git tag -a v0.1.0 -m "jaxrs-twirp 0.1.0"
-git push origin v0.1.0
-
-# 5. Open the next development iteration.
-mvn versions:set -DnewVersion=0.2.0-SNAPSHOT -DgenerateBackupPoms=false
-git commit -am "Start 0.2.0-SNAPSHOT"
 ```
 
-After *Publish*, artifacts typically appear on Central within ~15–30 minutes and
-are searchable at <https://central.sonatype.com> and via
+### 2. Commit and push the release versions
+
+```bash
+mvn versions:set -DnewVersion=0.1.0 -DgenerateBackupPoms=false
+git diff -- pom.xml */pom.xml
+```
+
+Review all five POMs: the root version and every module's parent version,
+including the example's, must be `0.1.0`. Then commit only those POM changes.
+Keep `release_commit` for the later tag.
+
+```bash
+git add pom.xml */pom.xml &&
+git commit -m "Release 0.1.0" &&
+release_commit=$(git rev-parse HEAD) &&
+git push origin main
+```
+
+### 3. Build and upload that committed source
+
+Credentials come from the `central` server in `settings.xml`. `-pl` selects the
+three libraries; `-am` includes their required parent POM, without the example.
+The example's `maven.deploy.skip` controls Maven's deploy plugin, not the
+Central publisher.
+
+```bash
+test "$(git rev-parse HEAD)" = "$release_commit" &&
+test -z "$(git status --porcelain)" &&
+mvn -Prelease -pl jaxrs-twirp-core,dropwizard-twirp,jaxrs-twirp-protoc -am clean deploy &&
+test -z "$(git status --porcelain)"
+```
+
+### 4. Publish, then tag the release commit
+
+`autoPublish=false` leaves the deployment awaiting manual publication. At
+<https://central.sonatype.com/publishing/deployments>, wait for validation and
+confirm the deployment contains the parent POM and three libraries at `0.1.0`,
+not the example. Click **Publish** and wait for the deployment to be published
+before tagging.
+
+```bash
+test "$(git rev-parse HEAD)" = "$release_commit" &&
+test -z "$(git status --porcelain)" &&
+git tag -a v0.1.0 -m "jaxrs-twirp 0.1.0" "$release_commit" &&
+git push origin refs/tags/v0.1.0
+```
+
+### 5. Commit the next development version separately
+
+Only proceed after publication and the tag push succeed. Review the version
+changes before committing; this commit must not be part of the release tag.
+
+```bash
+mvn versions:set -DnewVersion=0.2.0-SNAPSHOT -DgenerateBackupPoms=false
+git diff -- pom.xml */pom.xml
+git add pom.xml */pom.xml
+git commit -m "Start 0.2.0-SNAPSHOT"
+git push origin main
+```
+
+Publishing and search indexing can take time. Look for the release at
+<https://central.sonatype.com> and
 <https://repo1.maven.org/maven2/com/dennyac/twirp/>.
 
 ---
 
 ## Verifying the wiring without releasing
 
-You can prove the `release` profile produces the right artifacts **before** any
-account/key setup by skipping the signing step:
+You can inspect release packaging before account/key setup by skipping signing:
 
 ```bash
 mvn -Prelease -DskipTests -Dgpg.skip=true clean verify
 # each library module's target/ should contain -sources.jar and -javadoc.jar
 ```
 
-(This exact command is part of the project's pre-release checklist and passes
-today.)
+This checks packaging only; it does not sign, upload, or validate a deployment
+with Central.
 
 ---
 
