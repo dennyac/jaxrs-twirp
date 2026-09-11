@@ -5,6 +5,7 @@ import com.dennyac.twirp.codec.ProtobufJsonMessageBodyReader;
 import com.dennyac.twirp.codec.ProtobufJsonMessageBodyWriter;
 import com.dennyac.twirp.codec.ProtobufMessageBodyReader;
 import com.dennyac.twirp.codec.ProtobufMessageBodyWriter;
+import com.dennyac.twirp.codec.TwirpErrorMessageBodyWriter;
 import com.dennyac.twirp.errors.InvalidProtocolBufferExceptionMapper;
 import com.dennyac.twirp.errors.TwirpExceptionMapper;
 import jakarta.ws.rs.core.Feature;
@@ -23,6 +24,8 @@ import java.util.Objects;
  *       for {@code application/protobuf}</li>
  *   <li>{@link ProtobufJsonMessageBodyReader} / {@link ProtobufJsonMessageBodyWriter}
  *       for {@code application/json}</li>
+ *   <li>{@link TwirpErrorMessageBodyWriter} for JSON error envelopes, without
+ *       requiring a general JSON provider</li>
  *   <li>{@link TwirpExceptionMapper} — renders a {@link TwirpException} as the
  *       wire-format JSON error</li>
  *   <li>{@link InvalidProtocolBufferExceptionMapper} — renders malformed
@@ -92,6 +95,7 @@ public final class TwirpServerFeature implements Feature {
         context.register(new ProtobufMessageBodyWriter());
         context.register(new ProtobufJsonMessageBodyReader(jsonParser));
         context.register(new ProtobufJsonMessageBodyWriter(jsonPrinter));
+        context.register(new TwirpErrorMessageBodyWriter());
         context.register(new TwirpExceptionMapper());
         context.register(new InvalidProtocolBufferExceptionMapper());
         context.register(new TwirpBadRouteFilter(pathPrefixes));

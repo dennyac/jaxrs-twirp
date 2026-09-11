@@ -4,6 +4,7 @@ import com.dennyac.twirp.codec.ProtobufJsonMessageBodyReader;
 import com.dennyac.twirp.codec.ProtobufJsonMessageBodyWriter;
 import com.dennyac.twirp.codec.ProtobufMessageBodyReader;
 import com.dennyac.twirp.codec.ProtobufMessageBodyWriter;
+import com.dennyac.twirp.codec.TwirpErrorMessageBodyWriter;
 import com.dennyac.twirp.errors.InvalidProtocolBufferExceptionMapper;
 import com.dennyac.twirp.errors.TwirpExceptionMapper;
 import jakarta.ws.rs.core.Configuration;
@@ -34,6 +35,7 @@ class TwirpServerFeatureTest {
                         ProtobufMessageBodyWriter.class,
                         ProtobufJsonMessageBodyReader.class,
                         ProtobufJsonMessageBodyWriter.class,
+                        TwirpErrorMessageBodyWriter.class,
                         TwirpExceptionMapper.class,
                         InvalidProtocolBufferExceptionMapper.class,
                         TwirpBadRouteFilter.class);
