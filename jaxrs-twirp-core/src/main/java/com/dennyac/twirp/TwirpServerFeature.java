@@ -49,7 +49,7 @@ import java.util.Objects;
  *
  * <p>This class carries <strong>no Dropwizard dependency</strong>, so plain
  * Jakarta JAX-RS apps can serve Twirp with exactly the same runtime. Dropwizard
- * applications don't register it directly — {@link TwirpBundle} installs it for
+ * applications don't register it directly — {@code TwirpBundle} installs it for
  * them on the Jersey environment.
  *
  * <p>For client-side provider registration (no exception mappers), see
