@@ -1,0 +1,1767 @@
+JNA 5.14.0 native source license notices
+
+Verbatim legal comment excerpts from the JNA release source tree.
+Source file hashes identify the complete upstream files, not just the excerpts.
+JNA selects Apache-2.0 here; the libffi MIT and other retained native
+permission notices remain applicable. See PROVENANCE.txt for source scope.
+
+Source file: https://raw.githubusercontent.com/java-native-access/jna/5.14.0/native/callback.c
+Source SHA-256: c93c162e02b5eb7694cd6f45930d28b187f4fafdbee86dda63d0b8a73abfab77
+
+/* Copyright (c) 2007-2013 Timothy Wall, All Rights Reserved
+ * Copyright (c) 2007 Wayne Meissner, All Rights Reserved
+ *
+ * The contents of this file is dual-licensed under 2 
+ * alternative Open Source/Free licenses: LGPL 2.1 or later and 
+ * Apache License 2.0. (starting with JNA version 4.0.0).
+ * 
+ * You can freely decide which license you want to apply to 
+ * the project.
+ * 
+ * You may obtain a copy of the LGPL License at:
+ * 
+ * http://www.gnu.org/licenses/licenses.html
+ * 
+ * A copy is also included in the downloadable source code package
+ * containing JNA, in file "LGPL2.1".
+ * 
+ * You may obtain a copy of the Apache License at:
+ * 
+ * http://www.apache.org/licenses/
+ * 
+ * A copy is also included in the downloadable source code package
+ * containing JNA, in file "AL2.0".
+ */
+
+Source file: https://raw.githubusercontent.com/java-native-access/jna/5.14.0/native/dispatch.c
+Source SHA-256: 7257cae4597b67c633b5bda02eedb322c194943957d9b4c9409843d95ec033d3
+
+/*
+ * @(#)dispatch.c       1.9 98/03/22
+ *
+ * Copyright (c) 1998 Sun Microsystems, Inc. All Rights Reserved.
+ * Copyright (c) 2007-2013 Timothy Wall. All Rights Reserved.
+ * Copyright (c) 2007 Wayne Meissner. All Rights Reserved.
+ *
+ * The contents of this file is dual-licensed under 2 
+ * alternative Open Source/Free licenses: LGPL 2.1 or later and 
+ * Apache License 2.0. (starting with JNA version 4.0.0).
+ * 
+ * You can freely decide which license you want to apply to 
+ * the project.
+ * 
+ * You may obtain a copy of the LGPL License at:
+ * 
+ * http://www.gnu.org/licenses/licenses.html
+ * 
+ * A copy is also included in the downloadable source code package
+ * containing JNA, in file "LGPL2.1".
+ * 
+ * You may obtain a copy of the Apache License at:
+ * 
+ * http://www.apache.org/licenses/
+ * 
+ * A copy is also included in the downloadable source code package
+ * containing JNA, in file "AL2.0".
+ */
+
+Source file: https://raw.githubusercontent.com/java-native-access/jna/5.14.0/native/dispatch.h
+Source SHA-256: a5b1fe67f1bd6ab411e31a5e0c109c8079cfc299fee38735d59b1b52ed6e773a
+
+/* Copyright (c) 2007-2013 Timothy Wall, All Rights Reserved
+ *
+ * The contents of this file is dual-licensed under 2 
+ * alternative Open Source/Free licenses: LGPL 2.1 or later and 
+ * Apache License 2.0. (starting with JNA version 4.0.0).
+ * 
+ * You can freely decide which license you want to apply to 
+ * the project.
+ * 
+ * You may obtain a copy of the LGPL License at:
+ * 
+ * http://www.gnu.org/licenses/licenses.html
+ * 
+ * A copy is also included in the downloadable source code package
+ * containing JNA, in file "LGPL2.1".
+ * 
+ * You may obtain a copy of the Apache License at:
+ * 
+ * http://www.apache.org/licenses/
+ * 
+ * A copy is also included in the downloadable source code package
+ * containing JNA, in file "AL2.0".
+ */
+
+Source file: https://raw.githubusercontent.com/java-native-access/jna/5.14.0/native/dll-callback.c
+Source SHA-256: ff9e81c15855ff64470ac8bdd004c04b45a2e5377f68c0032c1e6528bbab62ea
+
+/* Copyright (c) 2007-2012 Timothy Wall, All Rights Reserved
+ *
+ * The contents of this file is dual-licensed under 2 
+ * alternative Open Source/Free licenses: LGPL 2.1 or later and 
+ * Apache License 2.0. (starting with JNA version 4.0.0).
+ * 
+ * You can freely decide which license you want to apply to 
+ * the project.
+ * 
+ * You may obtain a copy of the LGPL License at:
+ * 
+ * http://www.gnu.org/licenses/licenses.html
+ * 
+ * A copy is also included in the downloadable source code package
+ * containing JNA, in file "LGPL2.1".
+ * 
+ * You may obtain a copy of the Apache License at:
+ * 
+ * http://www.apache.org/licenses/
+ * 
+ * A copy is also included in the downloadable source code package
+ * containing JNA, in file "AL2.0".
+ */
+
+Source file: https://raw.githubusercontent.com/java-native-access/jna/5.14.0/native/libffi/include/ffi.h.in
+Source SHA-256: f1b72e1162a55ab007cb7756d2bd6f68ae1a99e7dc7177ea6201aee8790e908d
+
+/* -----------------------------------------------------------------*-C-*-
+   libffi @VERSION@
+     - Copyright (c) 2011, 2014, 2019, 2021, 2022 Anthony Green
+     - Copyright (c) 1996-2003, 2007, 2008 Red Hat, Inc.
+
+   Permission is hereby granted, free of charge, to any person
+   obtaining a copy of this software and associated documentation
+   files (the ``Software''), to deal in the Software without
+   restriction, including without limitation the rights to use, copy,
+   modify, merge, publish, distribute, sublicense, and/or sell copies
+   of the Software, and to permit persons to whom the Software is
+   furnished to do so, subject to the following conditions:
+
+   The above copyright notice and this permission notice shall be
+   included in all copies or substantial portions of the Software.
+
+   THE SOFTWARE IS PROVIDED ``AS IS'', WITHOUT WARRANTY OF ANY KIND,
+   EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+   MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+   NONINFRINGEMENT.  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+   HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+   WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+   DEALINGS IN THE SOFTWARE.
+
+   ----------------------------------------------------------------------- */
+
+Source file: https://raw.githubusercontent.com/java-native-access/jna/5.14.0/native/libffi/include/ffi_cfi.h
+Source SHA-256: 165495aafcdb15ad48340b8b9906514032c284db3db372c31e3f4d6b35888dc5
+
+/* -----------------------------------------------------------------------
+   ffi_cfi.h - Copyright (c) 2014  Red Hat, Inc.
+
+   Conditionally assemble cfi directives. Only necessary for building libffi.
+
+   Permission is hereby granted, free of charge, to any person
+   obtaining a copy of this software and associated documentation
+   files (the ``Software''), to deal in the Software without
+   restriction, including without limitation the rights to use, copy,
+   modify, merge, publish, distribute, sublicense, and/or sell copies
+   of the Software, and to permit persons to whom the Software is
+   furnished to do so, subject to the following conditions:
+
+   The above copyright notice and this permission notice shall be
+   included in all copies or substantial portions of the Software.
+
+   THE SOFTWARE IS PROVIDED ``AS IS'', WITHOUT WARRANTY OF ANY KIND,
+   EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+   MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+   NONINFRINGEMENT.  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+   HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+   WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+   DEALINGS IN THE SOFTWARE.
+
+   ----------------------------------------------------------------------- */
+
+Source file: https://raw.githubusercontent.com/java-native-access/jna/5.14.0/native/libffi/include/ffi_common.h
+Source SHA-256: 2b3f3d2ca1b16d6ae98d6b27ca0467fcd7605847b14cb681e844e51dea11527d
+
+/* -----------------------------------------------------------------------
+   ffi_common.h - Copyright (C) 2011, 2012, 2013  Anthony Green
+                  Copyright (C) 2007  Free Software Foundation, Inc
+                  Copyright (c) 1996  Red Hat, Inc.
+                  
+   Common internal definitions and macros. Only necessary for building
+   libffi.
+
+   Permission is hereby granted, free of charge, to any person
+   obtaining a copy of this software and associated documentation
+   files (the ``Software''), to deal in the Software without
+   restriction, including without limitation the rights to use, copy,
+   modify, merge, publish, distribute, sublicense, and/or sell copies
+   of the Software, and to permit persons to whom the Software is
+   furnished to do so, subject to the following conditions:
+
+   The above copyright notice and this permission notice shall be
+   included in all copies or substantial portions of the Software.
+
+   THE SOFTWARE IS PROVIDED ``AS IS'', WITHOUT WARRANTY OF ANY KIND,
+   EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+   MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+   NONINFRINGEMENT.  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+   HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+   WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+   DEALINGS IN THE SOFTWARE.
+
+   ----------------------------------------------------------------------- */
+
+Source file: https://raw.githubusercontent.com/java-native-access/jna/5.14.0/native/libffi/include/tramp.h
+Source SHA-256: ef20dace99925672167a5f3b3898299d462ace170f0b90ca47fd36b30cfc7fbf
+
+/* -----------------------------------------------------------------------
+   ffi_tramp.h - Copyright (C) 2021  Microsoft, Inc.
+
+   Static trampoline definitions.
+
+   Permission is hereby granted, free of charge, to any person
+   obtaining a copy of this software and associated documentation
+   files (the ``Software''), to deal in the Software without
+   restriction, including without limitation the rights to use, copy,
+   modify, merge, publish, distribute, sublicense, and/or sell copies
+   of the Software, and to permit persons to whom the Software is
+   furnished to do so, subject to the following conditions:
+
+   The above copyright notice and this permission notice shall be
+   included in all copies or substantial portions of the Software.
+
+   THE SOFTWARE IS PROVIDED ``AS IS'', WITHOUT WARRANTY OF ANY KIND,
+   EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+   MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+   NONINFRINGEMENT.  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+   HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+   WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+   DEALINGS IN THE SOFTWARE.
+
+   ----------------------------------------------------------------------- */
+
+Source file: https://raw.githubusercontent.com/java-native-access/jna/5.14.0/native/libffi/src/aarch64/ffi.c
+Source SHA-256: bfc8f82aeb2f6a6d26f81cc9c4caf57a4957405c032f986e88bfe08d0a356e0c
+Source file: https://raw.githubusercontent.com/java-native-access/jna/5.14.0/native/libffi/src/aarch64/ffitarget.h
+Source SHA-256: f416ed82c7c3a024433bfa269f4aeaae3b2880f9f82eb46cacb43e388e94a0f2
+Source file: https://raw.githubusercontent.com/java-native-access/jna/5.14.0/native/libffi/src/aarch64/sysv.S
+Source SHA-256: bf10254d73f8feb0b335e081ffcbf3df86d6259b0a671e05b8704165a60f05c1
+
+/* Copyright (c) 2009, 2010, 2011, 2012 ARM Ltd.
+
+Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the
+``Software''), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:
+
+The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED ``AS IS'', WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.  */
+
+Source file: https://raw.githubusercontent.com/java-native-access/jna/5.14.0/native/libffi/src/aarch64/internal.h
+Source SHA-256: 449e978d4d211d5ae3c1a72ebbf364f3a704f9f1316ae71bf6c935397a9ee4a0
+
+/* 
+Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the
+``Software''), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:
+
+The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED ``AS IS'', WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.  */
+
+Source file: https://raw.githubusercontent.com/java-native-access/jna/5.14.0/native/libffi/src/aarch64/win64_armasm.S
+Source SHA-256: a675f9159ebb0c57fd0ea52e17ade39e045161b09a5a372d6a0dcd1b91ce6aaa
+
+/* Copyright (c) 2009, 2010, 2011, 2012 ARM Ltd.
+Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the
+``Software''), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:
+The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
+THE SOFTWARE IS PROVIDED ``AS IS'', WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.  */
+
+Source file: https://raw.githubusercontent.com/java-native-access/jna/5.14.0/native/libffi/src/arm/ffi.c
+Source SHA-256: 6dac3517308979cac7a053f95b671cfcfa8a5d59e3effe9bd9488ce3a146e05c
+
+/* -----------------------------------------------------------------------
+   ffi.c - Copyright (c) 2011 Timothy Wall
+           Copyright (c) 2011 Plausible Labs Cooperative, Inc.
+           Copyright (c) 2011 Anthony Green
+	   Copyright (c) 2011 Free Software Foundation
+           Copyright (c) 1998, 2008, 2011  Red Hat, Inc.
+
+   ARM Foreign Function Interface
+
+   Permission is hereby granted, free of charge, to any person obtaining
+   a copy of this software and associated documentation files (the
+   ``Software''), to deal in the Software without restriction, including
+   without limitation the rights to use, copy, modify, merge, publish,
+   distribute, sublicense, and/or sell copies of the Software, and to
+   permit persons to whom the Software is furnished to do so, subject to
+   the following conditions:
+
+   The above copyright notice and this permission notice shall be included
+   in all copies or substantial portions of the Software.
+
+   THE SOFTWARE IS PROVIDED ``AS IS'', WITHOUT WARRANTY OF ANY KIND,
+   EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+   MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+   NONINFRINGEMENT.  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+   HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+   WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+   DEALINGS IN THE SOFTWARE.
+   ----------------------------------------------------------------------- */
+
+Source file: https://raw.githubusercontent.com/java-native-access/jna/5.14.0/native/libffi/src/arm/ffitarget.h
+Source SHA-256: 6e8478a81677d0a7da1f22b8ad05b256d0598bf7810e13612aab5ffd83bae9a6
+
+/* -----------------------------------------------------------------*-C-*-
+   ffitarget.h - Copyright (c) 2012  Anthony Green
+                 Copyright (c) 2010  CodeSourcery
+                 Copyright (c) 1996-2003  Red Hat, Inc.
+
+   Target configuration macros for ARM.
+
+   Permission is hereby granted, free of charge, to any person obtaining
+   a copy of this software and associated documentation files (the
+   ``Software''), to deal in the Software without restriction, including
+   without limitation the rights to use, copy, modify, merge, publish,
+   distribute, sublicense, and/or sell copies of the Software, and to
+   permit persons to whom the Software is furnished to do so, subject to
+   the following conditions:
+
+   The above copyright notice and this permission notice shall be included
+   in all copies or substantial portions of the Software.
+
+   THE SOFTWARE IS PROVIDED ``AS IS'', WITHOUT WARRANTY OF ANY KIND,
+   EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+   MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+   NONINFRINGEMENT.  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+   HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+   WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+   DEALINGS IN THE SOFTWARE.
+
+   ----------------------------------------------------------------------- */
+
+Source file: https://raw.githubusercontent.com/java-native-access/jna/5.14.0/native/libffi/src/arm/sysv.S
+Source SHA-256: ce6e873a450e00599bf856a4e7beb192a1b923d1b5e603bac3dc946544d1dcfb
+
+/* -----------------------------------------------------------------------
+   sysv.S - Copyright (c) 1998, 2008, 2011 Red Hat, Inc.
+	    Copyright (c) 2011 Plausible Labs Cooperative, Inc.
+
+   ARM Foreign Function Interface
+
+   Permission is hereby granted, free of charge, to any person obtaining
+   a copy of this software and associated documentation files (the
+   ``Software''), to deal in the Software without restriction, including
+   without limitation the rights to use, copy, modify, merge, publish,
+   distribute, sublicense, and/or sell copies of the Software, and to
+   permit persons to whom the Software is furnished to do so, subject to
+   the following conditions:
+
+   The above copyright notice and this permission notice shall be included
+   in all copies or substantial portions of the Software.
+
+   THE SOFTWARE IS PROVIDED ``AS IS'', WITHOUT WARRANTY OF ANY KIND,
+   EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+   MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+   NONINFRINGEMENT.  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+   HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+   WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+   DEALINGS IN THE SOFTWARE.
+   ----------------------------------------------------------------------- */
+
+Source file: https://raw.githubusercontent.com/java-native-access/jna/5.14.0/native/libffi/src/closures.c
+Source SHA-256: 8b83d1b65271d601b66323d4d650d7f240f16407b9843f41467ddf836e5d3d72
+
+/* -----------------------------------------------------------------------
+   closures.c - Copyright (c) 2019, 2022 Anthony Green
+                Copyright (c) 2007, 2009, 2010 Red Hat, Inc.
+                Copyright (C) 2007, 2009, 2010 Free Software Foundation, Inc
+                Copyright (c) 2011 Plausible Labs Cooperative, Inc.
+
+   Code to allocate and deallocate memory for closures.
+
+   Permission is hereby granted, free of charge, to any person obtaining
+   a copy of this software and associated documentation files (the
+   ``Software''), to deal in the Software without restriction, including
+   without limitation the rights to use, copy, modify, merge, publish,
+   distribute, sublicense, and/or sell copies of the Software, and to
+   permit persons to whom the Software is furnished to do so, subject to
+   the following conditions:
+
+   The above copyright notice and this permission notice shall be included
+   in all copies or substantial portions of the Software.
+
+   THE SOFTWARE IS PROVIDED ``AS IS'', WITHOUT WARRANTY OF ANY KIND,
+   EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+   MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+   NONINFRINGEMENT.  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+   HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+   WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+   DEALINGS IN THE SOFTWARE.
+   ----------------------------------------------------------------------- */
+
+Source file: https://raw.githubusercontent.com/java-native-access/jna/5.14.0/native/libffi/src/debug.c
+Source SHA-256: 5160a3877b65490aa30fa92a44a66c3bdf093d5ab75b9502adb729038efb3e5f
+
+/* -----------------------------------------------------------------------
+   debug.c - Copyright (c) 1996 Red Hat, Inc.
+
+   Permission is hereby granted, free of charge, to any person obtaining
+   a copy of this software and associated documentation files (the
+   ``Software''), to deal in the Software without restriction, including
+   without limitation the rights to use, copy, modify, merge, publish,
+   distribute, sublicense, and/or sell copies of the Software, and to
+   permit persons to whom the Software is furnished to do so, subject to
+   the following conditions:
+
+   The above copyright notice and this permission notice shall be included
+   in all copies or substantial portions of the Software.
+
+   THE SOFTWARE IS PROVIDED ``AS IS'', WITHOUT WARRANTY OF ANY KIND,
+   EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+   MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+   NONINFRINGEMENT.  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+   HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+   WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+   DEALINGS IN THE SOFTWARE.
+   ----------------------------------------------------------------------- */
+
+Source file: https://raw.githubusercontent.com/java-native-access/jna/5.14.0/native/libffi/src/dlmalloc.c
+Source SHA-256: 962edeb826b66f9ae3462226ee89cd9d9afdcdeb533e53529e0612f2fea22ebd
+
+  This is a version (aka dlmalloc) of malloc/free/realloc written by
+  Doug Lea and released to the public domain, as explained at
+  http://creativecommons.org/licenses/publicdomain.  Send questions,
+  comments, complaints, performance data, etc to dl@cs.oswego.edu
+
+Source file: https://raw.githubusercontent.com/java-native-access/jna/5.14.0/native/libffi/src/java_raw_api.c
+Source SHA-256: 5c3886d8c20ba1238135835aa132ad9c017af5f9e5c55e2167d3ad047def1bd6
+
+/* -----------------------------------------------------------------------
+   java_raw_api.c - Copyright (c) 1999, 2007, 2008  Red Hat, Inc.
+
+   Cloned from raw_api.c
+
+   Raw_api.c author: Kresten Krab Thorup <krab@gnu.org>
+   Java_raw_api.c author: Hans-J. Boehm <hboehm@hpl.hp.com>
+
+   $Id $
+
+   Permission is hereby granted, free of charge, to any person obtaining
+   a copy of this software and associated documentation files (the
+   ``Software''), to deal in the Software without restriction, including
+   without limitation the rights to use, copy, modify, merge, publish,
+   distribute, sublicense, and/or sell copies of the Software, and to
+   permit persons to whom the Software is furnished to do so, subject to
+   the following conditions:
+
+   The above copyright notice and this permission notice shall be included
+   in all copies or substantial portions of the Software.
+
+   THE SOFTWARE IS PROVIDED ``AS IS'', WITHOUT WARRANTY OF ANY KIND,
+   EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+   MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+   NONINFRINGEMENT.  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+   HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+   WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+   DEALINGS IN THE SOFTWARE.
+   ----------------------------------------------------------------------- */
+
+Source file: https://raw.githubusercontent.com/java-native-access/jna/5.14.0/native/libffi/src/loongarch64/ffi.c
+Source SHA-256: 67bd92f9ede776c7e8ff5a168fb0ff343b1268e7ab85362a4fe9425bf40ebdde
+
+/* -----------------------------------------------------------------------
+   ffi.c - Copyright (c) 2022 Xu Chenghua <xuchenghua@loongson.cn>
+                         2022 Cheng Lulu <chenglulu@loongson.cn>
+   Based on RISC-V port
+
+   LoongArch Foreign Function Interface
+
+   Permission is hereby granted, free of charge, to any person obtaining
+   a copy of this software and associated documentation files (the
+   ``Software''), to deal in the Software without restriction, including
+   without limitation the rights to use, copy, modify, merge, publish,
+   distribute, sublicense, and/or sell copies of the Software, and to
+   permit persons to whom the Software is furnished to do so, subject to
+   the following conditions:
+
+   The above copyright notice and this permission notice shall be included
+   in all copies or substantial portions of the Software.
+
+   THE SOFTWARE IS PROVIDED ``AS IS'', WITHOUT WARRANTY OF ANY KIND,
+   EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+   MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+   NONINFRINGEMENT.  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+   HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+   WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+   DEALINGS IN THE SOFTWARE.
+   ----------------------------------------------------------------------- */
+
+Source file: https://raw.githubusercontent.com/java-native-access/jna/5.14.0/native/libffi/src/loongarch64/ffitarget.h
+Source SHA-256: daa56da624b80ffaf138788d1c0be4a5e10345bec46851824d4a7cf2f53cf98f
+
+/* -----------------------------------------------------------------*-C-*-
+   ffitarget.h - Copyright (c) 2022 Xu Chenghua <xuchenghua@loongson.cn>
+                               2022 Cheng Lulu <chenglulu@loongson.cn>
+
+   Target configuration macros for LoongArch.
+
+   Permission is hereby granted, free of charge, to any person obtaining
+   a copy of this software and associated documentation files (the
+   ``Software''), to deal in the Software without restriction, including
+   without limitation the rights to use, copy, modify, merge, publish,
+   distribute, sublicense, and/or sell copies of the Software, and to
+   permit persons to whom the Software is furnished to do so, subject to
+   the following conditions:
+
+   The above copyright notice and this permission notice shall be included
+   in all copies or substantial portions of the Software.
+
+   THE SOFTWARE IS PROVIDED ``AS IS'', WITHOUT WARRANTY OF ANY KIND,
+   EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+   MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+   NONINFRINGEMENT.  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+   HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+   WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+   DEALINGS IN THE SOFTWARE.
+
+   ----------------------------------------------------------------------- */
+
+Source file: https://raw.githubusercontent.com/java-native-access/jna/5.14.0/native/libffi/src/loongarch64/sysv.S
+Source SHA-256: 852251065245fecc4b30e67900482205c9c07f488551a40ec83a3310058e6943
+
+/* -----------------------------------------------------------------------
+  sysv.S  - Copyright (c) 2022 Xu Chenghua <xuchenghua@loongson.cn>
+                          2022 Cheng Lulu <chenglulu@loongson.cn>
+
+   LoongArch Foreign Function Interface
+
+   Permission is hereby granted, free of charge, to any person obtaining
+   a copy of this software and associated documentation files (the
+   ``Software''), to deal in the Software without restriction, including
+   without limitation the rights to use, copy, modify, merge, publish,
+   distribute, sublicense, and/or sell copies of the Software, and to
+   permit persons to whom the Software is furnished to do so, subject to
+   the following conditions:
+
+   The above copyright notice and this permission notice shall be included
+   in all copies or substantial portions of the Software.
+
+   THE SOFTWARE IS PROVIDED ``AS IS'', WITHOUT WARRANTY OF ANY KIND,
+   EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+   MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+   NONINFRINGEMENT.  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+   HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+   WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+   DEALINGS IN THE SOFTWARE.
+   ----------------------------------------------------------------------- */
+
+Source file: https://raw.githubusercontent.com/java-native-access/jna/5.14.0/native/libffi/src/mips/ffi.c
+Source SHA-256: 5d59b968aa844663108006a0feb9228ad03df89f555b4c87f6ed3b937cf5eb63
+
+/* -----------------------------------------------------------------------
+   ffi.c - Copyright (c) 2011  Anthony Green
+           Copyright (c) 2008  David Daney
+           Copyright (c) 1996, 2007, 2008, 2011  Red Hat, Inc.
+   
+   MIPS Foreign Function Interface 
+
+   Permission is hereby granted, free of charge, to any person obtaining
+   a copy of this software and associated documentation files (the
+   ``Software''), to deal in the Software without restriction, including
+   without limitation the rights to use, copy, modify, merge, publish,
+   distribute, sublicense, and/or sell copies of the Software, and to
+   permit persons to whom the Software is furnished to do so, subject to
+   the following conditions:
+
+   The above copyright notice and this permission notice shall be included
+   in all copies or substantial portions of the Software.
+
+   THE SOFTWARE IS PROVIDED ``AS IS'', WITHOUT WARRANTY OF ANY KIND,
+   EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+   MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+   NONINFRINGEMENT.  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+   HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+   WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+   DEALINGS IN THE SOFTWARE.
+   ----------------------------------------------------------------------- */
+
+Source file: https://raw.githubusercontent.com/java-native-access/jna/5.14.0/native/libffi/src/mips/ffitarget.h
+Source SHA-256: 9750b30896a5376a12e7ad92ea52f7b3231d9a5a636f89f21bb366d95af36a30
+
+/* -----------------------------------------------------------------*-C-*-
+   ffitarget.h - Copyright (c) 2012  Anthony Green
+                 Copyright (c) 1996-2003  Red Hat, Inc.
+   Target configuration macros for MIPS.
+
+   Permission is hereby granted, free of charge, to any person obtaining
+   a copy of this software and associated documentation files (the
+   ``Software''), to deal in the Software without restriction, including
+   without limitation the rights to use, copy, modify, merge, publish,
+   distribute, sublicense, and/or sell copies of the Software, and to
+   permit persons to whom the Software is furnished to do so, subject to
+   the following conditions:
+
+   The above copyright notice and this permission notice shall be included
+   in all copies or substantial portions of the Software.
+
+   THE SOFTWARE IS PROVIDED ``AS IS'', WITHOUT WARRANTY OF ANY KIND,
+   EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+   MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+   NONINFRINGEMENT.  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+   HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+   WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+   DEALINGS IN THE SOFTWARE.
+
+   ----------------------------------------------------------------------- */
+
+Source file: https://raw.githubusercontent.com/java-native-access/jna/5.14.0/native/libffi/src/mips/n32.S
+Source SHA-256: 90621b017aa2d951105ea5e480b4db98644abd3dfb6786954ca359d90bbaa818
+
+/* -----------------------------------------------------------------------
+   n32.S - Copyright (c) 1996, 1998, 2005, 2007, 2009, 2010  Red Hat, Inc.
+   
+   MIPS Foreign Function Interface 
+
+   Permission is hereby granted, free of charge, to any person obtaining
+   a copy of this software and associated documentation files (the
+   ``Software''), to deal in the Software without restriction, including
+   without limitation the rights to use, copy, modify, merge, publish,
+   distribute, sublicense, and/or sell copies of the Software, and to
+   permit persons to whom the Software is furnished to do so, subject to
+   the following conditions:
+
+   The above copyright notice and this permission notice shall be included
+   in all copies or substantial portions of the Software.
+
+   THE SOFTWARE IS PROVIDED ``AS IS'', WITHOUT WARRANTY OF ANY KIND,
+   EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+   MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+   NONINFRINGEMENT.  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+   HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+   WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+   DEALINGS IN THE SOFTWARE.
+   ----------------------------------------------------------------------- */
+
+Source file: https://raw.githubusercontent.com/java-native-access/jna/5.14.0/native/libffi/src/mips/o32.S
+Source SHA-256: b4a336f597cb2d20ef157436b05a994d5fc874e2f80e12e7286ef1167b0409cd
+
+/* -----------------------------------------------------------------------
+   o32.S - Copyright (c) 1996, 1998, 2005  Red Hat, Inc.
+   
+   MIPS Foreign Function Interface 
+
+   Permission is hereby granted, free of charge, to any person obtaining
+   a copy of this software and associated documentation files (the
+   ``Software''), to deal in the Software without restriction, including
+   without limitation the rights to use, copy, modify, merge, publish,
+   distribute, sublicense, and/or sell copies of the Software, and to
+   permit persons to whom the Software is furnished to do so, subject to
+   the following conditions:
+
+   The above copyright notice and this permission notice shall be included
+   in all copies or substantial portions of the Software.
+
+   THE SOFTWARE IS PROVIDED ``AS IS'', WITHOUT WARRANTY OF ANY KIND,
+   EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+   MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+   NONINFRINGEMENT.  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+   HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+   WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+   DEALINGS IN THE SOFTWARE.
+   ----------------------------------------------------------------------- */
+
+Source file: https://raw.githubusercontent.com/java-native-access/jna/5.14.0/native/libffi/src/powerpc/aix.S
+Source SHA-256: 4626e4cb0fefe1b81bfa110c65c2be79f4d5c4d7066fbb9d857bee01ec319c97
+
+/* -----------------------------------------------------------------------
+   aix.S - Copyright (c) 2002, 2009 Free Software Foundation, Inc.
+   based on darwin.S by John Hornkvist
+
+   PowerPC Assembly glue.
+
+   Permission is hereby granted, free of charge, to any person obtaining
+   a copy of this software and associated documentation files (the
+   ``Software''), to deal in the Software without restriction, including
+   without limitation the rights to use, copy, modify, merge, publish,
+   distribute, sublicense, and/or sell copies of the Software, and to
+   permit persons to whom the Software is furnished to do so, subject to
+   the following conditions:
+
+   The above copyright notice and this permission notice shall be included
+   in all copies or substantial portions of the Software.
+
+   THE SOFTWARE IS PROVIDED ``AS IS'', WITHOUT WARRANTY OF ANY KIND, EXPRESS
+   OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+   MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+   IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY CLAIM, DAMAGES OR
+   OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+   ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+   OTHER DEALINGS IN THE SOFTWARE.
+   ----------------------------------------------------------------------- */
+
+Source file: https://raw.githubusercontent.com/java-native-access/jna/5.14.0/native/libffi/src/powerpc/aix_closure.S
+Source SHA-256: 2e4f0e8e11137c9bba06c2c6493790b502bdf0c5d57e9a2367745ef09f5bb75e
+
+/* -----------------------------------------------------------------------
+   aix_closure.S - Copyright (c) 2002, 2003, 2009 Free Software Foundation, Inc.
+   based on darwin_closure.S
+
+   PowerPC Assembly glue.
+
+   Permission is hereby granted, free of charge, to any person obtaining
+   a copy of this software and associated documentation files (the
+   ``Software''), to deal in the Software without restriction, including
+   without limitation the rights to use, copy, modify, merge, publish,
+   distribute, sublicense, and/or sell copies of the Software, and to
+   permit persons to whom the Software is furnished to do so, subject to
+   the following conditions:
+
+   The above copyright notice and this permission notice shall be included
+   in all copies or substantial portions of the Software.
+
+   THE SOFTWARE IS PROVIDED ``AS IS'', WITHOUT WARRANTY OF ANY KIND, EXPRESS
+   OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+   MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+   IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY CLAIM, DAMAGES OR
+   OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+   ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+   OTHER DEALINGS IN THE SOFTWARE.
+   ----------------------------------------------------------------------- */
+
+Source file: https://raw.githubusercontent.com/java-native-access/jna/5.14.0/native/libffi/src/powerpc/asm.h
+Source SHA-256: 88ae9590e5880128d80b5b44e78a08a3a19027adc4d54d061e2ce0eb24db977b
+
+/* -----------------------------------------------------------------------
+   asm.h - Copyright (c) 1998 Geoffrey Keating
+
+   PowerPC Assembly glue.
+
+   Permission is hereby granted, free of charge, to any person obtaining
+   a copy of this software and associated documentation files (the
+   ``Software''), to deal in the Software without restriction, including
+   without limitation the rights to use, copy, modify, merge, publish,
+   distribute, sublicense, and/or sell copies of the Software, and to
+   permit persons to whom the Software is furnished to do so, subject to
+   the following conditions:
+
+   The above copyright notice and this permission notice shall be included
+   in all copies or substantial portions of the Software.
+
+   THE SOFTWARE IS PROVIDED ``AS IS'', WITHOUT WARRANTY OF ANY KIND, EXPRESS
+   OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+   MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+   IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY CLAIM, DAMAGES OR
+   OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+   ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+   OTHER DEALINGS IN THE SOFTWARE.
+   ----------------------------------------------------------------------- */
+
+Source file: https://raw.githubusercontent.com/java-native-access/jna/5.14.0/native/libffi/src/powerpc/ffi.c
+Source SHA-256: e71ddf26c51e4fa6905da7540bd60b3e84b8b1c45a2593bebdb87ef3024293d0
+
+/* -----------------------------------------------------------------------
+   ffi.c - Copyright (C) 2013 IBM
+           Copyright (C) 2011 Anthony Green
+           Copyright (C) 2011 Kyle Moffett
+           Copyright (C) 2008 Red Hat, Inc
+           Copyright (C) 2007, 2008 Free Software Foundation, Inc
+	   Copyright (c) 1998 Geoffrey Keating
+
+   PowerPC Foreign Function Interface
+
+   Permission is hereby granted, free of charge, to any person obtaining
+   a copy of this software and associated documentation files (the
+   ``Software''), to deal in the Software without restriction, including
+   without limitation the rights to use, copy, modify, merge, publish,
+   distribute, sublicense, and/or sell copies of the Software, and to
+   permit persons to whom the Software is furnished to do so, subject to
+   the following conditions:
+
+   The above copyright notice and this permission notice shall be included
+   in all copies or substantial portions of the Software.
+
+   THE SOFTWARE IS PROVIDED ``AS IS'', WITHOUT WARRANTY OF ANY KIND, EXPRESS
+   OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+   MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+   IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY CLAIM, DAMAGES OR
+   OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+   ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+   OTHER DEALINGS IN THE SOFTWARE.
+   ----------------------------------------------------------------------- */
+
+Source file: https://raw.githubusercontent.com/java-native-access/jna/5.14.0/native/libffi/src/powerpc/ffi_darwin.c
+Source SHA-256: da00c4af7f65dc57c091ffd3eef8809b7cc5c79d3f998750544fc209db335dff
+
+/* -----------------------------------------------------------------------
+   ffi_darwin.c
+
+   Copyright (C) 1998 Geoffrey Keating
+   Copyright (C) 2001 John Hornkvist
+   Copyright (C) 2002, 2006, 2007, 2009, 2010 Free Software Foundation, Inc.
+
+   FFI support for Darwin and AIX.
+   
+   Permission is hereby granted, free of charge, to any person obtaining
+   a copy of this software and associated documentation files (the
+   ``Software''), to deal in the Software without restriction, including
+   without limitation the rights to use, copy, modify, merge, publish,
+   distribute, sublicense, and/or sell copies of the Software, and to
+   permit persons to whom the Software is furnished to do so, subject to
+   the following conditions:
+
+   The above copyright notice and this permission notice shall be included
+   in all copies or substantial portions of the Software.
+
+   THE SOFTWARE IS PROVIDED ``AS IS'', WITHOUT WARRANTY OF ANY KIND, EXPRESS
+   OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+   MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+   IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY CLAIM, DAMAGES OR
+   OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+   ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+   OTHER DEALINGS IN THE SOFTWARE.
+   ----------------------------------------------------------------------- */
+
+Source file: https://raw.githubusercontent.com/java-native-access/jna/5.14.0/native/libffi/src/powerpc/ffi_linux64.c
+Source SHA-256: f5dee7aee51f9888b71087fdf463650dca3259d0e532166382189af016ebd4b9
+
+/* -----------------------------------------------------------------------
+   ffi_linux64.c - Copyright (C) 2013 IBM
+                   Copyright (C) 2011 Anthony Green
+                   Copyright (C) 2011 Kyle Moffett
+                   Copyright (C) 2008 Red Hat, Inc
+                   Copyright (C) 2007, 2008 Free Software Foundation, Inc
+                   Copyright (c) 1998 Geoffrey Keating
+
+   PowerPC Foreign Function Interface
+
+   Permission is hereby granted, free of charge, to any person obtaining
+   a copy of this software and associated documentation files (the
+   ``Software''), to deal in the Software without restriction, including
+   without limitation the rights to use, copy, modify, merge, publish,
+   distribute, sublicense, and/or sell copies of the Software, and to
+   permit persons to whom the Software is furnished to do so, subject to
+   the following conditions:
+
+   The above copyright notice and this permission notice shall be included
+   in all copies or substantial portions of the Software.
+
+   THE SOFTWARE IS PROVIDED ``AS IS'', WITHOUT WARRANTY OF ANY KIND, EXPRESS
+   OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+   MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+   IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY CLAIM, DAMAGES OR
+   OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+   ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+   OTHER DEALINGS IN THE SOFTWARE.
+   ----------------------------------------------------------------------- */
+
+Source file: https://raw.githubusercontent.com/java-native-access/jna/5.14.0/native/libffi/src/powerpc/ffi_powerpc.h
+Source SHA-256: 4867559a7af98033b5e70cab0883d0f60ca002d2f551cb88f4d3fb789c0aa841
+
+/* -----------------------------------------------------------------------
+   ffi_powerpc.h - Copyright (C) 2013 IBM
+                   Copyright (C) 2011 Anthony Green
+                   Copyright (C) 2011 Kyle Moffett
+                   Copyright (C) 2008 Red Hat, Inc
+                   Copyright (C) 2007, 2008 Free Software Foundation, Inc
+                   Copyright (c) 1998 Geoffrey Keating
+
+   PowerPC Foreign Function Interface
+
+   Permission is hereby granted, free of charge, to any person obtaining
+   a copy of this software and associated documentation files (the
+   ``Software''), to deal in the Software without restriction, including
+   without limitation the rights to use, copy, modify, merge, publish,
+   distribute, sublicense, and/or sell copies of the Software, and to
+   permit persons to whom the Software is furnished to do so, subject to
+   the following conditions:
+
+   The above copyright notice and this permission notice shall be included
+   in all copies or substantial portions of the Software.
+
+   THE SOFTWARE IS PROVIDED ``AS IS'', WITHOUT WARRANTY OF ANY KIND, EXPRESS
+   OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+   MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+   IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY CLAIM, DAMAGES OR
+   OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+   ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+   OTHER DEALINGS IN THE SOFTWARE.
+   ----------------------------------------------------------------------- */
+
+Source file: https://raw.githubusercontent.com/java-native-access/jna/5.14.0/native/libffi/src/powerpc/ffi_sysv.c
+Source SHA-256: 3feda390184634474602e5e231fcad9072c5a93d931f13b979cc460a911f83fc
+
+/* -----------------------------------------------------------------------
+   ffi_sysv.c - Copyright (C) 2013 IBM
+                Copyright (C) 2011 Anthony Green
+                Copyright (C) 2011 Kyle Moffett
+                Copyright (C) 2008 Red Hat, Inc
+                Copyright (C) 2007, 2008 Free Software Foundation, Inc
+                Copyright (c) 1998 Geoffrey Keating
+
+   PowerPC Foreign Function Interface
+
+   Permission is hereby granted, free of charge, to any person obtaining
+   a copy of this software and associated documentation files (the
+   ``Software''), to deal in the Software without restriction, including
+   without limitation the rights to use, copy, modify, merge, publish,
+   distribute, sublicense, and/or sell copies of the Software, and to
+   permit persons to whom the Software is furnished to do so, subject to
+   the following conditions:
+
+   The above copyright notice and this permission notice shall be included
+   in all copies or substantial portions of the Software.
+
+   THE SOFTWARE IS PROVIDED ``AS IS'', WITHOUT WARRANTY OF ANY KIND, EXPRESS
+   OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+   MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+   IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY CLAIM, DAMAGES OR
+   OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+   ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+   OTHER DEALINGS IN THE SOFTWARE.
+   ----------------------------------------------------------------------- */
+
+Source file: https://raw.githubusercontent.com/java-native-access/jna/5.14.0/native/libffi/src/powerpc/ffitarget.h
+Source SHA-256: 302e085cf78c8a08ecd75a763710a63457a405c6b9d7dd9dc1c004a942a536e9
+
+/* -----------------------------------------------------------------*-C-*-
+   ffitarget.h - Copyright (c) 2012  Anthony Green
+                 Copyright (C) 2007, 2008, 2010 Free Software Foundation, Inc
+                 Copyright (c) 1996-2003  Red Hat, Inc.
+
+   Target configuration macros for PowerPC.
+
+   Permission is hereby granted, free of charge, to any person obtaining
+   a copy of this software and associated documentation files (the
+   ``Software''), to deal in the Software without restriction, including
+   without limitation the rights to use, copy, modify, merge, publish,
+   distribute, sublicense, and/or sell copies of the Software, and to
+   permit persons to whom the Software is furnished to do so, subject to
+   the following conditions:
+
+   The above copyright notice and this permission notice shall be included
+   in all copies or substantial portions of the Software.
+
+   THE SOFTWARE IS PROVIDED ``AS IS'', WITHOUT WARRANTY OF ANY KIND,
+   EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+   MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+   NONINFRINGEMENT.  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+   HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+   WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+   DEALINGS IN THE SOFTWARE.
+
+   ----------------------------------------------------------------------- */
+
+Source file: https://raw.githubusercontent.com/java-native-access/jna/5.14.0/native/libffi/src/powerpc/linux64.S
+Source SHA-256: cebd433c621e79f538fffea0ee5cb4ab866507a381c260fd25d7a22908f13d81
+Source file: https://raw.githubusercontent.com/java-native-access/jna/5.14.0/native/libffi/src/powerpc/linux64_closure.S
+Source SHA-256: 6d8e78cda0386a37e21bf6efa7c56bd8743c177daa2d814add9c8cc0dc30730b
+
+/* -----------------------------------------------------------------------
+   sysv.h - Copyright (c) 2003 Jakub Jelinek <jakub@redhat.com>
+	    Copyright (c) 2008 Red Hat, Inc.
+
+   PowerPC64 Assembly glue.
+
+   Permission is hereby granted, free of charge, to any person obtaining
+   a copy of this software and associated documentation files (the
+   ``Software''), to deal in the Software without restriction, including
+   without limitation the rights to use, copy, modify, merge, publish,
+   distribute, sublicense, and/or sell copies of the Software, and to
+   permit persons to whom the Software is furnished to do so, subject to
+   the following conditions:
+
+   The above copyright notice and this permission notice shall be included
+   in all copies or substantial portions of the Software.
+
+   THE SOFTWARE IS PROVIDED ``AS IS'', WITHOUT WARRANTY OF ANY KIND,
+   EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+   MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+   NONINFRINGEMENT.  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+   HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+   WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+   DEALINGS IN THE SOFTWARE.
+   ----------------------------------------------------------------------- */
+
+Source file: https://raw.githubusercontent.com/java-native-access/jna/5.14.0/native/libffi/src/powerpc/ppc_closure.S
+Source SHA-256: 6df911de61a58e2e003db4bc5c6076c9e2da18244805c92edbc57586e8d74aec
+
+/* -----------------------------------------------------------------------
+   sysv.h - Copyright (c) 2003 Jakub Jelinek <jakub@redhat.com>
+	    Copyright (c) 2008 Red Hat, Inc.
+
+   PowerPC Assembly glue.
+
+   Permission is hereby granted, free of charge, to any person obtaining
+   a copy of this software and associated documentation files (the
+   ``Software''), to deal in the Software without restriction, including
+   without limitation the rights to use, copy, modify, merge, publish,
+   distribute, sublicense, and/or sell copies of the Software, and to
+   permit persons to whom the Software is furnished to do so, subject to
+   the following conditions:
+
+   The above copyright notice and this permission notice shall be included
+   in all copies or substantial portions of the Software.
+
+   THE SOFTWARE IS PROVIDED ``AS IS'', WITHOUT WARRANTY OF ANY KIND,
+   EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+   MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+   NONINFRINGEMENT.  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+   HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+   WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+   DEALINGS IN THE SOFTWARE.
+   ----------------------------------------------------------------------- */
+
+Source file: https://raw.githubusercontent.com/java-native-access/jna/5.14.0/native/libffi/src/powerpc/sysv.S
+Source SHA-256: 07e60b40bb9aac673e80a841993e5bb0a66588bc286c275e4bdaffb1129da266
+
+/* -----------------------------------------------------------------------
+   sysv.S - Copyright (c) 1998 Geoffrey Keating
+   Copyright (C) 2007 Free Software Foundation, Inc
+
+   PowerPC Assembly glue.
+
+   Permission is hereby granted, free of charge, to any person obtaining
+   a copy of this software and associated documentation files (the
+   ``Software''), to deal in the Software without restriction, including
+   without limitation the rights to use, copy, modify, merge, publish,
+   distribute, sublicense, and/or sell copies of the Software, and to
+   permit persons to whom the Software is furnished to do so, subject to
+   the following conditions:
+
+   The above copyright notice and this permission notice shall be included
+   in all copies or substantial portions of the Software.
+
+   THE SOFTWARE IS PROVIDED ``AS IS'', WITHOUT WARRANTY OF ANY KIND,
+   EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+   MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+   NONINFRINGEMENT.  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+   HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+   WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+   DEALINGS IN THE SOFTWARE.
+   ----------------------------------------------------------------------- */
+
+Source file: https://raw.githubusercontent.com/java-native-access/jna/5.14.0/native/libffi/src/prep_cif.c
+Source SHA-256: 68fca3e5b7a49055787f0de50317c016481511eaa59361d7e00da11901f9a7a7
+
+/* -----------------------------------------------------------------------
+   prep_cif.c - Copyright (c) 2011, 2012, 2021  Anthony Green
+                Copyright (c) 1996, 1998, 2007  Red Hat, Inc.
+                Copyright (c) 2022 Oracle and/or its affiliates.
+
+   Permission is hereby granted, free of charge, to any person obtaining
+   a copy of this software and associated documentation files (the
+   ``Software''), to deal in the Software without restriction, including
+   without limitation the rights to use, copy, modify, merge, publish,
+   distribute, sublicense, and/or sell copies of the Software, and to
+   permit persons to whom the Software is furnished to do so, subject to
+   the following conditions:
+
+   The above copyright notice and this permission notice shall be included
+   in all copies or substantial portions of the Software.
+
+   THE SOFTWARE IS PROVIDED ``AS IS'', WITHOUT WARRANTY OF ANY KIND,
+   EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+   MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+   NONINFRINGEMENT.  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+   HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+   WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+   DEALINGS IN THE SOFTWARE.
+   ----------------------------------------------------------------------- */
+
+Source file: https://raw.githubusercontent.com/java-native-access/jna/5.14.0/native/libffi/src/raw_api.c
+Source SHA-256: d7ea1c81fc13e9fceb0dc431bc865e224d7be1e84483039eb4ad79144ef29c34
+
+/* -----------------------------------------------------------------------
+   raw_api.c - Copyright (c) 1999, 2008  Red Hat, Inc.
+
+   Author: Kresten Krab Thorup <krab@gnu.org>
+
+   Permission is hereby granted, free of charge, to any person obtaining
+   a copy of this software and associated documentation files (the
+   ``Software''), to deal in the Software without restriction, including
+   without limitation the rights to use, copy, modify, merge, publish,
+   distribute, sublicense, and/or sell copies of the Software, and to
+   permit persons to whom the Software is furnished to do so, subject to
+   the following conditions:
+
+   The above copyright notice and this permission notice shall be included
+   in all copies or substantial portions of the Software.
+
+   THE SOFTWARE IS PROVIDED ``AS IS'', WITHOUT WARRANTY OF ANY KIND,
+   EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+   MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+   NONINFRINGEMENT.  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+   HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+   WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+   DEALINGS IN THE SOFTWARE.
+   ----------------------------------------------------------------------- */
+
+Source file: https://raw.githubusercontent.com/java-native-access/jna/5.14.0/native/libffi/src/riscv/ffi.c
+Source SHA-256: e97433bee810984aa1cb89d700d0f329e89abe8f0005770ceaa747d22f8854fb
+
+/* -----------------------------------------------------------------------
+   ffi.c - Copyright (c) 2015 Michael Knyszek <mknyszek@berkeley.edu>
+                         2015 Andrew Waterman <waterman@cs.berkeley.edu>
+                         2018 Stef O'Rear <sorear2@gmail.com>
+   Based on MIPS N32/64 port
+
+   RISC-V Foreign Function Interface
+
+   Permission is hereby granted, free of charge, to any person obtaining
+   a copy of this software and associated documentation files (the
+   ``Software''), to deal in the Software without restriction, including
+   without limitation the rights to use, copy, modify, merge, publish,
+   distribute, sublicense, and/or sell copies of the Software, and to
+   permit persons to whom the Software is furnished to do so, subject to
+   the following conditions:
+
+   The above copyright notice and this permission notice shall be included
+   in all copies or substantial portions of the Software.
+
+   THE SOFTWARE IS PROVIDED ``AS IS'', WITHOUT WARRANTY OF ANY KIND,
+   EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+   MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+   NONINFRINGEMENT.  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+   HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+   WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+   DEALINGS IN THE SOFTWARE.
+   ----------------------------------------------------------------------- */
+
+Source file: https://raw.githubusercontent.com/java-native-access/jna/5.14.0/native/libffi/src/riscv/ffitarget.h
+Source SHA-256: e99d39a6622a5c1b3b0f164a89c45e53e60da2719ef15781b25e8fefcbef1a43
+
+/* -----------------------------------------------------------------*-C-*-
+   ffitarget.h - 2014 Michael Knyszek
+
+   Target configuration macros for RISC-V.
+
+   Permission is hereby granted, free of charge, to any person obtaining
+   a copy of this software and associated documentation files (the
+   ``Software''), to deal in the Software without restriction, including
+   without limitation the rights to use, copy, modify, merge, publish,
+   distribute, sublicense, and/or sell copies of the Software, and to
+   permit persons to whom the Software is furnished to do so, subject to
+   the following conditions:
+
+   The above copyright notice and this permission notice shall be included
+   in all copies or substantial portions of the Software.
+
+   THE SOFTWARE IS PROVIDED ``AS IS'', WITHOUT WARRANTY OF ANY KIND,
+   EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+   MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+   NONINFRINGEMENT.  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+   HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+   WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+   DEALINGS IN THE SOFTWARE.
+
+   ----------------------------------------------------------------------- */
+
+Source file: https://raw.githubusercontent.com/java-native-access/jna/5.14.0/native/libffi/src/riscv/sysv.S
+Source SHA-256: 20e6cd75b24b3e3061b4fdce2f6fef88b32fa33a89f01b623977ebf4c56f5195
+
+/* -----------------------------------------------------------------------
+   ffi.c - Copyright (c) 2015 Michael Knyszek <mknyszek@berkeley.edu>
+                         2015 Andrew Waterman <waterman@cs.berkeley.edu>
+                         2018 Stef O'Rear <sorear2@gmail.com>
+
+   RISC-V Foreign Function Interface
+
+   Permission is hereby granted, free of charge, to any person obtaining
+   a copy of this software and associated documentation files (the
+   ``Software''), to deal in the Software without restriction, including
+   without limitation the rights to use, copy, modify, merge, publish,
+   distribute, sublicense, and/or sell copies of the Software, and to
+   permit persons to whom the Software is furnished to do so, subject to
+   the following conditions:
+
+   The above copyright notice and this permission notice shall be included
+   in all copies or substantial portions of the Software.
+
+   THE SOFTWARE IS PROVIDED ``AS IS'', WITHOUT WARRANTY OF ANY KIND,
+   EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+   MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+   NONINFRINGEMENT.  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+   HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+   WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+   DEALINGS IN THE SOFTWARE.
+   ----------------------------------------------------------------------- */
+
+Source file: https://raw.githubusercontent.com/java-native-access/jna/5.14.0/native/libffi/src/s390/ffi.c
+Source SHA-256: 75c81d7329e261dc1177b5c7b7817fe894f06ae66130ff295c2b41c93c2bf134
+
+/* -----------------------------------------------------------------------
+   ffi.c - Copyright (c) 2000, 2007 Software AG
+           Copyright (c) 2008 Red Hat, Inc
+
+   S390 Foreign Function Interface
+
+   Permission is hereby granted, free of charge, to any person obtaining
+   a copy of this software and associated documentation files (the
+   ``Software''), to deal in the Software without restriction, including
+   without limitation the rights to use, copy, modify, merge, publish,
+   distribute, sublicense, and/or sell copies of the Software, and to
+   permit persons to whom the Software is furnished to do so, subject to
+   the following conditions:
+
+   The above copyright notice and this permission notice shall be included
+   in all copies or substantial portions of the Software.
+
+   THE SOFTWARE IS PROVIDED ``AS IS'', WITHOUT WARRANTY OF ANY KIND, EXPRESS
+   OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+   MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+   IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY CLAIM, DAMAGES OR
+   OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+   ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+   OTHER DEALINGS IN THE SOFTWARE.
+   ----------------------------------------------------------------------- */
+
+Source file: https://raw.githubusercontent.com/java-native-access/jna/5.14.0/native/libffi/src/s390/ffitarget.h
+Source SHA-256: dc96f638d83a5678232a6a7e6a65334cfbf3f1acdec2e3572ecdf3ad1ddf2b5c
+
+/* -----------------------------------------------------------------*-C-*-
+   ffitarget.h - Copyright (c) 2012  Anthony Green
+                 Copyright (c) 1996-2003  Red Hat, Inc.
+   Target configuration macros for S390.
+
+   Permission is hereby granted, free of charge, to any person obtaining
+   a copy of this software and associated documentation files (the
+   ``Software''), to deal in the Software without restriction, including
+   without limitation the rights to use, copy, modify, merge, publish,
+   distribute, sublicense, and/or sell copies of the Software, and to
+   permit persons to whom the Software is furnished to do so, subject to
+   the following conditions:
+
+   The above copyright notice and this permission notice shall be included
+   in all copies or substantial portions of the Software.
+
+   THE SOFTWARE IS PROVIDED ``AS IS'', WITHOUT WARRANTY OF ANY KIND,
+   EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+   MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+   NONINFRINGEMENT.  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+   HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+   WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+   DEALINGS IN THE SOFTWARE.
+
+   ----------------------------------------------------------------------- */
+
+Source file: https://raw.githubusercontent.com/java-native-access/jna/5.14.0/native/libffi/src/s390/sysv.S
+Source SHA-256: a49f55011bbf142097414a32395bd5050f361fca5f8d4264c96e9cde3a40e18c
+
+/* -----------------------------------------------------------------------
+   sysv.S - Copyright (c) 2000 Software AG
+            Copyright (c) 2008 Red Hat, Inc.
+
+   S390 Foreign Function Interface
+
+   Permission is hereby granted, free of charge, to any person obtaining
+   a copy of this software and associated documentation files (the
+   ``Software''), to deal in the Software without restriction, including
+   without limitation the rights to use, copy, modify, merge, publish,
+   distribute, sublicense, and/or sell copies of the Software, and to
+   permit persons to whom the Software is furnished to do so, subject to
+   the following conditions:
+
+   The above copyright notice and this permission notice shall be included
+   in all copies or substantial portions of the Software.
+
+   THE SOFTWARE IS PROVIDED ``AS IS'', WITHOUT WARRANTY OF ANY KIND,
+   EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+   MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+   NONINFRINGEMENT.  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+   HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+   WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+   DEALINGS IN THE SOFTWARE.
+   ----------------------------------------------------------------------- */
+
+Source file: https://raw.githubusercontent.com/java-native-access/jna/5.14.0/native/libffi/src/sparc/ffi.c
+Source SHA-256: 97e79944e54749353d0477365bbf41c2e98ac159cee661943938cb0270460587
+
+/* -----------------------------------------------------------------------
+   ffi.c - Copyright (c) 2011, 2013 Anthony Green
+           Copyright (c) 1996, 2003-2004, 2007-2008 Red Hat, Inc.
+   
+   SPARC Foreign Function Interface 
+
+   Permission is hereby granted, free of charge, to any person obtaining
+   a copy of this software and associated documentation files (the
+   ``Software''), to deal in the Software without restriction, including
+   without limitation the rights to use, copy, modify, merge, publish,
+   distribute, sublicense, and/or sell copies of the Software, and to
+   permit persons to whom the Software is furnished to do so, subject to
+   the following conditions:
+
+   The above copyright notice and this permission notice shall be included
+   in all copies or substantial portions of the Software.
+
+   THE SOFTWARE IS PROVIDED ``AS IS'', WITHOUT WARRANTY OF ANY KIND,
+   EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+   MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+   NONINFRINGEMENT.  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+   HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+   WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+   DEALINGS IN THE SOFTWARE.
+   ----------------------------------------------------------------------- */
+
+Source file: https://raw.githubusercontent.com/java-native-access/jna/5.14.0/native/libffi/src/sparc/ffi64.c
+Source SHA-256: fd8f203d4728e5382ef15fc6e46a5f713dba44317b1a31dd54eea35c0b4b90b4
+
+/* -----------------------------------------------------------------------
+   ffi.c - Copyright (c) 2011, 2013 Anthony Green
+           Copyright (c) 1996, 2003-2004, 2007-2008 Red Hat, Inc.
+
+   SPARC Foreign Function Interface
+
+   Permission is hereby granted, free of charge, to any person obtaining
+   a copy of this software and associated documentation files (the
+   ``Software''), to deal in the Software without restriction, including
+   without limitation the rights to use, copy, modify, merge, publish,
+   distribute, sublicense, and/or sell copies of the Software, and to
+   permit persons to whom the Software is furnished to do so, subject to
+   the following conditions:
+
+   The above copyright notice and this permission notice shall be included
+   in all copies or substantial portions of the Software.
+
+   THE SOFTWARE IS PROVIDED ``AS IS'', WITHOUT WARRANTY OF ANY KIND,
+   EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+   MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+   NONINFRINGEMENT.  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+   HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+   WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+   DEALINGS IN THE SOFTWARE.
+   ----------------------------------------------------------------------- */
+
+Source file: https://raw.githubusercontent.com/java-native-access/jna/5.14.0/native/libffi/src/sparc/ffitarget.h
+Source SHA-256: 255bcdf721e066d91f5dd20ad4868dcb3a5f523b0d8a74328f25d5d44d7dbef4
+
+/* -----------------------------------------------------------------*-C-*-
+   ffitarget.h - Copyright (c) 2012  Anthony Green
+                 Copyright (c) 1996-2003  Red Hat, Inc.
+   Target configuration macros for SPARC.
+
+   Permission is hereby granted, free of charge, to any person obtaining
+   a copy of this software and associated documentation files (the
+   ``Software''), to deal in the Software without restriction, including
+   without limitation the rights to use, copy, modify, merge, publish,
+   distribute, sublicense, and/or sell copies of the Software, and to
+   permit persons to whom the Software is furnished to do so, subject to
+   the following conditions:
+
+   The above copyright notice and this permission notice shall be included
+   in all copies or substantial portions of the Software.
+
+   THE SOFTWARE IS PROVIDED ``AS IS'', WITHOUT WARRANTY OF ANY KIND,
+   EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+   MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+   NONINFRINGEMENT.  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+   HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+   WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+   DEALINGS IN THE SOFTWARE.
+
+   ----------------------------------------------------------------------- */
+
+Source file: https://raw.githubusercontent.com/java-native-access/jna/5.14.0/native/libffi/src/sparc/v8.S
+Source SHA-256: 76d81e84943a95cd71011757a362be5c80e9efda2fc202ab03fa34696cea6785
+
+/* -----------------------------------------------------------------------
+   v8.S - Copyright (c) 2013  The Written Word, Inc.
+	  Copyright (c) 1996, 1997, 2003, 2004, 2008  Red Hat, Inc.
+
+   SPARC Foreign Function Interface
+
+   Permission is hereby granted, free of charge, to any person obtaining
+   a copy of this software and associated documentation files (the
+   ``Software''), to deal in the Software without restriction, including
+   without limitation the rights to use, copy, modify, merge, publish,
+   distribute, sublicense, and/or sell copies of the Software, and to
+   permit persons to whom the Software is furnished to do so, subject to
+   the following conditions:
+
+   The above copyright notice and this permission notice shall be included
+   in all copies or substantial portions of the Software.
+
+   THE SOFTWARE IS PROVIDED ``AS IS'', WITHOUT WARRANTY OF ANY KIND,
+   EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+   MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+   NONINFRINGEMENT.  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+   HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+   WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+   DEALINGS IN THE SOFTWARE.
+   ----------------------------------------------------------------------- */
+
+Source file: https://raw.githubusercontent.com/java-native-access/jna/5.14.0/native/libffi/src/sparc/v9.S
+Source SHA-256: d776dcdf2ba9063c040b9d96a761624a12e4cbdbbe79c27199d2f112016536fe
+
+/* -----------------------------------------------------------------------
+   v9.S - Copyright (c) 2000, 2003, 2004, 2008 Red Hat, Inc.
+   
+   SPARC 64-bit Foreign Function Interface 
+
+   Permission is hereby granted, free of charge, to any person obtaining
+   a copy of this software and associated documentation files (the
+   ``Software''), to deal in the Software without restriction, including
+   without limitation the rights to use, copy, modify, merge, publish,
+   distribute, sublicense, and/or sell copies of the Software, and to
+   permit persons to whom the Software is furnished to do so, subject to
+   the following conditions:
+
+   The above copyright notice and this permission notice shall be included
+   in all copies or substantial portions of the Software.
+
+   THE SOFTWARE IS PROVIDED ``AS IS'', WITHOUT WARRANTY OF ANY KIND,
+   EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+   MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+   NONINFRINGEMENT.  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+   HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+   WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+   DEALINGS IN THE SOFTWARE.
+   ----------------------------------------------------------------------- */
+
+Source file: https://raw.githubusercontent.com/java-native-access/jna/5.14.0/native/libffi/src/tramp.c
+Source SHA-256: a6326218ad11f485120083497aef1518fd758b6f80390733b3d254bf78d15efc
+
+/* -----------------------------------------------------------------------
+   tramp.c - Copyright (c) 2020 Madhavan T. Venkataraman
+             Copyright (c) 2022 Anthony Green
+
+   API and support functions for managing statically defined closure
+   trampolines.
+
+   Permission is hereby granted, free of charge, to any person obtaining
+   a copy of this software and associated documentation files (the
+   ``Software''), to deal in the Software without restriction, including
+   without limitation the rights to use, copy, modify, merge, publish,
+   distribute, sublicense, and/or sell copies of the Software, and to
+   permit persons to whom the Software is furnished to do so, subject to
+   the following conditions:
+
+   The above copyright notice and this permission notice shall be included
+   in all copies or substantial portions of the Software.
+
+   THE SOFTWARE IS PROVIDED ``AS IS'', WITHOUT WARRANTY OF ANY KIND,
+   EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+   MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+   NONINFRINGEMENT.  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+   HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+   WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+   DEALINGS IN THE SOFTWARE.
+   ----------------------------------------------------------------------- */
+
+Source file: https://raw.githubusercontent.com/java-native-access/jna/5.14.0/native/libffi/src/types.c
+Source SHA-256: 466735ab14f3f53b3f147c6f3ab245105e8c262e89daed8426e6e9fa569f792a
+
+/* -----------------------------------------------------------------------
+   types.c - Copyright (c) 1996, 1998  Red Hat, Inc.
+   
+   Predefined ffi_types needed by libffi.
+
+   Permission is hereby granted, free of charge, to any person obtaining
+   a copy of this software and associated documentation files (the
+   ``Software''), to deal in the Software without restriction, including
+   without limitation the rights to use, copy, modify, merge, publish,
+   distribute, sublicense, and/or sell copies of the Software, and to
+   permit persons to whom the Software is furnished to do so, subject to
+   the following conditions:
+
+   The above copyright notice and this permission notice shall be included
+   in all copies or substantial portions of the Software.
+
+   THE SOFTWARE IS PROVIDED ``AS IS'', WITHOUT WARRANTY OF ANY KIND,
+   EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+   MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+   NONINFRINGEMENT.  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+   HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+   WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+   DEALINGS IN THE SOFTWARE.
+   ----------------------------------------------------------------------- */
+
+Source file: https://raw.githubusercontent.com/java-native-access/jna/5.14.0/native/libffi/src/x86/ffi.c
+Source SHA-256: 8770cc52d2af84cf2a51f8c9dc6d14973cd91b70b89979f19800c13cd63840b2
+
+/* -----------------------------------------------------------------------
+   ffi.c - Copyright (c) 2017, 2022  Anthony Green
+           Copyright (c) 1996, 1998, 1999, 2001, 2007, 2008  Red Hat, Inc.
+           Copyright (c) 2002  Ranjit Mathew
+           Copyright (c) 2002  Bo Thorsen
+           Copyright (c) 2002  Roger Sayle
+           Copyright (C) 2008, 2010  Free Software Foundation, Inc.
+
+   x86 Foreign Function Interface
+
+   Permission is hereby granted, free of charge, to any person obtaining
+   a copy of this software and associated documentation files (the
+   ``Software''), to deal in the Software without restriction, including
+   without limitation the rights to use, copy, modify, merge, publish,
+   distribute, sublicense, and/or sell copies of the Software, and to
+   permit persons to whom the Software is furnished to do so, subject to
+   the following conditions:
+
+   The above copyright notice and this permission notice shall be included
+   in all copies or substantial portions of the Software.
+
+   THE SOFTWARE IS PROVIDED ``AS IS'', WITHOUT WARRANTY OF ANY KIND,
+   EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+   MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+   NONINFRINGEMENT.  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+   HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+   WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+   DEALINGS IN THE SOFTWARE.
+   ----------------------------------------------------------------------- */
+
+Source file: https://raw.githubusercontent.com/java-native-access/jna/5.14.0/native/libffi/src/x86/ffi64.c
+Source SHA-256: 125d9a406408c187fd8890b66c3a019b313899017d9b065f38eaccbe96913c17
+
+/* -----------------------------------------------------------------------
+   ffi64.c - Copyright (c) 2011, 2018, 2022  Anthony Green
+             Copyright (c) 2013  The Written Word, Inc.
+             Copyright (c) 2008, 2010  Red Hat, Inc.
+             Copyright (c) 2002, 2007  Bo Thorsen <bo@suse.de>
+
+   x86-64 Foreign Function Interface
+
+   Permission is hereby granted, free of charge, to any person obtaining
+   a copy of this software and associated documentation files (the
+   ``Software''), to deal in the Software without restriction, including
+   without limitation the rights to use, copy, modify, merge, publish,
+   distribute, sublicense, and/or sell copies of the Software, and to
+   permit persons to whom the Software is furnished to do so, subject to
+   the following conditions:
+
+   The above copyright notice and this permission notice shall be included
+   in all copies or substantial portions of the Software.
+
+   THE SOFTWARE IS PROVIDED ``AS IS'', WITHOUT WARRANTY OF ANY KIND,
+   EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+   MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+   NONINFRINGEMENT.  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+   HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+   WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+   DEALINGS IN THE SOFTWARE.
+   ----------------------------------------------------------------------- */
+
+Source file: https://raw.githubusercontent.com/java-native-access/jna/5.14.0/native/libffi/src/x86/ffitarget.h
+Source SHA-256: 45e4fd2585aaed711e4fa3d1377b70c8e54dcdc56bdf402fa23a8816d19cc58a
+
+/* -----------------------------------------------------------------*-C-*-
+   ffitarget.h - Copyright (c) 2012, 2014, 2018  Anthony Green
+                 Copyright (c) 1996-2003, 2010  Red Hat, Inc.
+                 Copyright (C) 2008  Free Software Foundation, Inc.
+
+   Target configuration macros for x86 and x86-64.
+
+   Permission is hereby granted, free of charge, to any person obtaining
+   a copy of this software and associated documentation files (the
+   ``Software''), to deal in the Software without restriction, including
+   without limitation the rights to use, copy, modify, merge, publish,
+   distribute, sublicense, and/or sell copies of the Software, and to
+   permit persons to whom the Software is furnished to do so, subject to
+   the following conditions:
+
+   The above copyright notice and this permission notice shall be included
+   in all copies or substantial portions of the Software.
+
+   THE SOFTWARE IS PROVIDED ``AS IS'', WITHOUT WARRANTY OF ANY KIND,
+   EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+   MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+   NONINFRINGEMENT.  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+   HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+   WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+   DEALINGS IN THE SOFTWARE.
+
+   ----------------------------------------------------------------------- */
+
+Source file: https://raw.githubusercontent.com/java-native-access/jna/5.14.0/native/libffi/src/x86/ffiw64.c
+Source SHA-256: b6630b509aa28c57d9a5f93cd710fa0a2d20907cf1703f4085d0eeb602060c9c
+
+/* -----------------------------------------------------------------------
+   ffiw64.c - Copyright (c) 2018 Anthony Green
+              Copyright (c) 2014 Red Hat, Inc.
+
+   x86 win64 Foreign Function Interface
+
+   Permission is hereby granted, free of charge, to any person obtaining
+   a copy of this software and associated documentation files (the
+   ``Software''), to deal in the Software without restriction, including
+   without limitation the rights to use, copy, modify, merge, publish,
+   distribute, sublicense, and/or sell copies of the Software, and to
+   permit persons to whom the Software is furnished to do so, subject to
+   the following conditions:
+
+   The above copyright notice and this permission notice shall be included
+   in all copies or substantial portions of the Software.
+
+   THE SOFTWARE IS PROVIDED ``AS IS'', WITHOUT WARRANTY OF ANY KIND,
+   EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+   MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+   NONINFRINGEMENT.  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+   HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+   WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+   DEALINGS IN THE SOFTWARE.
+   ----------------------------------------------------------------------- */
+
+Source file: https://raw.githubusercontent.com/java-native-access/jna/5.14.0/native/libffi/src/x86/sysv.S
+Source SHA-256: 088483db5f5a4813af965adf3a9e8f83a292db9db040852d08648370d8c1e54e
+
+/* -----------------------------------------------------------------------
+   sysv.S - Copyright (c) 2017  Anthony Green
+          - Copyright (c) 2013  The Written Word, Inc.
+          - Copyright (c) 1996,1998,2001-2003,2005,2008,2010  Red Hat, Inc.
+   
+   X86 Foreign Function Interface 
+
+   Permission is hereby granted, free of charge, to any person obtaining
+   a copy of this software and associated documentation files (the
+   ``Software''), to deal in the Software without restriction, including
+   without limitation the rights to use, copy, modify, merge, publish,
+   distribute, sublicense, and/or sell copies of the Software, and to
+   permit persons to whom the Software is furnished to do so, subject to
+   the following conditions:
+
+   The above copyright notice and this permission notice shall be included
+   in all copies or substantial portions of the Software.
+
+   THE SOFTWARE IS PROVIDED ``AS IS'', WITHOUT WARRANTY OF ANY KIND,
+   EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+   MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+   NONINFRINGEMENT.  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+   HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+   WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+   DEALINGS IN THE SOFTWARE.
+   ----------------------------------------------------------------------- */
+
+Source file: https://raw.githubusercontent.com/java-native-access/jna/5.14.0/native/libffi/src/x86/sysv_intel.S
+Source SHA-256: e1d0f8d30b46706d867b5fb391435fe1ba37eee73d35f4d8f861684c8707113d
+
+/* -----------------------------------------------------------------------
+   sysv.S - Copyright (c) 2017, 2022  Anthony Green
+          - Copyright (c) 2013  The Written Word, Inc.
+          - Copyright (c) 1996,1998,2001-2003,2005,2008,2010  Red Hat, Inc.
+
+   X86 Foreign Function Interface
+
+   Permission is hereby granted, free of charge, to any person obtaining
+   a copy of this software and associated documentation files (the
+   ``Software''), to deal in the Software without restriction, including
+   without limitation the rights to use, copy, modify, merge, publish,
+   distribute, sublicense, and/or sell copies of the Software, and to
+   permit persons to whom the Software is furnished to do so, subject to
+   the following conditions:
+
+   The above copyright notice and this permission notice shall be included
+   in all copies or substantial portions of the Software.
+
+   THE SOFTWARE IS PROVIDED ``AS IS'', WITHOUT WARRANTY OF ANY KIND,
+   EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+   MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+   NONINFRINGEMENT.  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+   HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+   WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+   DEALINGS IN THE SOFTWARE.
+   ----------------------------------------------------------------------- */
+
+Source file: https://raw.githubusercontent.com/java-native-access/jna/5.14.0/native/libffi/src/x86/unix64.S
+Source SHA-256: 8a3686659532c51af9cc9b27ef2566068a4eb9b2bce02e3c738df5c339a1efd0
+
+/* -----------------------------------------------------------------------
+   unix64.S - Copyright (c) 2013  The Written Word, Inc.
+	    - Copyright (c) 2008  Red Hat, Inc
+	    - Copyright (c) 2002  Bo Thorsen <bo@suse.de>
+
+   x86-64 Foreign Function Interface 
+
+   Permission is hereby granted, free of charge, to any person obtaining
+   a copy of this software and associated documentation files (the
+   ``Software''), to deal in the Software without restriction, including
+   without limitation the rights to use, copy, modify, merge, publish,
+   distribute, sublicense, and/or sell copies of the Software, and to
+   permit persons to whom the Software is furnished to do so, subject to
+   the following conditions:
+
+   The above copyright notice and this permission notice shall be included
+   in all copies or substantial portions of the Software.
+
+   THE SOFTWARE IS PROVIDED ``AS IS'', WITHOUT WARRANTY OF ANY KIND,
+   EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+   MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+   NONINFRINGEMENT.  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+   HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+   WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+   DEALINGS IN THE SOFTWARE.
+   ----------------------------------------------------------------------- */
+

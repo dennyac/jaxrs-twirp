@@ -1,0 +1,258 @@
+Source archive: https://repo.maven.apache.org/maven2/net/sourceforge/argparse4j/argparse4j/0.9.0/argparse4j-0.9.0-sources.jar
+Members:
+  net/sourceforge/argparse4j/annotation/Arg.java
+  net/sourceforge/argparse4j/ArgumentParsers.java
+  net/sourceforge/argparse4j/ext/java7/Java7ExtensionResourceBundle.java
+  net/sourceforge/argparse4j/ext/java7/PathArgumentType.java
+  net/sourceforge/argparse4j/helper/ASCIITextWidthCounter.java
+  net/sourceforge/argparse4j/helper/CJKTextWidthCounter.java
+  net/sourceforge/argparse4j/helper/PrefixPattern.java
+  net/sourceforge/argparse4j/helper/ReflectHelper.java
+  net/sourceforge/argparse4j/helper/TextHelper.java
+  net/sourceforge/argparse4j/helper/TextWidthCounter.java
+  net/sourceforge/argparse4j/impl/action/AppendArgumentAction.java
+  net/sourceforge/argparse4j/impl/action/AppendConstArgumentAction.java
+  net/sourceforge/argparse4j/impl/action/HelpArgumentAction.java
+  net/sourceforge/argparse4j/impl/action/StoreArgumentAction.java
+  net/sourceforge/argparse4j/impl/action/StoreConstArgumentAction.java
+  net/sourceforge/argparse4j/impl/action/StoreFalseArgumentAction.java
+  net/sourceforge/argparse4j/impl/action/StoreTrueArgumentAction.java
+  net/sourceforge/argparse4j/impl/action/VersionArgumentAction.java
+  net/sourceforge/argparse4j/impl/Arguments.java
+  net/sourceforge/argparse4j/impl/choice/CollectionArgumentChoice.java
+  net/sourceforge/argparse4j/impl/choice/RangeArgumentChoice.java
+  net/sourceforge/argparse4j/impl/type/ConstructorArgumentType.java
+  net/sourceforge/argparse4j/impl/type/EnumArgumentType.java
+  net/sourceforge/argparse4j/impl/type/FileVerification.java
+  net/sourceforge/argparse4j/impl/type/StringArgumentType.java
+  net/sourceforge/argparse4j/inf/Argument.java
+  net/sourceforge/argparse4j/inf/ArgumentAction.java
+  net/sourceforge/argparse4j/inf/ArgumentChoice.java
+  net/sourceforge/argparse4j/inf/ArgumentGroup.java
+  net/sourceforge/argparse4j/inf/ArgumentParser.java
+  net/sourceforge/argparse4j/inf/ArgumentParserException.java
+  net/sourceforge/argparse4j/inf/ArgumentType.java
+  net/sourceforge/argparse4j/inf/FeatureControl.java
+  net/sourceforge/argparse4j/inf/Namespace.java
+  net/sourceforge/argparse4j/inf/Subparser.java
+  net/sourceforge/argparse4j/inf/Subparsers.java
+  net/sourceforge/argparse4j/internal/ArgumentGroupImpl.java
+  net/sourceforge/argparse4j/internal/ArgumentImpl.java
+  net/sourceforge/argparse4j/internal/ArgumentParserImpl.java
+  net/sourceforge/argparse4j/internal/ParseState.java
+  net/sourceforge/argparse4j/internal/SubparserImpl.java
+  net/sourceforge/argparse4j/internal/SubparsersImpl.java
+  net/sourceforge/argparse4j/internal/UnrecognizedArgumentException.java
+  net/sourceforge/argparse4j/internal/UnrecognizedCommandException.java
+
+/*
+ * Copyright (C) 2011 Tatsuhiro Tsujikawa
+ *
+ * Permission is hereby granted, free of charge, to any person
+ * obtaining a copy of this software and associated documentation
+ * files (the "Software"), to deal in the Software without
+ * restriction, including without limitation the rights to use, copy,
+ * modify, merge, publish, distribute, sublicense, and/or sell copies
+ * of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be
+ * included in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
+ * BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
+ * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
+Source archive: https://repo.maven.apache.org/maven2/net/sourceforge/argparse4j/argparse4j/0.9.0/argparse4j-0.9.0-sources.jar
+Members:
+  net/sourceforge/argparse4j/helper/HelpScreenException.java
+
+/*
+ * Copyright (C) 2013 Adam Parkin
+ *
+ * Permission is hereby granted, free of charge, to any person
+ * obtaining a copy of this software and associated documentation
+ * files (the "Software"), to deal in the Software without
+ * restriction, including without limitation the rights to use, copy,
+ * modify, merge, publish, distribute, sublicense, and/or sell copies
+ * of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be
+ * included in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
+ * BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
+ * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
+Source archive: https://repo.maven.apache.org/maven2/net/sourceforge/argparse4j/argparse4j/0.9.0/argparse4j-0.9.0-sources.jar
+Members:
+  net/sourceforge/argparse4j/impl/action/CountArgumentAction.java
+  net/sourceforge/argparse4j/impl/type/ReflectArgumentType.java
+
+/*
+ * Copyright (C) 2013 Tatsuhiro Tsujikawa
+ *
+ * Permission is hereby granted, free of charge, to any person
+ * obtaining a copy of this software and associated documentation
+ * files (the "Software"), to deal in the Software without
+ * restriction, including without limitation the rights to use, copy,
+ * modify, merge, publish, distribute, sublicense, and/or sell copies
+ * of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be
+ * included in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
+ * BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
+ * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
+Source archive: https://repo.maven.apache.org/maven2/net/sourceforge/argparse4j/argparse4j/0.9.0/argparse4j-0.9.0-sources.jar
+Members:
+  net/sourceforge/argparse4j/impl/type/BooleanArgumentType.java
+  net/sourceforge/argparse4j/inf/MetavarInference.java
+
+/*
+ * Copyright (C) 2015 Tatsuhiro Tsujikawa
+ *
+ * Permission is hereby granted, free of charge, to any person
+ * obtaining a copy of this software and associated documentation
+ * files (the "Software"), to deal in the Software without
+ * restriction, including without limitation the rights to use, copy,
+ * modify, merge, publish, distribute, sublicense, and/or sell copies
+ * of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be
+ * included in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
+ * BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
+ * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
+Source archive: https://repo.maven.apache.org/maven2/net/sourceforge/argparse4j/argparse4j/0.9.0/argparse4j-0.9.0-sources.jar
+Members:
+  net/sourceforge/argparse4j/impl/type/CaseInsensitiveEnumNameArgumentType.java
+  net/sourceforge/argparse4j/impl/type/CaseInsensitiveEnumStringArgumentType.java
+  net/sourceforge/argparse4j/impl/type/EnumStringArgumentType.java
+
+/*
+ * Copyright (C) 2015 Andrew January
+ *
+ * Permission is hereby granted, free of charge, to any person
+ * obtaining a copy of this software and associated documentation
+ * files (the "Software"), to deal in the Software without
+ * restriction, including without limitation the rights to use, copy,
+ * modify, merge, publish, distribute, sublicense, and/or sell copies
+ * of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be
+ * included in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
+ * BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
+ * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
+Source archive: https://repo.maven.apache.org/maven2/net/sourceforge/argparse4j/argparse4j/0.9.0/argparse4j-0.9.0-sources.jar
+Members:
+  net/sourceforge/argparse4j/impl/type/FileArgumentType.java
+
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
+Source archive: https://repo.maven.apache.org/maven2/net/sourceforge/argparse4j/argparse4j/0.9.0/argparse4j-0.9.0-sources.jar
+Members:
+  net/sourceforge/argparse4j/inf/MutuallyExclusiveGroup.java
+
+/*
+ * Copyright (C) 2012 Tatsuhiro Tsujikawa
+ *
+ * Permission is hereby granted, free of charge, to any person
+ * obtaining a copy of this software and associated documentation
+ * files (the "Software"), to deal in the Software without
+ * restriction, including without limitation the rights to use, copy,
+ * modify, merge, publish, distribute, sublicense, and/or sell copies
+ * of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be
+ * included in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
+ * BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
+ * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
+Source archive: https://repo.maven.apache.org/maven2/net/sourceforge/argparse4j/argparse4j/0.9.0/argparse4j-0.9.0-sources.jar
+Members:
+  net/sourceforge/argparse4j/internal/TerminalWidth.java
+
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */

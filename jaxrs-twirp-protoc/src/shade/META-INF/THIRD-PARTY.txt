@@ -1,0 +1,21 @@
+The jaxrs-twirp-protoc executable bundles these dependencies:
+
+com.google.protobuf:protobuf-java:4.32.1
+  License: BSD-3-Clause
+  Text: META-INF/third-party/com/google/protobuf/protobuf-java/4.32.1/LICENSE
+  Copyright: META-INF/third-party/com/google/protobuf/protobuf-java/4.32.1/COPYRIGHT
+  Upstream: https://github.com/protocolbuffers/protobuf/tree/v32.1
+  License source: https://raw.githubusercontent.com/protocolbuffers/protobuf/v32.1/LICENSE
+  Copyright sources: google/protobuf/*.proto in the binary artifact and
+    https://repo.maven.apache.org/maven2/com/google/protobuf/protobuf-java/4.32.1/protobuf-java-4.32.1-sources.jar
+
+com.squareup:javapoet:1.13.0
+  License: Apache-2.0
+  Text: META-INF/third-party/com/squareup/javapoet/1.13.0/LICENSE
+  Copyright: META-INF/third-party/com/squareup/javapoet/1.13.0/COPYRIGHT
+  Upstream: https://github.com/square/javapoet/tree/javapoet-1.13.0
+  License source: https://raw.githubusercontent.com/square/javapoet/javapoet-1.13.0/LICENSE.txt
+  Copyright source: https://repo.maven.apache.org/maven2/com/squareup/javapoet/1.13.0/javapoet-1.13.0-sources.jar
+
+The dependency license texts above supplement META-INF/LICENSE, which licenses
+jaxrs-twirp itself. Neither dependency supplies an upstream NOTICE file.

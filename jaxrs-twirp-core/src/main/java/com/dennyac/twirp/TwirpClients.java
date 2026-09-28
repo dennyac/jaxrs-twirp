@@ -1,3 +1,6 @@
+// Copyright 2026 the jaxrs-twirp authors
+// SPDX-License-Identifier: Apache-2.0
+
 package com.dennyac.twirp;
 
 import com.fasterxml.jackson.databind.ObjectMapper;

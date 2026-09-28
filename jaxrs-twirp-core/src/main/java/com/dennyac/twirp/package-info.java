@@ -1,3 +1,6 @@
+// Copyright 2026 the jaxrs-twirp authors
+// SPDX-License-Identifier: Apache-2.0
+
 /**
  * Framework-agnostic JAX-RS runtime for the
  * <a href="https://twitchtv.github.io/twirp/docs/spec_v7.html">Twirp RPC protocol (v7)</a>.

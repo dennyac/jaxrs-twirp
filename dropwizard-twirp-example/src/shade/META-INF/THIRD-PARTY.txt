@@ -1,0 +1,256 @@
+Third-party material in the runnable example
+==========================================
+
+This index describes the resolved runtime inputs to this shaded binary jar.
+It does not apply to the project's source or javadoc jars.
+
+The original legal files from each dependency jar are preserved under:
+  META-INF/third-party/<groupId path>/<artifactId>/<version>/<original entry>
+The groupId path replaces dots with slashes. For example:
+  META-INF/third-party/com/google/guava/guava/33.6.0-jre/META-INF/LICENSE
+
+Dependency originals, including NOTICE.md and NOTICE.markdown, must be read
+inside those dependency directories. META-INF/LICENSE and META-INF/NOTICE
+at the shaded jar's top level are the project's own files, not merged
+dependency notices.
+
+Additional legal material is under META-INF/third-party/supplemental/.
+PROVENANCE.txt there identifies the exact upstream versions and source files
+used for the supplements. RUNTIME-SOURCES.tsv gives the coordinates, exact
+source-archive URLs, and SHA-256 digests of the external runtime inputs.
+The empty listenablefuture compatibility artifact contributes no classes.
+
+License texts and notices
+------------------------
+
+The complete Apache License, Version 2.0 is in META-INF/LICENSE. It applies to
+the Apache-licensed dependencies and portions below, not to the whole collection
+of third-party software under a single license.
+
+* Apache-2.0: the listed Dropwizard, Dropwizard Metrics, throttling appender,
+  Jackson, ClassMate, Guava, failureaccess, Hibernate Validator, SnakeYAML,
+  Apache Commons, Error Prone annotations, profiler, JSpecify, Jakarta Validation,
+  Jakarta Inject, JBoss Logging, Gson, J2ObjC annotations, and Caffeine artifacts.
+  Existing artifact LICENSE/NOTICE files are retained in the
+  dependency directories described above. Missing notices are
+  supplied by dropwizard-5.0.2-NOTICE, metrics-4.2.39-COPYRIGHT.txt,
+  logback-throttling-appender-1.5.3-COPYRIGHT.txt, profiler-1.1.1-LICENSE,
+  hibernate-validator-8.0.3.Final-COPYRIGHT.txt,
+  jakarta.validation-api-3.0.2-NOTICE.md,
+  jakarta.validation-api-3.0.2-COPYRIGHT.txt, and apache-source-NOTICES.txt.
+  The last file also retains source notices for copied code, including
+  Hibernate's jtype/JSR-166 code, SnakeYAML's Google escapers, and Gson's
+  Android-derived LinkedTreeMap.
+
+* Jetty 12.1.9, jetty-setuid-jna 2.0.3, Javassist 3.31.0-GA, and JNA 5.14.0:
+  Apache-2.0 is the selected upstream license alternative. The supplemental
+  jetty-12.1.9-NOTICE.txt and javassist-3.31.0-GA-License.html retain the upstream
+  notices and license choices. jetty-12.1.9-UnixCrypt-NOTICE.txt retains Aki
+  Yoshida's separate permission notice. JNA's native libffi license and native
+  source notices are in jna-5.14.0-libffi-LICENSE and
+  jna-5.14.0-native-NOTICES.txt; libffi is not covered solely by JNA's Apache
+  license choice.
+
+* Logback Core/Classic 1.5.33 and Logback Access 2.0.12: EPL-2.0 is selected.
+  These versions' own source headers and module LICENSE files say EPL-2.0
+  or LGPL-2.1, not the EPL-1.0 wording used by older Logback releases.
+  See EPL-2.0.txt, logback-1.5.33-LICENSE.txt, and
+  logback-access-2.0.12-LICENSE.txt.
+
+* Expressly, Jersey, HK2, OSGi Resource Locator, and the listed Jakarta
+  Annotation, EL, REST, and Servlet APIs: EPL-2.0 is selected where upstream
+  offers EPL-2.0 or GPL-2.0 with the Classpath Exception. Their original
+  secondary-license notices remain intact. The missing Expressly, Servlet,
+  and OSGi Resource Locator LICENSE/NOTICE files are supplied as
+  expressly-5.0.0-LICENSE.md and expressly-5.0.0-NOTICE.md,
+  jakarta.servlet-api-6.0.0-LICENSE.md and jakarta.servlet-api-6.0.0-NOTICE.md,
+  and osgi-resource-locator-1.0.3-LICENSE.md and
+  osgi-resource-locator-1.0.3-NOTICE.md. Servlet also has Apache-2.0 portions;
+  their source notices are retained in apache-source-NOTICES.txt.
+
+* SLF4J API and jul-to-slf4j 2.0.18: MIT; see:
+  META-INF/third-party/org/slf4j/slf4j-api/2.0.18/META-INF/LICENSE.txt
+  META-INF/third-party/org/slf4j/jul-to-slf4j/2.0.18/META-INF/LICENSE.txt
+  The jcl-over-slf4j and log4j-over-slf4j modules
+  instead have Apache-2.0 module licenses and source headers. Their Apache
+  notices are retained in apache-source-NOTICES.txt; the generic MIT file
+  included in their published jars is also preserved in each bridge's
+  dependency directory.
+  Argparse4j 0.9.0: MIT, with Apache-2.0 source files. See
+  argparse4j-0.9.0-LICENSE.txt and argparse4j-0.9.0-NOTICES.txt. The latter
+  retains the individual MIT notices and the Apache headers of
+  FileArgumentType and TerminalWidth without assigning them an unverified
+  origin in another library.
+
+* Protobuf Java/Java Util 4.32.1: BSD-3-Clause; the supplied license files are:
+  META-INF/third-party/com/google/protobuf/protobuf-java/4.32.1/LICENSE
+  META-INF/third-party/com/google/protobuf/protobuf-java-util/4.32.1/LICENSE
+  Protobuf Java's additional source copyright notices are retained in:
+  META-INF/third-party/com/google/protobuf/protobuf-java/4.32.1/COPYRIGHT
+  Jakarta Activation 2.1.4 and XML Binding 4.0.5: BSD-3-Clause;
+  see LICENSE.md and NOTICE.md in these respective directories:
+  META-INF/third-party/jakarta/activation/jakarta.activation-api/2.1.4/META-INF/
+  META-INF/third-party/jakarta/xml/bind/jakarta.xml.bind-api/4.0.5/META-INF/
+
+* JSR305 3.0.2: the published POM declares Apache-2.0, but the original
+  reference implementation has a BSD-3-Clause license, and the resolved
+  javax.annotation.concurrent sources explicitly carry Brian Goetz's
+  CC-BY-2.5 notice. Preserve all of these rather than infer a single license:
+  META-INF/LICENSE, jsr305-3.0.2-origin-LICENSE,
+  jsr305-3.0.2-NOTICES.txt, and CC-BY-2.5.html. The source archive and
+  original implementation archive are identified in PROVENANCE.txt.
+
+Embedded components
+-------------------
+
+* Jackson Core's FastDoubleParser and Schubfach material includes MIT,
+  BSD-2-Clause, and Boost-1.0 terms. See FastDoubleParser-LICENSE,
+  FastDoubleParser-ThirdParty-LICENSE, and Schubfach-LICENSE in:
+  META-INF/third-party/com/fasterxml/jackson/core/jackson-core/2.21.4/META-INF/
+  Jackson Blackbird's ASM notice is in:
+  META-INF/third-party/com/fasterxml/jackson/module/jackson-module-blackbird/2.21.4/META-INF/LICENSE
+  These prefixed license filenames are
+  part of the distribution, not optional references to external websites.
+
+* Jersey Common 3.1.11 includes Guava 18.0-derived classes (Apache-2.0)
+  and JSR-166 material. Its original NOTICE.md and NOTICE.markdown are in:
+  META-INF/third-party/org/glassfish/jersey/core/jersey-common/3.1.11/META-INF/
+  jersey-common-3.1.11-JSR166-NOTICE.txt and CC0-1.0.html supplement
+  the public-domain/CC0 notice in Flow.java.
+  Jersey Server 3.1.11 includes ASM 9.8; its complete BSD-3-Clause header is
+  in jersey-server-3.1.11-ASM-LICENSE.txt. Its original NOTICE.md and
+  NOTICE.markdown are in:
+  META-INF/third-party/org/glassfish/jersey/core/jersey-server/3.1.11/META-INF/
+  Its Metrics-derived monitoring
+  code and Jersey Bean Validation's Hibernate-derived classes have
+  Apache-2.0 notices retained in apache-source-NOTICES.txt.
+
+* Some upstream notices cover entire projects, including optional or test
+  dependencies not present here. Those notices are preserved as written,
+  not treated as the runtime inventory. In particular, Jersey Server's
+  NOTICE.markdown mentions W3C documents, but its resolved binary contains
+  no such document resources. The bundled Servlet version's terms are in
+  its own 6.0.0 legal files, not the older Servlet terms mentioned in the
+  project-wide Jetty notice. libffi build tools, tests, and documentation
+  are not added as runtime dependencies.
+
+EPL source availability
+-----------------------
+
+The source code for the EPL-covered components is available under EPL-2.0
+from the exact source-archive URLs in RUNTIME-SOURCES.tsv. Full upstream
+source distributions, including build files, are listed in
+PROVENANCE.txt under "EPL source distributions". This jar aggregates the
+dependency classes; it does not relicense those components as Apache-only.
+
+The third-party programs are provided "as is", without warranties or
+conditions of any kind. Their contributors disclaim liability for direct,
+indirect, incidental, special, exemplary, or consequential damages.
+The reproduced licenses contain the applicable terms and limitations.
+
+Resolved runtime inputs
+-----------------------
+
+io.dropwizard:dropwizard-core:5.0.2
+io.dropwizard:dropwizard-util:5.0.2
+io.dropwizard:dropwizard-jackson:5.0.2
+com.google.guava:guava:33.6.0-jre
+com.google.guava:failureaccess:1.0.3
+com.google.guava:listenablefuture:9999.0-empty-to-avoid-conflict-with-guava
+com.fasterxml.jackson.core:jackson-core:2.21.4
+com.fasterxml.jackson.datatype:jackson-datatype-guava:2.21.4
+com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.21.4
+com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.21.4
+com.fasterxml.jackson.module:jackson-module-parameter-names:2.21.4
+com.fasterxml.jackson.module:jackson-module-blackbird:2.21.4
+io.dropwizard:dropwizard-validation:5.0.2
+com.fasterxml:classmate:1.7.3
+org.hibernate.validator:hibernate-validator:8.0.3.Final
+org.glassfish.expressly:expressly:5.0.0
+io.dropwizard:dropwizard-configuration:5.0.2
+com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.21.4
+org.yaml:snakeyaml:2.5
+org.apache.commons:commons-text:1.15.0
+org.apache.commons:commons-lang3:3.20.0
+io.dropwizard:dropwizard-logging:5.0.2
+io.dropwizard.metrics:metrics-logback:4.2.39
+org.slf4j:jul-to-slf4j:2.0.18
+ch.qos.logback:logback-core:1.5.33
+com.google.errorprone:error_prone_annotations:2.42.0
+io.dropwizard.logback:logback-throttling-appender:1.5.3
+org.slf4j:log4j-over-slf4j:2.0.18
+org.slf4j:jcl-over-slf4j:2.0.18
+io.dropwizard:dropwizard-metrics:5.0.2
+io.dropwizard:dropwizard-jersey:5.0.2
+org.glassfish.jersey.ext:jersey-metainf-services:3.1.11
+org.glassfish.jersey.inject:jersey-hk2:3.1.11
+org.glassfish.hk2:hk2-locator:3.0.6
+org.javassist:javassist:3.31.0-GA
+io.dropwizard.metrics:metrics-jersey3:4.2.39
+org.glassfish.hk2:hk2-api:3.0.6
+org.glassfish.hk2:hk2-utils:3.0.6
+org.glassfish.hk2.external:aopalliance-repackaged:3.0.6
+org.glassfish.jersey.containers:jersey-container-servlet:3.1.11
+org.eclipse.jetty:jetty-io:12.1.9
+io.dropwizard:dropwizard-servlets:5.0.2
+io.dropwizard:dropwizard-jetty:5.0.2
+org.eclipse.jetty:jetty-http:12.1.9
+io.dropwizard:dropwizard-lifecycle:5.0.2
+io.dropwizard:dropwizard-health:5.0.2
+io.dropwizard.metrics:metrics-core:4.2.39
+io.dropwizard.metrics:metrics-annotation:4.2.39
+io.dropwizard.metrics:metrics-jetty12:4.2.39
+io.dropwizard.metrics:metrics-jetty12-ee10:4.2.39
+io.dropwizard.metrics:metrics-jvm:4.2.39
+io.dropwizard.metrics:metrics-jmx:4.2.39
+io.dropwizard.metrics:metrics-jakarta-servlets:4.2.39
+io.dropwizard.metrics:metrics-json:4.2.39
+com.helger:profiler:1.1.1
+io.dropwizard.metrics:metrics-healthchecks:4.2.39
+io.dropwizard:dropwizard-request-logging:5.0.2
+ch.qos.logback.access:logback-access-common:2.0.12
+ch.qos.logback.access:logback-access-jetty12:2.0.12
+ch.qos.logback:logback-classic:1.5.33
+com.fasterxml.jackson.core:jackson-annotations:2.21
+com.fasterxml.jackson.core:jackson-databind:2.21.4
+org.jspecify:jspecify:1.0.0
+jakarta.servlet:jakarta.servlet-api:6.0.0
+jakarta.validation:jakarta.validation-api:3.0.2
+jakarta.ws.rs:jakarta.ws.rs-api:3.1.0
+net.sourceforge.argparse4j:argparse4j:0.9.0
+org.eclipse.jetty:jetty-security:12.1.9
+org.eclipse.jetty:jetty-server:12.1.9
+org.eclipse.jetty.ee10:jetty-ee10-servlet:12.1.9
+org.eclipse.jetty:jetty-session:12.1.9
+org.eclipse.jetty:jetty-util:12.1.9
+org.eclipse.jetty.toolchain.setuid:jetty-setuid-jna:2.0.3
+net.java.dev.jna:jna-jpms:5.14.0
+jakarta.inject:jakarta.inject-api:2.0.1
+org.glassfish.jersey.core:jersey-common:3.1.11
+org.glassfish.hk2:osgi-resource-locator:1.0.3
+org.glassfish.jersey.ext:jersey-bean-validation:3.1.11
+org.jboss.logging:jboss-logging:3.6.3.Final
+jakarta.el:jakarta.el-api:5.0.1
+org.slf4j:slf4j-api:2.0.18
+com.dennyac.twirp:dropwizard-twirp:0.1.0-SNAPSHOT
+com.dennyac.twirp:jaxrs-twirp-core:0.1.0-SNAPSHOT
+com.google.protobuf:protobuf-java-util:4.32.1
+com.google.code.findbugs:jsr305:3.0.2
+com.google.code.gson:gson:2.8.9
+com.google.j2objc:j2objc-annotations:2.8
+io.dropwizard:dropwizard-auth:5.0.2
+io.dropwizard.metrics:metrics-caffeine:4.2.39
+com.github.ben-manes.caffeine:caffeine:3.2.4
+jakarta.annotation:jakarta.annotation-api:2.1.1
+org.glassfish.jersey.core:jersey-server:3.1.11
+com.google.protobuf:protobuf-java:4.32.1
+org.glassfish.jersey.core:jersey-client:3.1.11
+com.fasterxml.jackson.jakarta.rs:jackson-jakarta-rs-json-provider:2.21.4
+com.fasterxml.jackson.jakarta.rs:jackson-jakarta-rs-base:2.21.4
+com.fasterxml.jackson.module:jackson-module-jakarta-xmlbind-annotations:2.21.4
+org.glassfish.jersey.containers:jersey-container-servlet-core:3.1.11
+jakarta.activation:jakarta.activation-api:2.1.4
+jakarta.xml.bind:jakarta.xml.bind-api:4.0.5
+
+The two com.dennyac.twirp inputs are modules of this project, covered by its
+LICENSE/NOTICE and matching published source artifacts, not external releases.

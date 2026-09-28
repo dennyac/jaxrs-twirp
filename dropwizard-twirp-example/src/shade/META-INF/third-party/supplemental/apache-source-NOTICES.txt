@@ -1,0 +1,3836 @@
+Apache-licensed source notices and retained alternate-license notices
+
+Source archive: https://repo.maven.apache.org/maven2/org/hibernate/validator/hibernate-validator/8.0.3.Final/hibernate-validator-8.0.3.Final-sources.jar
+Members:
+  org/hibernate/validator/BaseHibernateValidatorConfiguration.java
+  org/hibernate/validator/HibernateValidatorFactory.java
+  org/hibernate/validator/HibernateValidatorPermission.java
+  org/hibernate/validator/Incubating.java
+  org/hibernate/validator/PredefinedScopeHibernateValidator.java
+  org/hibernate/validator/PredefinedScopeHibernateValidatorConfiguration.java
+  org/hibernate/validator/PredefinedScopeHibernateValidatorFactory.java
+  org/hibernate/validator/cfg/AnnotationDef.java
+  org/hibernate/validator/cfg/ConstraintDef.java
+  org/hibernate/validator/cfg/ConstraintMapping.java
+  org/hibernate/validator/cfg/GenericConstraintDef.java
+  org/hibernate/validator/cfg/context/AnnotationIgnoreOptions.java
+  org/hibernate/validator/cfg/context/AnnotationProcessingOptions.java
+  org/hibernate/validator/cfg/context/Cascadable.java
+  org/hibernate/validator/cfg/context/Constrainable.java
+  org/hibernate/validator/cfg/context/ConstraintDefinitionContext.java
+  org/hibernate/validator/cfg/context/ConstraintDefinitionTarget.java
+  org/hibernate/validator/cfg/context/ConstraintMappingTarget.java
+  org/hibernate/validator/cfg/context/ConstructorConstraintMappingContext.java
+  org/hibernate/validator/cfg/context/ConstructorTarget.java
+  org/hibernate/validator/cfg/context/ContainerElementConstraintMappingContext.java
+  org/hibernate/validator/cfg/context/ContainerElementTarget.java
+  org/hibernate/validator/cfg/context/CrossParameterConstraintMappingContext.java
+  org/hibernate/validator/cfg/context/GroupConversionTargetContext.java
+  org/hibernate/validator/cfg/context/MethodTarget.java
+  org/hibernate/validator/cfg/context/ParameterTarget.java
+  org/hibernate/validator/cfg/context/PropertyTarget.java
+  org/hibernate/validator/cfg/context/TypeConstraintMappingContext.java
+  org/hibernate/validator/cfg/defs/AssertTrueDef.java
+  org/hibernate/validator/cfg/defs/CreditCardNumberDef.java
+  org/hibernate/validator/cfg/defs/DecimalMaxDef.java
+  org/hibernate/validator/cfg/defs/DigitsDef.java
+  org/hibernate/validator/cfg/defs/DurationMaxDef.java
+  org/hibernate/validator/cfg/defs/DurationMinDef.java
+  org/hibernate/validator/cfg/defs/EANDef.java
+  org/hibernate/validator/cfg/defs/EmailDef.java
+  org/hibernate/validator/cfg/defs/FutureDef.java
+  org/hibernate/validator/cfg/defs/FutureOrPresentDef.java
+  org/hibernate/validator/cfg/defs/ISBNDef.java
+  org/hibernate/validator/cfg/defs/LuhnCheckDef.java
+  org/hibernate/validator/cfg/defs/MaxDef.java
+  org/hibernate/validator/cfg/defs/Mod10CheckDef.java
+  org/hibernate/validator/cfg/defs/NegativeDef.java
+  org/hibernate/validator/cfg/defs/NormalizedDef.java
+  org/hibernate/validator/cfg/defs/NotEmptyDef.java
+  org/hibernate/validator/cfg/defs/ParameterScriptAssertDef.java
+  org/hibernate/validator/cfg/defs/PastOrPresentDef.java
+  org/hibernate/validator/cfg/defs/PatternDef.java
+  org/hibernate/validator/cfg/defs/PositiveDef.java
+  org/hibernate/validator/constraintvalidation/HibernateConstraintValidatorInitializationContext.java
+  org/hibernate/validator/constraintvalidation/HibernateConstraintViolationBuilder.java
+  org/hibernate/validator/constraintvalidation/HibernateCrossParameterConstraintValidatorContext.java
+  org/hibernate/validator/constraintvalidators/RegexpURLValidator.java
+  org/hibernate/validator/engine/HibernateConstraintViolation.java
+  org/hibernate/validator/engine/HibernateValidatorEnhancedBean.java
+  org/hibernate/validator/group/GroupSequenceProvider.java
+  org/hibernate/validator/internal/IgnoreForbiddenApisErrors.java
+  org/hibernate/validator/internal/cfg/context/AbstractPropertyConstraintMappingContextImpl.java
+  org/hibernate/validator/internal/cfg/context/CascadableConstraintMappingContextImplBase.java
+  org/hibernate/validator/internal/cfg/context/ConstraintDefinitionContextImpl.java
+  org/hibernate/validator/internal/cfg/context/ConstructorConstraintMappingContextImpl.java
+  org/hibernate/validator/internal/cfg/context/CrossParameterConstraintMappingContextImpl.java
+  org/hibernate/validator/internal/cfg/context/DefaultConstraintMapping.java
+  org/hibernate/validator/internal/cfg/context/ExecutableConstraintMappingContextImpl.java
+  org/hibernate/validator/internal/cfg/context/GroupConversionTargetContextImpl.java
+  org/hibernate/validator/internal/cfg/context/ParameterConstraintMappingContextImpl.java
+  org/hibernate/validator/internal/constraintvalidators/AbstractEmailValidator.java
+  org/hibernate/validator/internal/constraintvalidators/bv/AssertFalseValidator.java
+  org/hibernate/validator/internal/constraintvalidators/bv/DigitsValidatorForCharSequence.java
+  org/hibernate/validator/internal/constraintvalidators/bv/number/bound/MinValidatorForByte.java
+  org/hibernate/validator/internal/constraintvalidators/bv/number/bound/MinValidatorForFloat.java
+  org/hibernate/validator/internal/constraintvalidators/bv/number/bound/MinValidatorForShort.java
+  org/hibernate/validator/internal/constraintvalidators/bv/number/bound/decimal/AbstractDecimalMinValidator.java
+  org/hibernate/validator/internal/constraintvalidators/bv/number/bound/decimal/DecimalMaxValidatorForByte.java
+  org/hibernate/validator/internal/constraintvalidators/bv/number/bound/decimal/DecimalMaxValidatorForInteger.java
+  org/hibernate/validator/internal/constraintvalidators/bv/number/bound/decimal/DecimalMinValidatorForBigDecimal.java
+  org/hibernate/validator/internal/constraintvalidators/bv/number/bound/decimal/DecimalMinValidatorForDouble.java
+  org/hibernate/validator/internal/constraintvalidators/bv/number/bound/decimal/DecimalMinValidatorForInteger.java
+  org/hibernate/validator/internal/constraintvalidators/bv/number/bound/decimal/DecimalNumberComparatorHelper.java
+  org/hibernate/validator/internal/constraintvalidators/bv/number/sign/NegativeOrZeroValidatorForBigInteger.java
+  org/hibernate/validator/internal/constraintvalidators/hv/pl/REGONValidator.java
+  org/hibernate/validator/internal/constraintvalidators/hv/time/DurationMaxValidator.java
+  org/hibernate/validator/internal/constraintvalidators/hv/time/DurationMinValidator.java
+  org/hibernate/validator/internal/engine/ConfigurationImpl.java
+  org/hibernate/validator/internal/engine/ConstraintCreationContext.java
+  org/hibernate/validator/internal/engine/ConstraintViolationImpl.java
+  org/hibernate/validator/internal/engine/DefaultClockProvider.java
+  org/hibernate/validator/internal/engine/DefaultParameterNameProvider.java
+  org/hibernate/validator/internal/engine/DefaultPropertyNodeNameProvider.java
+  org/hibernate/validator/internal/engine/MessageInterpolatorContext.java
+  org/hibernate/validator/internal/engine/MethodValidationConfiguration.java
+  org/hibernate/validator/internal/engine/PredefinedScopeValidatorFactoryImpl.java
+  org/hibernate/validator/internal/engine/ValidatorFactoryConfigurationHelper.java
+  org/hibernate/validator/internal/engine/ValidatorImpl.java
+  org/hibernate/validator/internal/engine/valueextraction/ShortArrayValueExtractor.java
+  org/hibernate/validator/internal/engine/valueextraction/ValueExtractorHelper.java
+  org/hibernate/validator/internal/engine/valueextraction/ValueExtractorManager.java
+  org/hibernate/validator/internal/metadata/BeanMetaDataManager.java
+  org/hibernate/validator/internal/metadata/BeanMetaDataManagerImpl.java
+  org/hibernate/validator/internal/metadata/DefaultBeanMetaDataClassNormalizer.java
+  org/hibernate/validator/internal/metadata/aggregated/AbstractConstraintMetaData.java
+  org/hibernate/validator/internal/metadata/aggregated/AbstractPropertyCascadable.java
+  org/hibernate/validator/internal/metadata/aggregated/BeanMetaDataBuilder.java
+  org/hibernate/validator/internal/metadata/descriptor/BeanDescriptorImpl.java
+  org/hibernate/validator/internal/metadata/descriptor/ClassDescriptorImpl.java
+  org/hibernate/validator/internal/metadata/descriptor/ContainerElementTypeDescriptorImpl.java
+  org/hibernate/validator/internal/metadata/descriptor/CrossParameterDescriptorImpl.java
+  org/hibernate/validator/internal/metadata/descriptor/ElementDescriptorImpl.java
+  org/hibernate/validator/internal/metadata/descriptor/ExecutableDescriptorImpl.java
+  org/hibernate/validator/internal/metadata/descriptor/GroupConversionDescriptorImpl.java
+  org/hibernate/validator/internal/metadata/descriptor/ParameterDescriptorImpl.java
+  org/hibernate/validator/internal/metadata/descriptor/PropertyDescriptorImpl.java
+  org/hibernate/validator/internal/metadata/descriptor/ReturnValueDescriptorImpl.java
+  org/hibernate/validator/internal/metadata/facets/Cascadable.java
+  org/hibernate/validator/internal/metadata/location/BeanConstraintLocation.java
+  org/hibernate/validator/internal/metadata/provider/MetaDataProvider.java
+  org/hibernate/validator/internal/metadata/provider/ProgrammaticMetaDataProvider.java
+  org/hibernate/validator/internal/metadata/raw/AbstractConstrainedElement.java
+  org/hibernate/validator/internal/metadata/raw/ConfigurationSource.java
+  org/hibernate/validator/internal/metadata/raw/ConstrainedExecutable.java
+  org/hibernate/validator/internal/properties/Callable.java
+  org/hibernate/validator/internal/properties/DefaultGetterPropertySelectionStrategy.java
+  org/hibernate/validator/internal/properties/PropertyAccessor.java
+  org/hibernate/validator/internal/properties/javabean/JavaBeanAnnotatedConstrainable.java
+  org/hibernate/validator/internal/properties/javabean/JavaBeanAnnotatedElement.java
+  org/hibernate/validator/internal/properties/javabean/JavaBeanExecutable.java
+  org/hibernate/validator/internal/properties/javabean/JavaBeanHelper.java
+  org/hibernate/validator/internal/properties/javabean/JavaBeanParameter.java
+  org/hibernate/validator/spi/cfg/ConstraintMappingContributor.java
+  org/hibernate/validator/spi/messageinterpolation/LocaleResolver.java
+  org/hibernate/validator/spi/nodenameprovider/JavaBeanProperty.java
+  org/hibernate/validator/spi/nodenameprovider/PropertyNodeNameProvider.java
+  org/hibernate/validator/spi/properties/GetterPropertySelectionStrategy.java
+  org/hibernate/validator/spi/scripting/ScriptEngineScriptEvaluator.java
+  org/hibernate/validator/spi/scripting/ScriptEvaluatorFactory.java
+  org/hibernate/validator/HibernateValidator.java
+  org/hibernate/validator/cfg/context/CrossParameterTarget.java
+  org/hibernate/validator/cfg/context/MethodConstraintMappingContext.java
+  org/hibernate/validator/cfg/context/ParameterConstraintMappingContext.java
+  org/hibernate/validator/cfg/context/PropertyConstraintMappingContext.java
+  org/hibernate/validator/cfg/context/ReturnValueConstraintMappingContext.java
+  org/hibernate/validator/cfg/context/ReturnValueTarget.java
+  org/hibernate/validator/cfg/context/TypeTarget.java
+  org/hibernate/validator/cfg/defs/AssertFalseDef.java
+  org/hibernate/validator/cfg/defs/CodePointLengthDef.java
+  org/hibernate/validator/cfg/defs/CurrencyDef.java
+  org/hibernate/validator/cfg/defs/DecimalMinDef.java
+  org/hibernate/validator/cfg/defs/PositiveOrZeroDef.java
+  org/hibernate/validator/cfg/defs/UniqueElementsDef.java
+  org/hibernate/validator/cfg/defs/br/CNPJDef.java
+  org/hibernate/validator/cfg/defs/br/CPFDef.java
+  org/hibernate/validator/cfg/defs/br/TituloEleitoralDef.java
+  org/hibernate/validator/constraints/CreditCardNumber.java
+  org/hibernate/validator/constraints/Email.java
+  org/hibernate/validator/constraints/Length.java
+  org/hibernate/validator/constraints/Mod10Check.java
+  org/hibernate/validator/constraints/ModCheck.java
+  org/hibernate/validator/constraints/Normalized.java
+  org/hibernate/validator/constraints/NotEmpty.java
+  org/hibernate/validator/constraints/Range.java
+  org/hibernate/validator/constraints/URL.java
+  org/hibernate/validator/constraints/UniqueElements.java
+  org/hibernate/validator/constraints/br/CNPJ.java
+  org/hibernate/validator/constraints/br/TituloEleitoral.java
+  org/hibernate/validator/constraints/pl/NIP.java
+  org/hibernate/validator/constraints/pl/REGON.java
+  org/hibernate/validator/constraints/time/DurationMax.java
+  org/hibernate/validator/constraintvalidation/HibernateConstraintValidatorContext.java
+  org/hibernate/validator/internal/constraintvalidators/bv/notempty/NotEmptyValidatorForArraysOfDouble.java
+  org/hibernate/validator/internal/constraintvalidators/bv/notempty/NotEmptyValidatorForArraysOfInt.java
+  org/hibernate/validator/internal/constraintvalidators/bv/notempty/NotEmptyValidatorForArraysOfShort.java
+  org/hibernate/validator/internal/constraintvalidators/bv/notempty/NotEmptyValidatorForCollection.java
+  org/hibernate/validator/internal/constraintvalidators/bv/number/bound/AbstractMaxValidator.java
+  org/hibernate/validator/internal/constraintvalidators/bv/number/bound/MaxValidatorForBigDecimal.java
+  org/hibernate/validator/internal/constraintvalidators/bv/number/bound/MaxValidatorForByte.java
+  org/hibernate/validator/internal/constraintvalidators/bv/number/bound/MaxValidatorForDouble.java
+  org/hibernate/validator/internal/constraintvalidators/bv/number/bound/MaxValidatorForFloat.java
+  org/hibernate/validator/internal/constraintvalidators/bv/number/bound/MaxValidatorForNumber.java
+  org/hibernate/validator/internal/constraintvalidators/bv/number/bound/MinValidatorForBigInteger.java
+  org/hibernate/validator/internal/constraintvalidators/bv/number/bound/MinValidatorForDouble.java
+  org/hibernate/validator/internal/constraintvalidators/bv/number/bound/MinValidatorForLong.java
+  org/hibernate/validator/internal/constraintvalidators/bv/number/bound/NumberComparatorHelper.java
+  org/hibernate/validator/internal/constraintvalidators/bv/number/bound/decimal/DecimalMaxValidatorForBigDecimal.java
+  org/hibernate/validator/internal/constraintvalidators/bv/number/bound/decimal/DecimalMaxValidatorForBigInteger.java
+  org/hibernate/validator/internal/constraintvalidators/bv/number/bound/decimal/DecimalMaxValidatorForDouble.java
+  org/hibernate/validator/internal/constraintvalidators/bv/number/bound/decimal/DecimalMaxValidatorForFloat.java
+  org/hibernate/validator/internal/constraintvalidators/bv/number/bound/decimal/DecimalMaxValidatorForNumber.java
+  org/hibernate/validator/internal/constraintvalidators/bv/number/bound/decimal/DecimalMinValidatorForBigInteger.java
+  org/hibernate/validator/internal/constraintvalidators/bv/number/bound/decimal/DecimalMinValidatorForByte.java
+  org/hibernate/validator/internal/constraintvalidators/bv/number/bound/decimal/DecimalMinValidatorForFloat.java
+  org/hibernate/validator/internal/constraintvalidators/bv/number/bound/decimal/DecimalMinValidatorForNumber.java
+  org/hibernate/validator/internal/constraintvalidators/bv/number/bound/decimal/DecimalMinValidatorForShort.java
+  org/hibernate/validator/internal/constraintvalidators/bv/number/sign/NegativeOrZeroValidatorForBigDecimal.java
+  org/hibernate/validator/internal/constraintvalidators/bv/number/sign/NegativeOrZeroValidatorForCharSequence.java
+  org/hibernate/validator/internal/constraintvalidators/bv/number/sign/NegativeOrZeroValidatorForFloat.java
+  org/hibernate/validator/internal/constraintvalidators/bv/number/sign/PositiveValidatorForCharSequence.java
+  org/hibernate/validator/internal/constraintvalidators/bv/number/sign/PositiveValidatorForLong.java
+  org/hibernate/validator/internal/constraintvalidators/bv/size/SizeValidatorForArraysOfBoolean.java
+  org/hibernate/validator/internal/constraintvalidators/bv/size/SizeValidatorForArraysOfChar.java
+  org/hibernate/validator/internal/constraintvalidators/bv/size/SizeValidatorForArraysOfInt.java
+  org/hibernate/validator/internal/constraintvalidators/bv/size/SizeValidatorForArraysOfShort.java
+  org/hibernate/validator/internal/constraintvalidators/bv/size/SizeValidatorForMap.java
+  org/hibernate/validator/internal/constraintvalidators/bv/time/AbstractJavaTimeValidator.java
+  org/hibernate/validator/internal/constraintvalidators/bv/time/future/AbstractFutureJavaTimeValidator.java
+  org/hibernate/validator/internal/constraintvalidators/bv/time/future/FutureValidatorForInstant.java
+  org/hibernate/validator/internal/constraintvalidators/bv/time/future/FutureValidatorForJapaneseDate.java
+  org/hibernate/validator/internal/constraintvalidators/bv/time/future/FutureValidatorForLocalDate.java
+  org/hibernate/validator/internal/constraintvalidators/bv/time/future/FutureValidatorForLocalDateTime.java
+  org/hibernate/validator/internal/constraintvalidators/bv/time/future/FutureValidatorForLocalTime.java
+  org/hibernate/validator/internal/constraintvalidators/bv/time/future/FutureValidatorForMinguoDate.java
+  org/hibernate/validator/internal/constraintvalidators/bv/time/future/FutureValidatorForMonthDay.java
+  org/hibernate/validator/internal/constraintvalidators/bv/time/future/FutureValidatorForOffsetDateTime.java
+  org/hibernate/validator/internal/constraintvalidators/bv/time/future/FutureValidatorForOffsetTime.java
+  org/hibernate/validator/internal/constraintvalidators/bv/time/future/FutureValidatorForReadableInstant.java
+  org/hibernate/validator/internal/constraintvalidators/bv/time/future/FutureValidatorForReadablePartial.java
+  org/hibernate/validator/internal/constraintvalidators/bv/time/future/FutureValidatorForThaiBuddhistDate.java
+  org/hibernate/validator/internal/constraintvalidators/bv/time/future/FutureValidatorForYear.java
+  org/hibernate/validator/internal/constraintvalidators/bv/time/future/FutureValidatorForYearMonth.java
+  org/hibernate/validator/internal/constraintvalidators/bv/time/future/FutureValidatorForZonedDateTime.java
+  org/hibernate/validator/internal/constraintvalidators/bv/time/futureorpresent/AbstractFutureOrPresentEpochBasedValidator.java
+  org/hibernate/validator/internal/constraintvalidators/bv/time/futureorpresent/AbstractFutureOrPresentInstantBasedValidator.java
+  org/hibernate/validator/internal/constraintvalidators/bv/time/futureorpresent/AbstractFutureOrPresentJavaTimeValidator.java
+  org/hibernate/validator/internal/constraintvalidators/bv/time/futureorpresent/FutureOrPresentValidatorForCalendar.java
+  org/hibernate/validator/internal/constraintvalidators/bv/time/futureorpresent/FutureOrPresentValidatorForDate.java
+  org/hibernate/validator/internal/constraintvalidators/bv/time/futureorpresent/FutureOrPresentValidatorForHijrahDate.java
+  org/hibernate/validator/internal/constraintvalidators/bv/time/futureorpresent/FutureOrPresentValidatorForInstant.java
+  org/hibernate/validator/internal/constraintvalidators/bv/time/futureorpresent/FutureOrPresentValidatorForJapaneseDate.java
+  org/hibernate/validator/internal/constraintvalidators/bv/time/futureorpresent/FutureOrPresentValidatorForLocalDate.java
+  org/hibernate/validator/internal/constraintvalidators/bv/time/futureorpresent/FutureOrPresentValidatorForLocalDateTime.java
+  org/hibernate/validator/internal/constraintvalidators/bv/time/futureorpresent/FutureOrPresentValidatorForLocalTime.java
+  org/hibernate/validator/internal/constraintvalidators/bv/time/futureorpresent/FutureOrPresentValidatorForMinguoDate.java
+  org/hibernate/validator/internal/constraintvalidators/bv/time/futureorpresent/FutureOrPresentValidatorForMonthDay.java
+  org/hibernate/validator/internal/constraintvalidators/bv/time/futureorpresent/FutureOrPresentValidatorForOffsetDateTime.java
+  org/hibernate/validator/internal/constraintvalidators/bv/time/futureorpresent/FutureOrPresentValidatorForOffsetTime.java
+  org/hibernate/validator/internal/constraintvalidators/bv/time/futureorpresent/FutureOrPresentValidatorForReadableInstant.java
+  org/hibernate/validator/internal/constraintvalidators/bv/time/futureorpresent/FutureOrPresentValidatorForReadablePartial.java
+  org/hibernate/validator/internal/constraintvalidators/bv/time/futureorpresent/FutureOrPresentValidatorForThaiBuddhistDate.java
+  org/hibernate/validator/internal/constraintvalidators/hv/ModCheckValidator.java
+  org/hibernate/validator/internal/constraintvalidators/hv/ParameterScriptAssertValidator.java
+  org/hibernate/validator/internal/constraintvalidators/hv/ScriptAssertValidator.java
+  org/hibernate/validator/internal/constraintvalidators/hv/UUIDValidator.java
+  org/hibernate/validator/internal/constraintvalidators/hv/br/CPFValidator.java
+  org/hibernate/validator/internal/constraintvalidators/hv/pl/PESELValidator.java
+  org/hibernate/validator/internal/constraintvalidators/hv/ru/INNValidator.java
+  org/hibernate/validator/internal/engine/AbstractConfigurationImpl.java
+  org/hibernate/validator/internal/engine/PredefinedScopeConfigurationImpl.java
+  org/hibernate/validator/internal/engine/PredefinedScopeValidatorContextImpl.java
+  org/hibernate/validator/internal/engine/ServiceLoaderBasedConstraintMappingContributor.java
+  org/hibernate/validator/internal/engine/ValidatorContextImpl.java
+  org/hibernate/validator/internal/engine/groups/GroupWithInheritance.java
+  org/hibernate/validator/internal/engine/groups/ValidationOrder.java
+  org/hibernate/validator/internal/engine/messageinterpolation/DefaultLocaleResolver.java
+  org/hibernate/validator/internal/engine/messageinterpolation/DefaultLocaleResolverContext.java
+  org/hibernate/validator/internal/engine/messageinterpolation/ElTermResolver.java
+  org/hibernate/validator/internal/engine/messageinterpolation/InterpolationTermType.java
+  org/hibernate/validator/internal/engine/messageinterpolation/ParameterTermResolver.java
+  org/hibernate/validator/internal/engine/messageinterpolation/el/BeanMethodsELContext.java
+  org/hibernate/validator/internal/engine/messageinterpolation/el/BeanPropertiesElContext.java
+  org/hibernate/validator/internal/engine/messageinterpolation/el/DisabledFeatureELException.java
+  org/hibernate/validator/internal/engine/messageinterpolation/el/NoOpElResolver.java
+  org/hibernate/validator/internal/engine/messageinterpolation/el/RootResolver.java
+  org/hibernate/validator/internal/engine/messageinterpolation/el/VariablesELContext.java
+  org/hibernate/validator/internal/engine/messageinterpolation/parser/ELState.java
+  org/hibernate/validator/internal/engine/messageinterpolation/parser/EscapedState.java
+  org/hibernate/validator/internal/engine/messageinterpolation/parser/InterpolationTermState.java
+  org/hibernate/validator/internal/engine/messageinterpolation/parser/MessageDescriptorFormatException.java
+  org/hibernate/validator/internal/engine/messageinterpolation/parser/MessageState.java
+  org/hibernate/validator/internal/engine/messageinterpolation/parser/ParserState.java
+  org/hibernate/validator/internal/engine/messageinterpolation/parser/Token.java
+  org/hibernate/validator/internal/engine/messageinterpolation/parser/TokenCollector.java
+  org/hibernate/validator/internal/engine/messageinterpolation/parser/TokenIterator.java
+  org/hibernate/validator/internal/engine/messageinterpolation/util/InterpolationHelper.java
+  org/hibernate/validator/internal/engine/path/NodeImpl.java
+  org/hibernate/validator/internal/engine/valueextraction/MapKeyExtractor.java
+  org/hibernate/validator/internal/engine/valueextraction/MapPropertyValueExtractor.java
+  org/hibernate/validator/internal/engine/valueextraction/ObjectArrayValueExtractor.java
+  org/hibernate/validator/internal/engine/valueextraction/OptionalDoubleValueExtractor.java
+  org/hibernate/validator/internal/engine/valueextraction/OptionalLongValueExtractor.java
+  org/hibernate/validator/internal/engine/valueextraction/ReadOnlyListPropertyValueExtractor.java
+  org/hibernate/validator/internal/engine/valueextraction/ReadOnlyMapPropertyValueExtractor.java
+  org/hibernate/validator/internal/engine/valueextraction/ReadOnlySetPropertyValueExtractor.java
+  org/hibernate/validator/internal/engine/valueextraction/SetPropertyValueExtractor.java
+  org/hibernate/validator/internal/engine/valueextraction/ValueExtractorDescriptor.java
+  org/hibernate/validator/internal/engine/valueextraction/ValueExtractorResolver.java
+  org/hibernate/validator/internal/metadata/PredefinedScopeBeanMetaDataManager.java
+  org/hibernate/validator/internal/metadata/aggregated/BeanMetaData.java
+  org/hibernate/validator/internal/metadata/aggregated/BeanMetaDataImpl.java
+  org/hibernate/validator/internal/metadata/core/ConstraintOrigin.java
+  org/hibernate/validator/internal/metadata/core/MetaConstraint.java
+  org/hibernate/validator/internal/metadata/core/MetaConstraints.java
+  org/hibernate/validator/internal/metadata/descriptor/ConstraintDescriptorImpl.java
+  org/hibernate/validator/internal/metadata/facets/Validatable.java
+  org/hibernate/validator/internal/metadata/location/AbstractPropertyConstraintLocation.java
+  org/hibernate/validator/internal/metadata/raw/ConstrainedType.java
+  org/hibernate/validator/internal/properties/Constrainable.java
+  org/hibernate/validator/internal/properties/Field.java
+  org/hibernate/validator/internal/properties/Getter.java
+  org/hibernate/validator/internal/properties/Property.java
+  org/hibernate/validator/internal/properties/Signature.java
+  org/hibernate/validator/internal/properties/javabean/JavaBeanConstructor.java
+  org/hibernate/validator/internal/properties/javabean/JavaBeanField.java
+  org/hibernate/validator/internal/properties/javabean/JavaBeanGetter.java
+  org/hibernate/validator/internal/properties/javabean/JavaBeanMethod.java
+  org/hibernate/validator/internal/properties/javabean/package-info.java
+  org/hibernate/validator/internal/util/CollectionHelper.java
+  org/hibernate/validator/internal/util/ExecutableHelper.java
+  org/hibernate/validator/internal/util/StringHelper.java
+  org/hibernate/validator/internal/util/classhierarchy/ClassHierarchyHelper.java
+  org/hibernate/validator/internal/util/logging/Messages.java
+  org/hibernate/validator/internal/util/logging/formatter/CollectionOfClassesObjectFormatter.java
+  org/hibernate/validator/internal/util/logging/formatter/DurationFormatter.java
+  org/hibernate/validator/internal/util/logging/formatter/ObjectArrayFormatter.java
+  org/hibernate/validator/internal/util/privilegedactions/ConstructorInstance.java
+  org/hibernate/validator/internal/util/privilegedactions/GetAnnotationAttributes.java
+  org/hibernate/validator/internal/util/privilegedactions/GetDeclaredConstructor.java
+  org/hibernate/validator/internal/util/privilegedactions/GetDeclaredField.java
+  org/hibernate/validator/internal/util/privilegedactions/GetDeclaredMethod.java
+  org/hibernate/validator/internal/util/privilegedactions/GetDeclaredMethods.java
+  org/hibernate/validator/internal/util/privilegedactions/GetMethod.java
+  org/hibernate/validator/internal/util/privilegedactions/GetMethodFromGetterNameCandidates.java
+  org/hibernate/validator/internal/util/privilegedactions/GetResolvedMemberMethods.java
+  org/hibernate/validator/internal/util/privilegedactions/GetResources.java
+  org/hibernate/validator/internal/util/privilegedactions/LoadClass.java
+  org/hibernate/validator/internal/util/privilegedactions/NewSchema.java
+  org/hibernate/validator/internal/util/stereotypes/Lazy.java
+  org/hibernate/validator/internal/xml/AbstractStaxBuilder.java
+  org/hibernate/validator/internal/xml/XmlParserHelper.java
+  org/hibernate/validator/internal/xml/mapping/CrossParameterStaxBuilder.java
+  org/hibernate/validator/internal/xml/mapping/DefaultPackageStaxBuilder.java
+  org/hibernate/validator/internal/xml/mapping/MappingXmlParser.java
+  org/hibernate/validator/parameternameprovider/ParanamerParameterNameProvider.java
+  org/hibernate/validator/parameternameprovider/ReflectionParameterNameProvider.java
+  org/hibernate/validator/path/ContainerElementNode.java
+  org/hibernate/validator/path/PropertyNode.java
+  org/hibernate/validator/resourceloading/AggregateResourceBundle.java
+  org/hibernate/validator/resourceloading/AggregateResourceBundleLocator.java
+  org/hibernate/validator/resourceloading/CachingResourceBundleLocator.java
+  org/hibernate/validator/resourceloading/DelegatingResourceBundleLocator.java
+  org/hibernate/validator/resourceloading/PlatformResourceBundleLocator.java
+  org/hibernate/validator/spi/group/DefaultGroupSequenceProvider.java
+  org/hibernate/validator/spi/messageinterpolation/LocaleResolverContext.java
+  org/hibernate/validator/spi/nodenameprovider/Property.java
+  org/hibernate/validator/spi/properties/ConstrainableExecutable.java
+  org/hibernate/validator/spi/resourceloading/ResourceBundleLocator.java
+  org/hibernate/validator/spi/scripting/AbstractCachingScriptEvaluatorFactory.java
+  org/hibernate/validator/spi/scripting/ScriptEvaluationException.java
+  org/hibernate/validator/spi/scripting/ScriptEvaluator.java
+  org/hibernate/validator/HibernateValidatorConfiguration.java
+  org/hibernate/validator/cfg/defs/LengthDef.java
+  org/hibernate/validator/cfg/defs/MinDef.java
+  org/hibernate/validator/cfg/defs/Mod11CheckDef.java
+  org/hibernate/validator/cfg/defs/NegativeOrZeroDef.java
+  org/hibernate/validator/cfg/defs/NotNullDef.java
+  org/hibernate/validator/cfg/defs/PastDef.java
+  org/hibernate/validator/cfg/defs/ScriptAssertDef.java
+  org/hibernate/validator/cfg/defs/URLDef.java
+  org/hibernate/validator/cfg/defs/pl/NIPDef.java
+  org/hibernate/validator/cfg/defs/pl/PESELDef.java
+  org/hibernate/validator/cfg/defs/pl/REGONDef.java
+  org/hibernate/validator/cfg/defs/ru/INNDef.java
+  org/hibernate/validator/constraints/CodePointLength.java
+  org/hibernate/validator/constraints/CompositionType.java
+  org/hibernate/validator/constraints/ConstraintComposition.java
+  org/hibernate/validator/constraints/Currency.java
+  org/hibernate/validator/constraints/EAN.java
+  org/hibernate/validator/constraints/ISBN.java
+  org/hibernate/validator/constraints/LuhnCheck.java
+  org/hibernate/validator/constraints/Mod11Check.java
+  org/hibernate/validator/constraints/NotBlank.java
+  org/hibernate/validator/constraints/ParameterScriptAssert.java
+  org/hibernate/validator/constraints/ScriptAssert.java
+  org/hibernate/validator/constraints/UUID.java
+  org/hibernate/validator/constraints/br/CPF.java
+  org/hibernate/validator/constraints/pl/PESEL.java
+  org/hibernate/validator/constraints/ru/INN.java
+  org/hibernate/validator/constraints/time/DurationMin.java
+  org/hibernate/validator/constraintvalidation/HibernateConstraintValidator.java
+  org/hibernate/validator/internal/constraintvalidators/bv/EmailValidator.java
+  org/hibernate/validator/internal/constraintvalidators/bv/NotNullValidator.java
+  org/hibernate/validator/internal/constraintvalidators/bv/PatternValidator.java
+  org/hibernate/validator/internal/constraintvalidators/bv/money/DecimalMaxValidatorForMonetaryAmount.java
+  org/hibernate/validator/internal/constraintvalidators/bv/money/DigitsValidatorForMonetaryAmount.java
+  org/hibernate/validator/internal/constraintvalidators/bv/money/MinValidatorForMonetaryAmount.java
+  org/hibernate/validator/internal/constraintvalidators/bv/money/NegativeValidatorForMonetaryAmount.java
+  org/hibernate/validator/internal/constraintvalidators/bv/money/PositiveValidatorForMonetaryAmount.java
+  org/hibernate/validator/internal/constraintvalidators/bv/notempty/NotEmptyValidatorForArraysOfBoolean.java
+  org/hibernate/validator/internal/constraintvalidators/bv/notempty/NotEmptyValidatorForArraysOfByte.java
+  org/hibernate/validator/internal/constraintvalidators/bv/notempty/NotEmptyValidatorForArraysOfChar.java
+  org/hibernate/validator/internal/constraintvalidators/bv/notempty/NotEmptyValidatorForArraysOfFloat.java
+  org/hibernate/validator/internal/constraintvalidators/bv/notempty/NotEmptyValidatorForArraysOfLong.java
+  org/hibernate/validator/internal/constraintvalidators/bv/notempty/NotEmptyValidatorForCharSequence.java
+  org/hibernate/validator/internal/constraintvalidators/bv/notempty/NotEmptyValidatorForMap.java
+  org/hibernate/validator/internal/constraintvalidators/bv/number/InfinityNumberComparatorHelper.java
+  org/hibernate/validator/internal/constraintvalidators/bv/number/bound/AbstractMinValidator.java
+  org/hibernate/validator/internal/constraintvalidators/bv/number/bound/MaxValidatorForBigInteger.java
+  org/hibernate/validator/internal/constraintvalidators/bv/number/bound/MaxValidatorForCharSequence.java
+  org/hibernate/validator/internal/constraintvalidators/bv/number/bound/MaxValidatorForInteger.java
+  org/hibernate/validator/internal/constraintvalidators/bv/number/bound/MaxValidatorForShort.java
+  org/hibernate/validator/internal/constraintvalidators/bv/number/bound/MinValidatorForCharSequence.java
+  org/hibernate/validator/internal/constraintvalidators/bv/number/bound/MinValidatorForInteger.java
+  org/hibernate/validator/internal/constraintvalidators/bv/number/bound/MinValidatorForNumber.java
+  org/hibernate/validator/internal/constraintvalidators/bv/number/bound/decimal/AbstractDecimalMaxValidator.java
+  org/hibernate/validator/internal/constraintvalidators/bv/number/bound/decimal/DecimalMaxValidatorForCharSequence.java
+  org/hibernate/validator/internal/constraintvalidators/bv/number/bound/decimal/DecimalMaxValidatorForLong.java
+  org/hibernate/validator/internal/constraintvalidators/bv/number/bound/decimal/DecimalMaxValidatorForShort.java
+  org/hibernate/validator/internal/constraintvalidators/bv/number/bound/decimal/DecimalMinValidatorForCharSequence.java
+  org/hibernate/validator/internal/constraintvalidators/bv/number/bound/decimal/DecimalMinValidatorForLong.java
+  org/hibernate/validator/internal/constraintvalidators/bv/number/sign/NegativeOrZeroValidatorForByte.java
+  org/hibernate/validator/internal/constraintvalidators/bv/number/sign/NegativeOrZeroValidatorForDouble.java
+  org/hibernate/validator/internal/constraintvalidators/bv/number/sign/NegativeOrZeroValidatorForLong.java
+  org/hibernate/validator/internal/constraintvalidators/bv/number/sign/NegativeOrZeroValidatorForNumber.java
+  org/hibernate/validator/internal/constraintvalidators/bv/number/sign/NegativeOrZeroValidatorForShort.java
+  org/hibernate/validator/internal/constraintvalidators/bv/number/sign/NegativeValidatorForBigDecimal.java
+  org/hibernate/validator/internal/constraintvalidators/bv/number/sign/NegativeValidatorForBigInteger.java
+  org/hibernate/validator/internal/constraintvalidators/bv/number/sign/NegativeValidatorForByte.java
+  org/hibernate/validator/internal/constraintvalidators/bv/number/sign/NegativeValidatorForCharSequence.java
+  org/hibernate/validator/internal/constraintvalidators/bv/number/sign/NegativeValidatorForDouble.java
+  org/hibernate/validator/internal/constraintvalidators/bv/number/sign/NegativeValidatorForFloat.java
+  org/hibernate/validator/internal/constraintvalidators/bv/number/sign/NegativeValidatorForInteger.java
+  org/hibernate/validator/internal/constraintvalidators/bv/number/sign/NegativeValidatorForLong.java
+  org/hibernate/validator/internal/constraintvalidators/bv/number/sign/NegativeValidatorForNumber.java
+  org/hibernate/validator/internal/constraintvalidators/bv/number/sign/NegativeValidatorForShort.java
+  org/hibernate/validator/internal/constraintvalidators/bv/number/sign/NumberSignHelper.java
+  org/hibernate/validator/internal/constraintvalidators/bv/number/sign/PositiveOrZeroValidatorForBigDecimal.java
+  org/hibernate/validator/internal/constraintvalidators/bv/number/sign/PositiveOrZeroValidatorForBigInteger.java
+  org/hibernate/validator/internal/constraintvalidators/bv/number/sign/PositiveOrZeroValidatorForByte.java
+  org/hibernate/validator/internal/constraintvalidators/bv/number/sign/PositiveOrZeroValidatorForCharSequence.java
+  org/hibernate/validator/internal/constraintvalidators/bv/number/sign/PositiveOrZeroValidatorForDouble.java
+  org/hibernate/validator/internal/constraintvalidators/bv/number/sign/PositiveOrZeroValidatorForFloat.java
+  org/hibernate/validator/internal/constraintvalidators/bv/number/sign/PositiveOrZeroValidatorForInteger.java
+  org/hibernate/validator/internal/constraintvalidators/bv/number/sign/PositiveOrZeroValidatorForLong.java
+  org/hibernate/validator/internal/constraintvalidators/bv/number/sign/PositiveOrZeroValidatorForNumber.java
+  org/hibernate/validator/internal/constraintvalidators/bv/number/sign/PositiveOrZeroValidatorForShort.java
+  org/hibernate/validator/internal/constraintvalidators/bv/number/sign/PositiveValidatorForBigDecimal.java
+  org/hibernate/validator/internal/constraintvalidators/bv/number/sign/PositiveValidatorForBigInteger.java
+  org/hibernate/validator/internal/constraintvalidators/bv/number/sign/PositiveValidatorForByte.java
+  org/hibernate/validator/internal/constraintvalidators/bv/number/sign/PositiveValidatorForFloat.java
+  org/hibernate/validator/internal/constraintvalidators/bv/number/sign/PositiveValidatorForInteger.java
+  org/hibernate/validator/internal/constraintvalidators/bv/number/sign/PositiveValidatorForShort.java
+  org/hibernate/validator/internal/constraintvalidators/bv/size/SizeValidatorForArray.java
+  org/hibernate/validator/internal/constraintvalidators/bv/size/SizeValidatorForArraysOfFloat.java
+  org/hibernate/validator/internal/constraintvalidators/bv/size/SizeValidatorForArraysOfPrimitives.java
+  org/hibernate/validator/internal/constraintvalidators/bv/size/SizeValidatorForCollection.java
+  org/hibernate/validator/internal/constraintvalidators/bv/time/AbstractEpochBasedTimeValidator.java
+  org/hibernate/validator/internal/constraintvalidators/bv/time/future/AbstractFutureEpochBasedValidator.java
+  org/hibernate/validator/internal/constraintvalidators/bv/time/future/FutureValidatorForCalendar.java
+  org/hibernate/validator/internal/constraintvalidators/bv/time/future/FutureValidatorForHijrahDate.java
+  org/hibernate/validator/internal/constraintvalidators/bv/time/past/PastValidatorForLocalDateTime.java
+  org/hibernate/validator/internal/constraintvalidators/bv/time/past/PastValidatorForMinguoDate.java
+  org/hibernate/validator/internal/constraintvalidators/bv/time/past/PastValidatorForOffsetTime.java
+  org/hibernate/validator/internal/constraintvalidators/bv/time/past/PastValidatorForReadablePartial.java
+  org/hibernate/validator/internal/constraintvalidators/bv/time/past/PastValidatorForYear.java
+  org/hibernate/validator/internal/constraintvalidators/bv/time/past/PastValidatorForZonedDateTime.java
+  org/hibernate/validator/internal/constraintvalidators/bv/time/pastorpresent/AbstractPastOrPresentEpochBasedValidator.java
+  org/hibernate/validator/internal/constraintvalidators/bv/time/pastorpresent/AbstractPastOrPresentJavaTimeValidator.java
+  org/hibernate/validator/internal/constraintvalidators/bv/time/pastorpresent/PastOrPresentValidatorForDate.java
+  org/hibernate/validator/internal/constraintvalidators/bv/time/pastorpresent/PastOrPresentValidatorForJapaneseDate.java
+  org/hibernate/validator/internal/constraintvalidators/bv/time/pastorpresent/PastOrPresentValidatorForLocalDateTime.java
+  org/hibernate/validator/internal/constraintvalidators/bv/time/pastorpresent/PastOrPresentValidatorForMinguoDate.java
+  org/hibernate/validator/internal/constraintvalidators/bv/time/pastorpresent/PastOrPresentValidatorForOffsetDateTime.java
+  org/hibernate/validator/internal/constraintvalidators/bv/time/pastorpresent/PastOrPresentValidatorForReadableInstant.java
+  org/hibernate/validator/internal/constraintvalidators/bv/time/pastorpresent/PastOrPresentValidatorForThaiBuddhistDate.java
+  org/hibernate/validator/internal/constraintvalidators/bv/time/pastorpresent/PastOrPresentValidatorForYearMonth.java
+  org/hibernate/validator/internal/constraintvalidators/hv/CodePointLengthValidator.java
+  org/hibernate/validator/internal/constraintvalidators/hv/EmailValidator.java
+  org/hibernate/validator/internal/constraintvalidators/hv/LengthValidator.java
+  org/hibernate/validator/internal/constraintvalidators/hv/LuhnCheckValidator.java
+  org/hibernate/validator/internal/constraintvalidators/hv/Mod11CheckValidator.java
+  org/hibernate/validator/internal/constraintvalidators/hv/NormalizedValidator.java
+  org/hibernate/validator/internal/constraintvalidators/hv/NotBlankValidator.java
+  org/hibernate/validator/internal/constraintvalidators/hv/ScriptAssertContext.java
+  org/hibernate/validator/internal/constraintvalidators/hv/URLValidator.java
+  org/hibernate/validator/internal/constraintvalidators/hv/UniqueElementsValidator.java
+  org/hibernate/validator/internal/constraintvalidators/hv/br/CNPJValidator.java
+  org/hibernate/validator/internal/constraintvalidators/hv/pl/NIPValidator.java
+  org/hibernate/validator/internal/constraintvalidators/hv/pl/PolishNumberValidator.java
+  org/hibernate/validator/internal/engine/constraintvalidation/ClassBasedValidatorDescriptor.java
+  org/hibernate/validator/internal/engine/constraintvalidation/ComposingConstraintTree.java
+  org/hibernate/validator/internal/engine/constraintvalidation/ConstraintValidatorDescriptor.java
+  org/hibernate/validator/internal/engine/constraintvalidation/ConstraintValidatorFactoryImpl.java
+  org/hibernate/validator/internal/engine/constraintvalidation/ConstraintValidatorManager.java
+  org/hibernate/validator/internal/engine/constraintvalidation/ConstraintValidatorManagerImpl.java
+  org/hibernate/validator/internal/engine/constraintvalidation/HibernateConstraintValidatorInitializationContextImpl.java
+  org/hibernate/validator/internal/engine/constraintvalidation/PredefinedScopeConstraintValidatorManagerImpl.java
+  org/hibernate/validator/internal/engine/groups/DefaultValidationOrder.java
+  org/hibernate/validator/internal/engine/groups/Sequence.java
+  org/hibernate/validator/internal/engine/groups/ValidationOrderGenerator.java
+  org/hibernate/validator/internal/engine/messageinterpolation/FormatterWrapper.java
+  org/hibernate/validator/internal/engine/messageinterpolation/InterpolationTerm.java
+  org/hibernate/validator/internal/engine/messageinterpolation/LocalizedMessage.java
+  org/hibernate/validator/internal/engine/messageinterpolation/TermResolver.java
+  org/hibernate/validator/internal/engine/messageinterpolation/el/BeanPropertiesELResolver.java
+  org/hibernate/validator/internal/engine/resolver/TraversableResolvers.java
+  org/hibernate/validator/internal/engine/validationcontext/AbstractValidationContext.java
+  org/hibernate/validator/internal/engine/validationcontext/PropertyValidationContext.java
+  org/hibernate/validator/internal/engine/validationcontext/ValidationContext.java
+  org/hibernate/validator/internal/engine/validationcontext/ValidatorScopedContext.java
+  org/hibernate/validator/internal/engine/valuecontext/ValueContext.java
+  org/hibernate/validator/internal/engine/valueextraction/BooleanArrayValueExtractor.java
+  org/hibernate/validator/internal/engine/valueextraction/ByteArrayValueExtractor.java
+  org/hibernate/validator/internal/engine/valueextraction/DoubleArrayValueExtractor.java
+  org/hibernate/validator/internal/engine/valueextraction/IntArrayValueExtractor.java
+  org/hibernate/validator/internal/engine/valueextraction/IterableValueExtractor.java
+  org/hibernate/validator/internal/engine/valueextraction/ListPropertyValueExtractor.java
+  org/hibernate/validator/internal/engine/valueextraction/ListValueExtractor.java
+  org/hibernate/validator/internal/engine/valueextraction/LongArrayValueExtractor.java
+  org/hibernate/validator/internal/engine/valueextraction/MapPropertyKeyExtractor.java
+  org/hibernate/validator/internal/engine/valueextraction/MapValueExtractor.java
+  org/hibernate/validator/internal/engine/valueextraction/ObservableValueValueExtractor.java
+  org/hibernate/validator/internal/engine/valueextraction/OptionalIntValueExtractor.java
+  org/hibernate/validator/internal/engine/valueextraction/OptionalValueExtractor.java
+  org/hibernate/validator/internal/engine/valueextraction/ReadOnlyMapPropertyKeyExtractor.java
+  org/hibernate/validator/internal/metadata/aggregated/ContainerCascadingMetaData.java
+  org/hibernate/validator/internal/metadata/aggregated/FieldCascadable.java
+  org/hibernate/validator/internal/metadata/aggregated/GetterCascadable.java
+  org/hibernate/validator/internal/metadata/aggregated/GroupConversionHelper.java
+  org/hibernate/validator/internal/metadata/aggregated/MetaDataBuilder.java
+  org/hibernate/validator/internal/metadata/aggregated/PotentiallyContainerCascadingMetaData.java
+  org/hibernate/validator/internal/metadata/aggregated/ReturnValueMetaData.java
+  org/hibernate/validator/internal/metadata/aggregated/ValidatableParametersMetaData.java
+  org/hibernate/validator/internal/metadata/aggregated/rule/MethodConfigurationRule.java
+  org/hibernate/validator/internal/metadata/aggregated/rule/ParallelMethodsMustNotDefineGroupConversionForCascadedReturnValue.java
+  org/hibernate/validator/internal/metadata/aggregated/rule/ReturnValueMayOnlyBeMarkedOnceAsCascadedPerHierarchyLine.java
+  org/hibernate/validator/internal/metadata/core/AnnotationProcessingOptionsImpl.java
+  org/hibernate/validator/internal/metadata/core/BuiltinConstraint.java
+  org/hibernate/validator/internal/metadata/core/ConstraintHelper.java
+  org/hibernate/validator/internal/util/Contracts.java
+  org/hibernate/validator/internal/util/DomainNameUtil.java
+  org/hibernate/validator/internal/util/ExecutableParameterNameProvider.java
+  org/hibernate/validator/internal/util/ModUtil.java
+  org/hibernate/validator/internal/util/ReflectionHelper.java
+  org/hibernate/validator/internal/util/TypeResolutionHelper.java
+  org/hibernate/validator/internal/util/TypeVariableBindings.java
+  org/hibernate/validator/internal/util/TypeVariables.java
+  org/hibernate/validator/internal/util/Version.java
+  org/hibernate/validator/internal/util/annotation/AnnotationDescriptor.java
+  org/hibernate/validator/internal/util/logging/LoggerFactory.java
+  org/hibernate/validator/internal/util/logging/formatter/ArrayOfClassesObjectFormatter.java
+  org/hibernate/validator/internal/util/logging/formatter/ClassObjectFormatter.java
+  org/hibernate/validator/internal/util/logging/formatter/CollectionOfObjectsToStringFormatter.java
+  org/hibernate/validator/internal/util/logging/formatter/ExecutableFormatter.java
+  org/hibernate/validator/internal/util/logging/formatter/TypeFormatter.java
+  org/hibernate/validator/internal/util/privilegedactions/GetAnnotationAttribute.java
+  org/hibernate/validator/internal/util/privilegedactions/GetClassLoader.java
+  org/hibernate/validator/internal/util/privilegedactions/GetDeclaredConstructors.java
+  org/hibernate/validator/internal/util/privilegedactions/GetDeclaredFields.java
+  org/hibernate/validator/internal/util/privilegedactions/GetDeclaredMethodHandle.java
+  org/hibernate/validator/internal/util/privilegedactions/GetInstancesFromServiceLoader.java
+  org/hibernate/validator/internal/util/privilegedactions/GetMethods.java
+  org/hibernate/validator/internal/util/privilegedactions/GetResource.java
+  org/hibernate/validator/internal/util/privilegedactions/IsClassPresent.java
+  org/hibernate/validator/internal/util/privilegedactions/NewInstance.java
+  org/hibernate/validator/internal/util/privilegedactions/NewProxyInstance.java
+  org/hibernate/validator/internal/util/privilegedactions/SetContextClassLoader.java
+  org/hibernate/validator/internal/util/stereotypes/Immutable.java
+  org/hibernate/validator/internal/util/stereotypes/ThreadSafe.java
+  org/hibernate/validator/internal/xml/CloseIgnoringInputStream.java
+  org/hibernate/validator/internal/xml/config/BootstrapConfigurationImpl.java
+  org/hibernate/validator/internal/xml/config/ValidationConfigStaxBuilder.java
+  org/hibernate/validator/internal/xml/mapping/AbstractConstrainedExecutableElementStaxBuilder.java
+  org/hibernate/validator/internal/xml/mapping/AbstractOneLineStringStaxBuilder.java
+  org/hibernate/validator/internal/xml/mapping/ClassConstraintTypeStaxBuilder.java
+  org/hibernate/validator/internal/xml/mapping/ConstrainedParameterStaxBuilder.java
+  org/hibernate/validator/internal/xml/mapping/ContainerElementTypeConfigurationBuilder.java
+  org/hibernate/validator/internal/xml/mapping/ContainerElementTypePath.java
+  org/hibernate/validator/internal/xml/mapping/ContainerElementTypeStaxBuilder.java
+  org/hibernate/validator/internal/xml/mapping/ReturnValueStaxBuilder.java
+  org/hibernate/validator/messageinterpolation/ExpressionLanguageFeatureLevel.java
+  org/hibernate/validator/messageinterpolation/ResourceBundleMessageInterpolator.java
+  org/hibernate/validator/spi/scripting/ScriptEvaluatorNotFoundException.java
+  org/hibernate/validator/HibernateValidatorContext.java
+  org/hibernate/validator/cfg/defs/NotBlankDef.java
+  org/hibernate/validator/cfg/defs/NullDef.java
+  org/hibernate/validator/cfg/defs/RangeDef.java
+  org/hibernate/validator/cfg/defs/SizeDef.java
+  org/hibernate/validator/cfg/defs/UUIDDef.java
+  org/hibernate/validator/internal/cfg/context/ConfiguredConstraint.java
+  org/hibernate/validator/internal/cfg/context/ConstraintContextImplBase.java
+  org/hibernate/validator/internal/cfg/context/ConstraintMappingContextImplBase.java
+  org/hibernate/validator/internal/cfg/context/ContainerElementConstraintMappingContextImpl.java
+  org/hibernate/validator/internal/cfg/context/FieldConstraintMappingContextImpl.java
+  org/hibernate/validator/internal/cfg/context/GetterConstraintMappingContextImpl.java
+  org/hibernate/validator/internal/cfg/context/MethodConstraintMappingContextImpl.java
+  org/hibernate/validator/internal/cfg/context/ReturnValueConstraintMappingContextImpl.java
+  org/hibernate/validator/internal/cfg/context/TypeConstraintMappingContextImpl.java
+  org/hibernate/validator/internal/constraintvalidators/bv/AssertTrueValidator.java
+  org/hibernate/validator/internal/constraintvalidators/bv/DigitsValidatorForNumber.java
+  org/hibernate/validator/internal/constraintvalidators/bv/NotBlankValidator.java
+  org/hibernate/validator/internal/constraintvalidators/bv/NullValidator.java
+  org/hibernate/validator/internal/constraintvalidators/bv/money/CurrencyValidatorForMonetaryAmount.java
+  org/hibernate/validator/internal/constraintvalidators/bv/money/DecimalMinValidatorForMonetaryAmount.java
+  org/hibernate/validator/internal/constraintvalidators/bv/money/MaxValidatorForMonetaryAmount.java
+  org/hibernate/validator/internal/constraintvalidators/bv/money/NegativeOrZeroValidatorForMonetaryAmount.java
+  org/hibernate/validator/internal/constraintvalidators/bv/money/PositiveOrZeroValidatorForMonetaryAmount.java
+  org/hibernate/validator/internal/constraintvalidators/bv/notempty/NotEmptyValidatorForArray.java
+  org/hibernate/validator/internal/constraintvalidators/bv/number/bound/MaxValidatorForLong.java
+  org/hibernate/validator/internal/constraintvalidators/bv/number/bound/MinValidatorForBigDecimal.java
+  org/hibernate/validator/internal/constraintvalidators/bv/number/sign/NegativeOrZeroValidatorForInteger.java
+  org/hibernate/validator/internal/constraintvalidators/bv/number/sign/PositiveValidatorForDouble.java
+  org/hibernate/validator/internal/constraintvalidators/bv/number/sign/PositiveValidatorForNumber.java
+  org/hibernate/validator/internal/constraintvalidators/bv/size/SizeValidatorForArraysOfByte.java
+  org/hibernate/validator/internal/constraintvalidators/bv/size/SizeValidatorForArraysOfDouble.java
+  org/hibernate/validator/internal/constraintvalidators/bv/size/SizeValidatorForArraysOfLong.java
+  org/hibernate/validator/internal/constraintvalidators/bv/size/SizeValidatorForCharSequence.java
+  org/hibernate/validator/internal/constraintvalidators/bv/time/AbstractInstantBasedTimeValidator.java
+  org/hibernate/validator/internal/constraintvalidators/bv/time/future/AbstractFutureInstantBasedValidator.java
+  org/hibernate/validator/internal/constraintvalidators/bv/time/future/FutureValidatorForDate.java
+  org/hibernate/validator/internal/constraintvalidators/bv/time/futureorpresent/FutureOrPresentValidatorForYear.java
+  org/hibernate/validator/internal/constraintvalidators/bv/time/futureorpresent/FutureOrPresentValidatorForYearMonth.java
+  org/hibernate/validator/internal/constraintvalidators/bv/time/futureorpresent/FutureOrPresentValidatorForZonedDateTime.java
+  org/hibernate/validator/internal/constraintvalidators/bv/time/past/AbstractPastEpochBasedValidator.java
+  org/hibernate/validator/internal/constraintvalidators/bv/time/past/AbstractPastInstantBasedValidator.java
+  org/hibernate/validator/internal/constraintvalidators/bv/time/past/AbstractPastJavaTimeValidator.java
+  org/hibernate/validator/internal/constraintvalidators/bv/time/past/PastValidatorForCalendar.java
+  org/hibernate/validator/internal/constraintvalidators/bv/time/past/PastValidatorForDate.java
+  org/hibernate/validator/internal/constraintvalidators/bv/time/past/PastValidatorForHijrahDate.java
+  org/hibernate/validator/internal/constraintvalidators/bv/time/past/PastValidatorForInstant.java
+  org/hibernate/validator/internal/constraintvalidators/bv/time/past/PastValidatorForJapaneseDate.java
+  org/hibernate/validator/internal/constraintvalidators/bv/time/past/PastValidatorForLocalDate.java
+  org/hibernate/validator/internal/constraintvalidators/bv/time/past/PastValidatorForLocalTime.java
+  org/hibernate/validator/internal/constraintvalidators/bv/time/past/PastValidatorForMonthDay.java
+  org/hibernate/validator/internal/constraintvalidators/bv/time/past/PastValidatorForOffsetDateTime.java
+  org/hibernate/validator/internal/constraintvalidators/bv/time/past/PastValidatorForReadableInstant.java
+  org/hibernate/validator/internal/constraintvalidators/bv/time/past/PastValidatorForThaiBuddhistDate.java
+  org/hibernate/validator/internal/constraintvalidators/bv/time/past/PastValidatorForYearMonth.java
+  org/hibernate/validator/internal/constraintvalidators/bv/time/pastorpresent/AbstractPastOrPresentInstantBasedValidator.java
+  org/hibernate/validator/internal/constraintvalidators/bv/time/pastorpresent/PastOrPresentValidatorForCalendar.java
+  org/hibernate/validator/internal/constraintvalidators/bv/time/pastorpresent/PastOrPresentValidatorForHijrahDate.java
+  org/hibernate/validator/internal/constraintvalidators/bv/time/pastorpresent/PastOrPresentValidatorForInstant.java
+  org/hibernate/validator/internal/constraintvalidators/bv/time/pastorpresent/PastOrPresentValidatorForLocalDate.java
+  org/hibernate/validator/internal/constraintvalidators/bv/time/pastorpresent/PastOrPresentValidatorForLocalTime.java
+  org/hibernate/validator/internal/constraintvalidators/bv/time/pastorpresent/PastOrPresentValidatorForMonthDay.java
+  org/hibernate/validator/internal/constraintvalidators/bv/time/pastorpresent/PastOrPresentValidatorForOffsetTime.java
+  org/hibernate/validator/internal/constraintvalidators/bv/time/pastorpresent/PastOrPresentValidatorForReadablePartial.java
+  org/hibernate/validator/internal/constraintvalidators/bv/time/pastorpresent/PastOrPresentValidatorForYear.java
+  org/hibernate/validator/internal/constraintvalidators/bv/time/pastorpresent/PastOrPresentValidatorForZonedDateTime.java
+  org/hibernate/validator/internal/constraintvalidators/hv/AbstractScriptAssertValidator.java
+  org/hibernate/validator/internal/constraintvalidators/hv/EANValidator.java
+  org/hibernate/validator/internal/constraintvalidators/hv/ISBNValidator.java
+  org/hibernate/validator/internal/constraintvalidators/hv/Mod10CheckValidator.java
+  org/hibernate/validator/internal/constraintvalidators/hv/ModCheckBase.java
+  org/hibernate/validator/internal/engine/ValidatorFactoryImpl.java
+  org/hibernate/validator/internal/engine/ValidatorFactoryScopedContext.java
+  org/hibernate/validator/internal/engine/constraintdefinition/ConstraintDefinitionContribution.java
+  org/hibernate/validator/internal/engine/constraintvalidation/AbstractConstraintValidatorManagerImpl.java
+  org/hibernate/validator/internal/engine/constraintvalidation/ConstraintTree.java
+  org/hibernate/validator/internal/engine/constraintvalidation/ConstraintValidatorContextImpl.java
+  org/hibernate/validator/internal/engine/constraintvalidation/ConstraintViolationCreationContext.java
+  org/hibernate/validator/internal/engine/constraintvalidation/CrossParameterConstraintValidatorContextImpl.java
+  org/hibernate/validator/internal/engine/constraintvalidation/LambdaBasedValidatorDescriptor.java
+  org/hibernate/validator/internal/engine/constraintvalidation/SimpleConstraintTree.java
+  org/hibernate/validator/internal/engine/groups/Group.java
+  org/hibernate/validator/internal/engine/path/PathImpl.java
+  org/hibernate/validator/internal/engine/resolver/AbstractTraversableHolder.java
+  org/hibernate/validator/internal/engine/resolver/CachingJPATraversableResolverForSingleValidation.java
+  org/hibernate/validator/internal/engine/resolver/CachingTraversableResolverForSingleValidation.java
+  org/hibernate/validator/internal/engine/resolver/JPATraversableResolver.java
+  org/hibernate/validator/internal/engine/resolver/TraverseAllTraversableResolver.java
+  org/hibernate/validator/internal/engine/scripting/DefaultScriptEvaluatorFactory.java
+  org/hibernate/validator/internal/engine/validationcontext/BaseBeanValidationContext.java
+  org/hibernate/validator/internal/engine/validationcontext/BeanValidationContext.java
+  org/hibernate/validator/internal/engine/validationcontext/ExecutableValidationContext.java
+  org/hibernate/validator/internal/engine/validationcontext/ParameterExecutableValidationContext.java
+  org/hibernate/validator/internal/engine/validationcontext/ReturnValueExecutableValidationContext.java
+  org/hibernate/validator/internal/engine/validationcontext/ValidationContextBuilder.java
+  org/hibernate/validator/internal/engine/valuecontext/BeanValueContext.java
+  org/hibernate/validator/internal/engine/valuecontext/ValueContexts.java
+  org/hibernate/validator/internal/engine/valueextraction/AnnotatedObject.java
+  org/hibernate/validator/internal/engine/valueextraction/ArrayElement.java
+  org/hibernate/validator/internal/engine/valueextraction/CharArrayValueExtractor.java
+  org/hibernate/validator/internal/engine/valueextraction/FloatArrayValueExtractor.java
+  org/hibernate/validator/internal/metadata/aggregated/CascadingMetaData.java
+  org/hibernate/validator/internal/metadata/aggregated/CascadingMetaDataBuilder.java
+  org/hibernate/validator/internal/metadata/aggregated/ClassMetaData.java
+  org/hibernate/validator/internal/metadata/aggregated/ConstraintMetaData.java
+  org/hibernate/validator/internal/metadata/aggregated/ExecutableMetaData.java
+  org/hibernate/validator/internal/metadata/aggregated/NonContainerCascadingMetaData.java
+  org/hibernate/validator/internal/metadata/aggregated/ParameterMetaData.java
+  org/hibernate/validator/internal/metadata/aggregated/PropertyMetaData.java
+  org/hibernate/validator/internal/metadata/aggregated/rule/OverridingMethodMustNotAlterParameterConstraints.java
+  org/hibernate/validator/internal/metadata/aggregated/rule/ParallelMethodsMustNotDefineParameterConstraints.java
+  org/hibernate/validator/internal/metadata/aggregated/rule/VoidMethodsMustNotBeReturnValueConstrained.java
+  org/hibernate/validator/internal/metadata/core/AnnotationProcessingOptions.java
+  org/hibernate/validator/internal/metadata/location/ConstraintLocation.java
+  org/hibernate/validator/internal/metadata/location/CrossParameterConstraintLocation.java
+  org/hibernate/validator/internal/metadata/location/FieldConstraintLocation.java
+  org/hibernate/validator/internal/metadata/location/GetterConstraintLocation.java
+  org/hibernate/validator/internal/metadata/location/ParameterConstraintLocation.java
+  org/hibernate/validator/internal/metadata/location/ReturnValueConstraintLocation.java
+  org/hibernate/validator/internal/metadata/location/TypeArgumentConstraintLocation.java
+  org/hibernate/validator/internal/metadata/provider/AnnotationMetaDataProvider.java
+  org/hibernate/validator/internal/metadata/provider/XmlMetaDataProvider.java
+  org/hibernate/validator/internal/metadata/raw/BeanConfiguration.java
+  org/hibernate/validator/internal/metadata/raw/ConstrainedElement.java
+  org/hibernate/validator/internal/metadata/raw/ConstrainedField.java
+  org/hibernate/validator/internal/metadata/raw/ConstrainedParameter.java
+  org/hibernate/validator/internal/util/annotation/AnnotationFactory.java
+  org/hibernate/validator/internal/util/annotation/AnnotationProxy.java
+  org/hibernate/validator/internal/util/annotation/ConstraintAnnotationDescriptor.java
+  org/hibernate/validator/internal/util/classhierarchy/Filter.java
+  org/hibernate/validator/internal/util/classhierarchy/Filters.java
+  org/hibernate/validator/internal/util/logging/Log.java
+  org/hibernate/validator/internal/xml/config/ResourceLoaderHelper.java
+  org/hibernate/validator/internal/xml/config/ValidationBootstrapParameters.java
+  org/hibernate/validator/internal/xml/config/ValidationXmlParser.java
+  org/hibernate/validator/internal/xml/mapping/AbstractConstrainedElementStaxBuilder.java
+  org/hibernate/validator/internal/xml/mapping/AbstractMultiValuedElementStaxBuilder.java
+  org/hibernate/validator/internal/xml/mapping/BeanStaxBuilder.java
+  org/hibernate/validator/internal/xml/mapping/ClassLoadingHelper.java
+  org/hibernate/validator/internal/xml/mapping/ConstrainedConstructorStaxBuilder.java
+  org/hibernate/validator/internal/xml/mapping/ConstrainedFieldStaxBuilder.java
+  org/hibernate/validator/internal/xml/mapping/ConstrainedGetterStaxBuilder.java
+  org/hibernate/validator/internal/xml/mapping/ConstrainedMethodStaxBuilder.java
+  org/hibernate/validator/internal/xml/mapping/ConstraintDefinitionStaxBuilder.java
+  org/hibernate/validator/internal/xml/mapping/ConstraintMappingsStaxBuilder.java
+  org/hibernate/validator/internal/xml/mapping/ConstraintTypeStaxBuilder.java
+  org/hibernate/validator/internal/xml/mapping/GroupConversionStaxBuilder.java
+  org/hibernate/validator/internal/xml/mapping/ValidStaxBuilder.java
+  org/hibernate/validator/messageinterpolation/AbstractMessageInterpolator.java
+  org/hibernate/validator/messageinterpolation/HibernateMessageInterpolatorContext.java
+  org/hibernate/validator/messageinterpolation/ParameterMessageInterpolator.java
+  org/hibernate/validator/metadata/BeanMetaDataClassNormalizer.java
+
+/*
+ * Hibernate Validator, declare and validate application constraints
+ *
+ * License: Apache License, Version 2.0
+ * See the license.txt file in the root directory or <http://www.apache.org/licenses/LICENSE-2.0>.
+ */
+
+Source archive: https://repo.maven.apache.org/maven2/org/hibernate/validator/hibernate-validator/8.0.3.Final/hibernate-validator-8.0.3.Final-sources.jar
+Members:
+  org/hibernate/validator/cfg/context/package-info.java
+
+/*
+ * Hibernate Validator, declare and validate application constraints
+ *
+ * License: Apache License, Version 2.0
+ * See the license.txt file in the root directory or <http://www.apache.org/licenses/LICENSE-2.0>.
+ */
+
+/**
+ * <p>Contains facet and creational context interfaces forming the API for programmatic constraint definition.</p>
+ * <p>This package is part of the public Hibernate Validator API.</p>
+ */
+
+Source archive: https://repo.maven.apache.org/maven2/org/hibernate/validator/hibernate-validator/8.0.3.Final/hibernate-validator-8.0.3.Final-sources.jar
+Members:
+  org/hibernate/validator/constraintvalidation/package-info.java
+
+/*
+ * Hibernate Validator, declare and validate application constraints
+ *
+ * License: Apache License, Version 2.0
+ * See the license.txt file in the root directory or <http://www.apache.org/licenses/LICENSE-2.0>.
+ */
+
+/**
+ * <p>Custom Hibernate Validator specific constraint validation extension classes.</p>
+ * <p>This package is part of the public Hibernate Validator API.</p>
+ */
+
+Source archive: https://repo.maven.apache.org/maven2/org/hibernate/validator/hibernate-validator/8.0.3.Final/hibernate-validator-8.0.3.Final-sources.jar
+Members:
+  org/hibernate/validator/group/package-info.java
+  org/hibernate/validator/spi/group/package-info.java
+
+/*
+ * Hibernate Validator, declare and validate application constraints
+ *
+ * License: Apache License, Version 2.0
+ * See the license.txt file in the root directory or <http://www.apache.org/licenses/LICENSE-2.0>.
+ */
+
+/**
+ * <p>This package provides support for dynamic default group sequence definition.</p>
+ * <p>This package is part of the public Hibernate Validator API.</p>
+ */
+
+Source archive: https://repo.maven.apache.org/maven2/org/hibernate/validator/hibernate-validator/8.0.3.Final/hibernate-validator-8.0.3.Final-sources.jar
+Members:
+  org/hibernate/validator/internal/cfg/context/package-info.java
+
+/*
+ * Hibernate Validator, declare and validate application constraints
+ *
+ * License: Apache License, Version 2.0
+ * See the license.txt file in the root directory or <http://www.apache.org/licenses/LICENSE-2.0>.
+ */
+
+/**
+ * Creational context implementations of the API for programmatic
+ * constraint definition.
+ */
+
+Source archive: https://repo.maven.apache.org/maven2/org/hibernate/validator/hibernate-validator/8.0.3.Final/hibernate-validator-8.0.3.Final-sources.jar
+Members:
+  org/hibernate/validator/internal/cfg/package-info.java
+
+/*
+ * Hibernate Validator, declare and validate application constraints
+ *
+ * License: Apache License, Version 2.0
+ * See the license.txt file in the root directory or <http://www.apache.org/licenses/LICENSE-2.0>.
+ */
+
+/**
+ * Implementation parts of the API for programmatic constraint definition.
+ */
+
+Source archive: https://repo.maven.apache.org/maven2/org/hibernate/validator/hibernate-validator/8.0.3.Final/hibernate-validator-8.0.3.Final-sources.jar
+Members:
+  org/hibernate/validator/internal/metadata/core/package-info.java
+
+/*
+ * Hibernate Validator, declare and validate application constraints
+ *
+ * License: Apache License, Version 2.0
+ * See the license.txt file in the root directory or <http://www.apache.org/licenses/LICENSE-2.0>.
+ */
+
+/**
+ * Core classes of the internal model used for representing constraints and related metadata.
+ */
+
+Source archive: https://repo.maven.apache.org/maven2/org/hibernate/validator/hibernate-validator/8.0.3.Final/hibernate-validator-8.0.3.Final-sources.jar
+Members:
+  org/hibernate/validator/internal/metadata/descriptor/package-info.java
+
+/*
+ * Hibernate Validator, declare and validate application constraints
+ *
+ * License: Apache License, Version 2.0
+ * See the license.txt file in the root directory or <http://www.apache.org/licenses/LICENSE-2.0>.
+ */
+
+/**
+ * <p>Implementation of the Bean Validation meta data API.</p>
+ * <p>The types in this package are generally immutable. Also any collections returned from methods in this package are
+ * unmodifiable and an exception will be thrown when trying to alter them.</p>
+ */
+
+Source archive: https://repo.maven.apache.org/maven2/org/hibernate/validator/hibernate-validator/8.0.3.Final/hibernate-validator-8.0.3.Final-sources.jar
+Members:
+  org/hibernate/validator/internal/metadata/facets/package-info.java
+
+/*
+ * Hibernate Validator, declare and validate application constraints
+ *
+ * License: Apache License, Version 2.0
+ * See the license.txt file in the root directory or <http://www.apache.org/licenses/LICENSE-2.0>.
+ */
+
+/**
+ * Contains the facet interfaces implemented by the aggregated meta data model types, allowing for a unified
+ * validation routine for all kinds of validation (bean, parameter and return value validation).
+ */
+
+Source archive: https://repo.maven.apache.org/maven2/org/hibernate/validator/hibernate-validator/8.0.3.Final/hibernate-validator-8.0.3.Final-sources.jar
+Members:
+  org/hibernate/validator/internal/metadata/provider/package-info.java
+
+/*
+ * Hibernate Validator, declare and validate application constraints
+ *
+ * License: Apache License, Version 2.0
+ * See the license.txt file in the root directory or <http://www.apache.org/licenses/LICENSE-2.0>.
+ */
+
+/**
+ * Abstraction of the meta data sources - annotation, xml, programmatic.
+ */
+
+Source archive: https://repo.maven.apache.org/maven2/org/hibernate/validator/hibernate-validator/8.0.3.Final/hibernate-validator-8.0.3.Final-sources.jar
+Members:
+  org/hibernate/validator/internal/util/ConcurrentReferenceHashMap.java
+
+/*
+ * Hibernate Validator, declare and validate application constraints
+ *
+ * License: Apache License, Version 2.0
+ * See the license.txt file in the root directory or <http://www.apache.org/licenses/LICENSE-2.0>.
+ */
+
+/*
+ * Written by Doug Lea with assistance from members of JCP JSR-166
+ * Expert Group and released to the public domain, as explained at
+ * http://creativecommons.org/licenses/publicdomain
+ */
+
+Source archive: https://repo.maven.apache.org/maven2/org/hibernate/validator/hibernate-validator/8.0.3.Final/hibernate-validator-8.0.3.Final-sources.jar
+Members:
+  org/hibernate/validator/spi/resourceloading/package-info.java
+
+/*
+ * Hibernate Validator, declare and validate application constraints
+ *
+ * License: Apache License, Version 2.0
+ * See the license.txt file in the root directory or <http://www.apache.org/licenses/LICENSE-2.0>.
+ */
+/**
+ * <p>ResourceBundleLocator interface. Several implementations are
+ * provided in the package {@link org.hibernate.validator.resourceloading}.</p>
+ * <p>This package is part of the public Hibernate Validator API.</p>
+ */
+
+Source archive: https://repo.maven.apache.org/maven2/org/hibernate/validator/hibernate-validator/8.0.3.Final/hibernate-validator-8.0.3.Final-sources.jar
+Members:
+  org/hibernate/validator/cfg/defs/br/package-info.java
+
+/*
+ * Hibernate Validator, declare and validate application constraints
+ *
+ * License: Apache License, Version 2.0
+ * See the license.txt file in the root directory or <http://www.apache.org/licenses/LICENSE-2.0>.
+ */
+
+/**
+ * <p>Brazil specific constraint definition classes for programmatic constraint definition API.</p>
+ * <p>This package is part of the public Hibernate Validator API.</p>
+ */
+
+Source archive: https://repo.maven.apache.org/maven2/org/hibernate/validator/hibernate-validator/8.0.3.Final/hibernate-validator-8.0.3.Final-sources.jar
+Members:
+  org/hibernate/validator/cfg/defs/package-info.java
+
+/*
+ * Hibernate Validator, declare and validate application constraints
+ *
+ * License: Apache License, Version 2.0
+ * See the license.txt file in the root directory or <http://www.apache.org/licenses/LICENSE-2.0>.
+ */
+
+/**
+ * <p>Constraint definition classes for programmatic constraint definition API.</p>
+ * <p>This package is part of the public Hibernate Validator API.</p>
+ */
+
+Source archive: https://repo.maven.apache.org/maven2/org/hibernate/validator/hibernate-validator/8.0.3.Final/hibernate-validator-8.0.3.Final-sources.jar
+Members:
+  org/hibernate/validator/constraints/ru/package-info.java
+
+/*
+ * Hibernate Validator, declare and validate application constraints
+ *
+ * License: Apache License, Version 2.0
+ * See the license.txt file in the root directory or <http://www.apache.org/licenses/LICENSE-2.0>.
+ */
+
+/**
+ * <p>Hibernate Validator Russian constraints.</p>
+ * <p>This package is part of the public Hibernate Validator API.</p>
+ */
+
+Source archive: https://repo.maven.apache.org/maven2/org/hibernate/validator/hibernate-validator/8.0.3.Final/hibernate-validator-8.0.3.Final-sources.jar
+Members:
+  org/hibernate/validator/constraints/time/package-info.java
+
+/*
+ * Hibernate Validator, declare and validate application constraints
+ *
+ * License: Apache License, Version 2.0
+ * See the license.txt file in the root directory or <http://www.apache.org/licenses/LICENSE-2.0>.
+ */
+
+/**
+ * <p>Hibernate Validator {@link java.time.Duration} constraints.</p>
+ * <p>This package is part of the public Hibernate Validator API.</p>
+ */
+
+Source archive: https://repo.maven.apache.org/maven2/org/hibernate/validator/hibernate-validator/8.0.3.Final/hibernate-validator-8.0.3.Final-sources.jar
+Members:
+  org/hibernate/validator/internal/constraintvalidators/bv/notempty/package-info.java
+
+/*
+ * Hibernate Validator, declare and validate application constraints
+ *
+ * License: Apache License, Version 2.0
+ * See the license.txt file in the root directory or <http://www.apache.org/licenses/LICENSE-2.0>.
+ */
+
+/**
+ * Implementations of the Bean Validation {@code NotEmpty} constraint.
+ */
+
+Source archive: https://repo.maven.apache.org/maven2/org/hibernate/validator/hibernate-validator/8.0.3.Final/hibernate-validator-8.0.3.Final-sources.jar
+Members:
+  org/hibernate/validator/internal/constraintvalidators/bv/number/bound/package-info.java
+
+/*
+ * Hibernate Validator, declare and validate application constraints
+ *
+ * License: Apache License, Version 2.0
+ * See the license.txt file in the root directory or <http://www.apache.org/licenses/LICENSE-2.0>.
+ */
+
+/**
+ * Contains {@link jakarta.validation.ConstraintValidator} implementations for
+ * min and max constraints for numbers.
+ *
+ * @author Marko Bekhta
+ */
+
+Source archive: https://repo.maven.apache.org/maven2/org/hibernate/validator/hibernate-validator/8.0.3.Final/hibernate-validator-8.0.3.Final-sources.jar
+Members:
+  org/hibernate/validator/internal/constraintvalidators/bv/package-info.java
+
+/*
+ * Hibernate Validator, declare and validate application constraints
+ *
+ * License: Apache License, Version 2.0
+ * See the license.txt file in the root directory or <http://www.apache.org/licenses/LICENSE-2.0>.
+ */
+
+/**
+ * Implementations of the Bean Validation built-in constraints.
+ */
+
+Source archive: https://repo.maven.apache.org/maven2/org/hibernate/validator/hibernate-validator/8.0.3.Final/hibernate-validator-8.0.3.Final-sources.jar
+Members:
+  org/hibernate/validator/internal/constraintvalidators/bv/time/future/package-info.java
+
+/*
+ * Hibernate Validator, declare and validate application constraints
+ *
+ * License: Apache License, Version 2.0
+ * See the license.txt file in the root directory or <http://www.apache.org/licenses/LICENSE-2.0>.
+ */
+
+/**
+ * Constraint validator implementations of the Bean Validation {@code Future} constraint.
+ */
+
+Source archive: https://repo.maven.apache.org/maven2/org/hibernate/validator/hibernate-validator/8.0.3.Final/hibernate-validator-8.0.3.Final-sources.jar
+Members:
+  org/hibernate/validator/internal/constraintvalidators/hv/package-info.java
+
+/*
+ * Hibernate Validator, declare and validate application constraints
+ *
+ * License: Apache License, Version 2.0
+ * See the license.txt file in the root directory or <http://www.apache.org/licenses/LICENSE-2.0>.
+ */
+
+/**
+ * Implementations of Hibernate Validator specific constraints.
+ */
+
+Source archive: https://repo.maven.apache.org/maven2/org/hibernate/validator/hibernate-validator/8.0.3.Final/hibernate-validator-8.0.3.Final-sources.jar
+Members:
+  org/hibernate/validator/internal/engine/groups/package-info.java
+
+/*
+ * Hibernate Validator, declare and validate application constraints
+ *
+ * License: Apache License, Version 2.0
+ * See the license.txt file in the root directory or <http://www.apache.org/licenses/LICENSE-2.0>.
+ */
+
+/**
+ * Helper classes for the processing of groups.
+ */
+
+Source archive: https://repo.maven.apache.org/maven2/org/hibernate/validator/hibernate-validator/8.0.3.Final/hibernate-validator-8.0.3.Final-sources.jar
+Members:
+  org/hibernate/validator/internal/engine/messageinterpolation/el/package-info.java
+
+/*
+ * Hibernate Validator, declare and validate application constraints
+ *
+ * License: Apache License, Version 2.0
+ * See the license.txt file in the root directory or <http://www.apache.org/licenses/LICENSE-2.0>.
+ */
+
+/**
+ * Helper classes for setting up the Expression Language context for message interpolation.
+ */
+
+Source archive: https://repo.maven.apache.org/maven2/org/hibernate/validator/hibernate-validator/8.0.3.Final/hibernate-validator-8.0.3.Final-sources.jar
+Members:
+  org/hibernate/validator/internal/engine/messageinterpolation/package-info.java
+
+/*
+ * Hibernate Validator, declare and validate application constraints
+ *
+ * License: Apache License, Version 2.0
+ * See the license.txt file in the root directory or <http://www.apache.org/licenses/LICENSE-2.0>.
+ */
+
+/**
+ * Helper classes for message interpolation.
+ */
+
+Source archive: https://repo.maven.apache.org/maven2/org/hibernate/validator/hibernate-validator/8.0.3.Final/hibernate-validator-8.0.3.Final-sources.jar
+Members:
+  org/hibernate/validator/internal/engine/messageinterpolation/parser/package-info.java
+
+/*
+ * Hibernate Validator, declare and validate application constraints
+ *
+ * License: Apache License, Version 2.0
+ * See the license.txt file in the root directory or <http://www.apache.org/licenses/LICENSE-2.0>.
+ */
+
+/**
+ * Classes related to parsing a message descriptor and extracting interpolation terms.
+ */
+
+Source archive: https://repo.maven.apache.org/maven2/org/hibernate/validator/hibernate-validator/8.0.3.Final/hibernate-validator-8.0.3.Final-sources.jar
+Members:
+  org/hibernate/validator/internal/engine/package-info.java
+
+/*
+ * Hibernate Validator, declare and validate application constraints
+ *
+ * License: Apache License, Version 2.0
+ * See the license.txt file in the root directory or <http://www.apache.org/licenses/LICENSE-2.0>.
+ */
+
+/**
+ * Implementations for the core interfaces of Jakarta Bean Validation.
+ */
+
+Source archive: https://repo.maven.apache.org/maven2/org/hibernate/validator/hibernate-validator/8.0.3.Final/hibernate-validator-8.0.3.Final-sources.jar
+Members:
+  org/hibernate/validator/internal/metadata/raw/package-info.java
+
+/*
+ * Hibernate Validator, declare and validate application constraints
+ *
+ * License: Apache License, Version 2.0
+ * See the license.txt file in the root directory or <http://www.apache.org/licenses/LICENSE-2.0>.
+ */
+
+/**
+ * The raw metadata is a reflection of all configured constraints including constraints defined via multiple
+ * configuration sources.
+ */
+
+Source archive: https://repo.maven.apache.org/maven2/org/hibernate/validator/hibernate-validator/8.0.3.Final/hibernate-validator-8.0.3.Final-sources.jar
+Members:
+  org/hibernate/validator/internal/util/TypeHelper.java
+
+// code originates from TypeUtils.java in jtype (http://code.google.com/p/jtype/) and has been modified to suite
+// the HV requirements and code style
+/*
+ * Copyright 2009 IIZUKA Software Technologies Ltd
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+Source archive: https://repo.maven.apache.org/maven2/org/hibernate/validator/hibernate-validator/8.0.3.Final/hibernate-validator-8.0.3.Final-sources.jar
+Members:
+  org/hibernate/validator/internal/util/classhierarchy/package-info.java
+
+/*
+ * Hibernate Validator, declare and validate application constraints
+ *
+ * License: Apache License, Version 2.0
+ * See the license.txt file in the root directory or <http://www.apache.org/licenses/LICENSE-2.0>.
+ */
+
+/**
+ * Contains classes for working with the elements of a class hierarchy.
+ */
+
+Source archive: https://repo.maven.apache.org/maven2/org/hibernate/validator/hibernate-validator/8.0.3.Final/hibernate-validator-8.0.3.Final-sources.jar
+Members:
+  org/hibernate/validator/internal/util/logging/package-info.java
+
+/*
+ * Hibernate Validator, declare and validate application constraints
+ *
+ * License: Apache License, Version 2.0
+ * See the license.txt file in the root directory or <http://www.apache.org/licenses/LICENSE-2.0>.
+ */
+
+/**
+ * Logging classes.
+ */
+
+Source archive: https://repo.maven.apache.org/maven2/org/hibernate/validator/hibernate-validator/8.0.3.Final/hibernate-validator-8.0.3.Final-sources.jar
+Members:
+  org/hibernate/validator/internal/util/privilegedactions/package-info.java
+
+/*
+ * Hibernate Validator, declare and validate application constraints
+ *
+ * License: Apache License, Version 2.0
+ * See the license.txt file in the root directory or <http://www.apache.org/licenses/LICENSE-2.0>.
+ */
+
+/**
+ * Implementations of PrivilegedAction in order to execute reflection operations in a security manager.
+ */
+
+Source archive: https://repo.maven.apache.org/maven2/org/hibernate/validator/hibernate-validator/8.0.3.Final/hibernate-validator-8.0.3.Final-sources.jar
+Members:
+  org/hibernate/validator/package-info.java
+
+/*
+ * Hibernate Validator, declare and validate application constraints
+ *
+ * License: Apache License, Version 2.0
+ * See the license.txt file in the root directory or <http://www.apache.org/licenses/LICENSE-2.0>.
+ */
+
+/**
+ * <p>Bootstrap classes HibernateValidator and HibernateValidatorConfiguration which uniquely identify Hibernate Validator
+ * and allow to configure it.</p>
+ * <p>This package is part of the public Hibernate Validator API.</p>
+ */
+
+Source archive: https://repo.maven.apache.org/maven2/org/hibernate/validator/hibernate-validator/8.0.3.Final/hibernate-validator-8.0.3.Final-sources.jar
+Members:
+  org/hibernate/validator/parameternameprovider/package-info.java
+
+/*
+ * Hibernate Validator, declare and validate application constraints
+ *
+ * License: Apache License, Version 2.0
+ * See the license.txt file in the root directory or <http://www.apache.org/licenses/LICENSE-2.0>.
+ */
+
+/**
+ * <p>Custom Hibernate Validator {@code jakarta.validation.ParameterNameProvider} implementations.</p>
+ * <p>This package is part of the public Hibernate Validator API.</p>
+ */
+
+Source archive: https://repo.maven.apache.org/maven2/org/hibernate/validator/hibernate-validator/8.0.3.Final/hibernate-validator-8.0.3.Final-sources.jar
+Members:
+  org/hibernate/validator/path/package-info.java
+
+/*
+ * Hibernate Validator, declare and validate application constraints
+ *
+ * License: Apache License, Version 2.0
+ * See the license.txt file in the root directory or <http://www.apache.org/licenses/LICENSE-2.0>.
+ */
+
+/**
+ * <p>Hibernate Validator extensions around {@code jakarta.validation.Path}.</p>
+ * <p>This package is part of the public Hibernate Validator API.</p>
+ */
+
+Source archive: https://repo.maven.apache.org/maven2/org/hibernate/validator/hibernate-validator/8.0.3.Final/hibernate-validator-8.0.3.Final-sources.jar
+Members:
+  org/hibernate/validator/resourceloading/package-info.java
+
+/*
+ * Hibernate Validator, declare and validate application constraints
+ *
+ * License: Apache License, Version 2.0
+ * See the license.txt file in the root directory or <http://www.apache.org/licenses/LICENSE-2.0>.
+ */
+
+/**
+ * <p>ResourceBundleLocator interface and its various implementations.</p>
+ * <p>This package is part of the public Hibernate Validator API.</p>
+ */
+
+Source archive: https://repo.maven.apache.org/maven2/org/hibernate/validator/hibernate-validator/8.0.3.Final/hibernate-validator-8.0.3.Final-sources.jar
+Members:
+  org/hibernate/validator/spi/properties/package-info.java
+
+/*
+ * Hibernate Validator, declare and validate application constraints
+ *
+ * License: Apache License, Version 2.0
+ * See the license.txt file in the root directory or <http://www.apache.org/licenses/LICENSE-2.0>.
+ */
+
+/**
+ * <p>This package provides support for customizing the getter detection logic.</p>
+ * <p>This package is part of the public Hibernate Validator SPI.</p>
+ */
+
+Source archive: https://repo.maven.apache.org/maven2/org/hibernate/validator/hibernate-validator/8.0.3.Final/hibernate-validator-8.0.3.Final-sources.jar
+Members:
+  org/hibernate/validator/cfg/defs/pl/package-info.java
+
+/*
+ * Hibernate Validator, declare and validate application constraints
+ *
+ * License: Apache License, Version 2.0
+ * See the license.txt file in the root directory or <http://www.apache.org/licenses/LICENSE-2.0>.
+ */
+
+/**
+ * <p>Poland specific constraint definition classes for programmatic constraint definition API.</p>
+ * <p>This package is part of the public Hibernate Validator API.</p>
+ */
+
+Source archive: https://repo.maven.apache.org/maven2/org/hibernate/validator/hibernate-validator/8.0.3.Final/hibernate-validator-8.0.3.Final-sources.jar
+Members:
+  org/hibernate/validator/cfg/defs/ru/package-info.java
+
+/*
+ * Hibernate Validator, declare and validate application constraints
+ *
+ * License: Apache License, Version 2.0
+ * See the license.txt file in the root directory or <http://www.apache.org/licenses/LICENSE-2.0>.
+ */
+
+/**
+ * <p>Russian specific constraint definition classes for programmatic constraint definition API.</p>
+ * <p>This package is part of the public Hibernate Validator API.</p>
+ */
+
+Source archive: https://repo.maven.apache.org/maven2/org/hibernate/validator/hibernate-validator/8.0.3.Final/hibernate-validator-8.0.3.Final-sources.jar
+Members:
+  org/hibernate/validator/cfg/package-info.java
+
+/*
+ * Hibernate Validator, declare and validate application constraints
+ *
+ * License: Apache License, Version 2.0
+ * See the license.txt file in the root directory or <http://www.apache.org/licenses/LICENSE-2.0>.
+ */
+
+/**
+ * <p>Entry point for the programmatic constraint definition API.</p>
+ * <p>This package is part of the public Hibernate Validator API.</p>
+ */
+
+Source archive: https://repo.maven.apache.org/maven2/org/hibernate/validator/hibernate-validator/8.0.3.Final/hibernate-validator-8.0.3.Final-sources.jar
+Members:
+  org/hibernate/validator/constraints/br/package-info.java
+
+/*
+ * Hibernate Validator, declare and validate application constraints
+ *
+ * License: Apache License, Version 2.0
+ * See the license.txt file in the root directory or <http://www.apache.org/licenses/LICENSE-2.0>.
+ */
+
+/**
+ * <p>Hibernate Validator Brazilian constraints.</p>
+ * <p>This package is part of the public Hibernate Validator API.</p>
+ */
+
+Source archive: https://repo.maven.apache.org/maven2/org/hibernate/validator/hibernate-validator/8.0.3.Final/hibernate-validator-8.0.3.Final-sources.jar
+Members:
+  org/hibernate/validator/constraints/package-info.java
+
+/*
+ * Hibernate Validator, declare and validate application constraints
+ *
+ * License: Apache License, Version 2.0
+ * See the license.txt file in the root directory or <http://www.apache.org/licenses/LICENSE-2.0>.
+ */
+
+/**
+ * <p>Hibernate Validator specific constraints.</p>
+ * <p>This package is part of the public Hibernate Validator API.</p>
+ */
+
+Source archive: https://repo.maven.apache.org/maven2/org/hibernate/validator/hibernate-validator/8.0.3.Final/hibernate-validator-8.0.3.Final-sources.jar
+Members:
+  org/hibernate/validator/constraints/pl/package-info.java
+
+/*
+ * Hibernate Validator, declare and validate application constraints
+ *
+ * License: Apache License, Version 2.0
+ * See the license.txt file in the root directory or <http://www.apache.org/licenses/LICENSE-2.0>.
+ */
+
+/**
+ * <p>Hibernate Validator Polish constraints.</p>
+ * <p>This package is part of the public Hibernate Validator API.</p>
+ */
+
+Source archive: https://repo.maven.apache.org/maven2/org/hibernate/validator/hibernate-validator/8.0.3.Final/hibernate-validator-8.0.3.Final-sources.jar
+Members:
+  org/hibernate/validator/internal/constraintvalidators/bv/number/bound/decimal/package-info.java
+
+/*
+ * Hibernate Validator, declare and validate application constraints
+ *
+ * License: Apache License, Version 2.0
+ * See the license.txt file in the root directory or <http://www.apache.org/licenses/LICENSE-2.0>.
+ */
+
+/**
+ * Contains {@link jakarta.validation.ConstraintValidator} implementations for
+ * {@link jakarta.validation.constraints.DecimalMin} and {@link jakarta.validation.constraints.DecimalMax}
+ * constraints.
+ *
+ * @author Marko Bekhta
+ */
+
+Source archive: https://repo.maven.apache.org/maven2/org/hibernate/validator/hibernate-validator/8.0.3.Final/hibernate-validator-8.0.3.Final-sources.jar
+Members:
+  org/hibernate/validator/internal/constraintvalidators/bv/number/package-info.java
+
+/*
+ * Hibernate Validator, declare and validate application constraints
+ *
+ * License: Apache License, Version 2.0
+ * See the license.txt file in the root directory or <http://www.apache.org/licenses/LICENSE-2.0>.
+ */
+
+/**
+ * Contains {@link jakarta.validation.ConstraintValidator} implementations for
+ * various number constraints.
+ *
+ * @author Marko Bekhta
+ */
+
+Source archive: https://repo.maven.apache.org/maven2/org/hibernate/validator/hibernate-validator/8.0.3.Final/hibernate-validator-8.0.3.Final-sources.jar
+Members:
+  org/hibernate/validator/internal/constraintvalidators/bv/time/pastorpresent/package-info.java
+
+/*
+ * Hibernate Validator, declare and validate application constraints
+ *
+ * License: Apache License, Version 2.0
+ * See the license.txt file in the root directory or <http://www.apache.org/licenses/LICENSE-2.0>.
+ */
+
+/**
+ * Constraint validator implementations of the Bean Validation {@code PastOrPresent} constraint.
+ */
+
+Source archive: https://repo.maven.apache.org/maven2/org/hibernate/validator/hibernate-validator/8.0.3.Final/hibernate-validator-8.0.3.Final-sources.jar
+Members:
+  org/hibernate/validator/internal/engine/constraintvalidation/package-info.java
+
+/*
+ * Hibernate Validator, declare and validate application constraints
+ *
+ * License: Apache License, Version 2.0
+ * See the license.txt file in the root directory or <http://www.apache.org/licenses/LICENSE-2.0>.
+ */
+
+/**
+ * Classes dealing with the representation of constraints and the management/instantitation of constraint
+ * validators.
+ */
+
+Source archive: https://repo.maven.apache.org/maven2/org/hibernate/validator/hibernate-validator/8.0.3.Final/hibernate-validator-8.0.3.Final-sources.jar
+Members:
+  org/hibernate/validator/internal/engine/scripting/package-info.java
+
+/*
+ * Hibernate Validator, declare and validate application constraints
+ *
+ * License: Apache License, Version 2.0
+ * See the license.txt file in the root directory or <http://www.apache.org/licenses/LICENSE-2.0>.
+ */
+
+/**
+ * Classes related to the evaluation of script with the JSR 223 ScriptEngine.
+ */
+
+Source archive: https://repo.maven.apache.org/maven2/org/hibernate/validator/hibernate-validator/8.0.3.Final/hibernate-validator-8.0.3.Final-sources.jar
+Members:
+  org/hibernate/validator/internal/metadata/aggregated/package-info.java
+
+/*
+ * Hibernate Validator, declare and validate application constraints
+ *
+ * License: Apache License, Version 2.0
+ * See the license.txt file in the root directory or <http://www.apache.org/licenses/LICENSE-2.0>.
+ */
+
+/**
+ * The classes in this package contain the aggregated meta data needed for an actual validation. The aggregated
+ * meta data view takes into account type inheritance, configuration source, etc and aggregates for a given type.
+ */
+
+Source archive: https://repo.maven.apache.org/maven2/org/hibernate/validator/hibernate-validator/8.0.3.Final/hibernate-validator-8.0.3.Final-sources.jar
+Members:
+  org/hibernate/validator/internal/metadata/aggregated/rule/package-info.java
+
+/*
+ * Hibernate Validator, declare and validate application constraints
+ *
+ * License: Apache License, Version 2.0
+ * See the license.txt file in the root directory or <http://www.apache.org/licenses/LICENSE-2.0>.
+ */
+
+/**
+ * Contains MethodConfigurationRule and its subclasses used to validate the correctness of method constraints
+ * on overridden/implemented methods in inheritance hierarchies.
+ */
+
+Source archive: https://repo.maven.apache.org/maven2/org/hibernate/validator/hibernate-validator/8.0.3.Final/hibernate-validator-8.0.3.Final-sources.jar
+Members:
+  org/hibernate/validator/internal/util/package-info.java
+
+/*
+ * Hibernate Validator, declare and validate application constraints
+ *
+ * License: Apache License, Version 2.0
+ * See the license.txt file in the root directory or <http://www.apache.org/licenses/LICENSE-2.0>.
+ */
+
+/**
+ * Independent helper classes.
+ */
+
+Source archive: https://repo.maven.apache.org/maven2/org/hibernate/validator/hibernate-validator/8.0.3.Final/hibernate-validator-8.0.3.Final-sources.jar
+Members:
+  org/hibernate/validator/internal/constraintvalidators/bv/number/sign/package-info.java
+
+/*
+ * Hibernate Validator, declare and validate application constraints
+ *
+ * License: Apache License, Version 2.0
+ * See the license.txt file in the root directory or <http://www.apache.org/licenses/LICENSE-2.0>.
+ */
+
+/**
+ * Contains {@link jakarta.validation.ConstraintValidator} implementations for
+ * {@link jakarta.validation.constraints.Positive}, {@link jakarta.validation.constraints.PositiveOrZero},
+ * {@link jakarta.validation.constraints.Negative} and {@link jakarta.validation.constraints.NegativeOrZero}
+ * constraints.
+ *
+ * @author Marko Bekhta
+ */
+
+Source archive: https://repo.maven.apache.org/maven2/org/hibernate/validator/hibernate-validator/8.0.3.Final/hibernate-validator-8.0.3.Final-sources.jar
+Members:
+  org/hibernate/validator/internal/constraintvalidators/bv/size/package-info.java
+
+/*
+ * Hibernate Validator, declare and validate application constraints
+ *
+ * License: Apache License, Version 2.0
+ * See the license.txt file in the root directory or <http://www.apache.org/licenses/LICENSE-2.0>.
+ */
+
+/**
+ * Implementations of the Bean Validation {@code Size} constraint.
+ */
+
+Source archive: https://repo.maven.apache.org/maven2/org/hibernate/validator/hibernate-validator/8.0.3.Final/hibernate-validator-8.0.3.Final-sources.jar
+Members:
+  org/hibernate/validator/internal/constraintvalidators/bv/time/futureorpresent/package-info.java
+
+/*
+ * Hibernate Validator, declare and validate application constraints
+ *
+ * License: Apache License, Version 2.0
+ * See the license.txt file in the root directory or <http://www.apache.org/licenses/LICENSE-2.0>.
+ */
+
+/**
+ * Constraint validator implementations of the Bean Validation {@code FutureOrPresent} constraint.
+ */
+
+Source archive: https://repo.maven.apache.org/maven2/org/hibernate/validator/hibernate-validator/8.0.3.Final/hibernate-validator-8.0.3.Final-sources.jar
+Members:
+  org/hibernate/validator/internal/constraintvalidators/bv/time/package-info.java
+
+/*
+ * Hibernate Validator, declare and validate application constraints
+ *
+ * License: Apache License, Version 2.0
+ * See the license.txt file in the root directory or <http://www.apache.org/licenses/LICENSE-2.0>.
+ */
+
+/**
+ * Constraint validator implementations of the Bean Validation time related constraints.
+ */
+
+Source archive: https://repo.maven.apache.org/maven2/org/hibernate/validator/hibernate-validator/8.0.3.Final/hibernate-validator-8.0.3.Final-sources.jar
+Members:
+  org/hibernate/validator/internal/constraintvalidators/bv/time/past/package-info.java
+
+/*
+ * Hibernate Validator, declare and validate application constraints
+ *
+ * License: Apache License, Version 2.0
+ * See the license.txt file in the root directory or <http://www.apache.org/licenses/LICENSE-2.0>.
+ */
+
+/**
+ * Constraint validator implementations of the Bean Validation {@code Past} constraint.
+ */
+
+Source archive: https://repo.maven.apache.org/maven2/org/hibernate/validator/hibernate-validator/8.0.3.Final/hibernate-validator-8.0.3.Final-sources.jar
+Members:
+  org/hibernate/validator/internal/engine/path/package-info.java
+
+/*
+ * Hibernate Validator, declare and validate application constraints
+ *
+ * License: Apache License, Version 2.0
+ * See the license.txt file in the root directory or <http://www.apache.org/licenses/LICENSE-2.0>.
+ */
+
+/**
+ * Classes related to the Path.Node API.
+ */
+
+Source archive: https://repo.maven.apache.org/maven2/org/hibernate/validator/hibernate-validator/8.0.3.Final/hibernate-validator-8.0.3.Final-sources.jar
+Members:
+  org/hibernate/validator/internal/engine/resolver/package-info.java
+
+/*
+ * Hibernate Validator, declare and validate application constraints
+ *
+ * License: Apache License, Version 2.0
+ * See the license.txt file in the root directory or <http://www.apache.org/licenses/LICENSE-2.0>.
+ */
+
+/**
+ * Various implementations of the TraversableResolver interface.
+ */
+
+Source archive: https://repo.maven.apache.org/maven2/org/hibernate/validator/hibernate-validator/8.0.3.Final/hibernate-validator-8.0.3.Final-sources.jar
+Members:
+  org/hibernate/validator/internal/engine/validationcontext/package-info.java
+
+/*
+ * Hibernate Validator, declare and validate application constraints
+ *
+ * License: Apache License, Version 2.0
+ * See the license.txt file in the root directory or <http://www.apache.org/licenses/LICENSE-2.0>.
+ */
+/**
+ * Contains various implementation of validation contexts and supporting classes.
+ */
+
+Source archive: https://repo.maven.apache.org/maven2/org/hibernate/validator/hibernate-validator/8.0.3.Final/hibernate-validator-8.0.3.Final-sources.jar
+Members:
+  org/hibernate/validator/internal/metadata/location/package-info.java
+
+/*
+ * Hibernate Validator, declare and validate application constraints
+ *
+ * License: Apache License, Version 2.0
+ * See the license.txt file in the root directory or <http://www.apache.org/licenses/LICENSE-2.0>.
+ */
+
+/**
+ * Contains types for the representation of constraint locations.
+ */
+
+Source archive: https://repo.maven.apache.org/maven2/org/hibernate/validator/hibernate-validator/8.0.3.Final/hibernate-validator-8.0.3.Final-sources.jar
+Members:
+  org/hibernate/validator/internal/metadata/package-info.java
+
+/*
+ * Hibernate Validator, declare and validate application constraints
+ *
+ * License: Apache License, Version 2.0
+ * See the license.txt file in the root directory or <http://www.apache.org/licenses/LICENSE-2.0>.
+ */
+
+/**
+ * Implementations of the Bean Validation metadata interfaces as well as Hibernate Validator specific meta data classes.
+ * Raw meta data can come from any configuration source, be it annotation, XML or programmatic configuration. See also
+ * {@link org.hibernate.validator.internal.metadata.raw.ConfigurationSource}
+ */
+
+Source archive: https://repo.maven.apache.org/maven2/org/hibernate/validator/hibernate-validator/8.0.3.Final/hibernate-validator-8.0.3.Final-sources.jar
+Members:
+  org/hibernate/validator/internal/util/annotation/package-info.java
+
+/*
+ * Hibernate Validator, declare and validate application constraints
+ *
+ * License: Apache License, Version 2.0
+ * See the license.txt file in the root directory or <http://www.apache.org/licenses/LICENSE-2.0>.
+ */
+
+/**
+ * Annotation proxy and descriptor.
+ */
+
+Source archive: https://repo.maven.apache.org/maven2/org/hibernate/validator/hibernate-validator/8.0.3.Final/hibernate-validator-8.0.3.Final-sources.jar
+Members:
+  org/hibernate/validator/internal/xml/package-info.java
+
+/*
+ * Hibernate Validator, declare and validate application constraints
+ *
+ * License: Apache License, Version 2.0
+ * See the license.txt file in the root directory or <http://www.apache.org/licenses/LICENSE-2.0>.
+ */
+
+/**
+ * Classes for parsing of Bean Validation XML configuration files.
+ */
+
+Source archive: https://repo.maven.apache.org/maven2/org/hibernate/validator/hibernate-validator/8.0.3.Final/hibernate-validator-8.0.3.Final-sources.jar
+Members:
+  org/hibernate/validator/messageinterpolation/package-info.java
+
+/*
+ * Hibernate Validator, declare and validate application constraints
+ *
+ * License: Apache License, Version 2.0
+ * See the license.txt file in the root directory or <http://www.apache.org/licenses/LICENSE-2.0>.
+ */
+
+/**
+ * <p>Implementations of the MessageInterpolator interface in particular ResourceBundleMessageInterpolator which can be
+ * used by custom implementations of the interface for delegation.</p>
+ * <p>This package is part of the public Hibernate Validator API.</p>
+ */
+
+Source archive: https://repo.maven.apache.org/maven2/org/hibernate/validator/hibernate-validator/8.0.3.Final/hibernate-validator-8.0.3.Final-sources.jar
+Members:
+  org/hibernate/validator/spi/scripting/package-info.java
+
+/*
+ * Hibernate Validator, declare and validate application constraints
+ *
+ * License: Apache License, Version 2.0
+ * See the license.txt file in the root directory or <http://www.apache.org/licenses/LICENSE-2.0>.
+ */
+
+/**
+ * <p>This package provides support for customization of the script evaluation for {@code ScriptAssert}
+ * and {@code ParameterScriptAssert} constraints.</p>
+ * <p>This package is part of the public Hibernate Validator SPI.</p>
+ *
+ * @author Marko Bekhta
+ */
+
+Source archive: https://repo.maven.apache.org/maven2/org/yaml/snakeyaml/2.5/snakeyaml-2.5-sources.jar
+Members:
+  org/yaml/snakeyaml/reader/UnicodeReader.java
+  org/yaml/snakeyaml/reader/ReaderException.java
+  org/yaml/snakeyaml/reader/StreamReader.java
+  org/yaml/snakeyaml/comments/CommentLine.java
+  org/yaml/snakeyaml/comments/CommentEventsCollector.java
+  org/yaml/snakeyaml/comments/CommentType.java
+  org/yaml/snakeyaml/TypeDescription.java
+  org/yaml/snakeyaml/LoaderOptions.java
+  org/yaml/snakeyaml/serializer/SerializerException.java
+  org/yaml/snakeyaml/serializer/AnchorGenerator.java
+  org/yaml/snakeyaml/serializer/NumberAnchorGenerator.java
+  org/yaml/snakeyaml/serializer/Serializer.java
+  org/yaml/snakeyaml/emitter/EmitterException.java
+  org/yaml/snakeyaml/emitter/EmitterState.java
+  org/yaml/snakeyaml/emitter/Emitable.java
+  org/yaml/snakeyaml/emitter/ScalarAnalysis.java
+  org/yaml/snakeyaml/emitter/Emitter.java
+  org/yaml/snakeyaml/util/UriEncoder.java
+  org/yaml/snakeyaml/util/MergeUtils.java
+  org/yaml/snakeyaml/util/Tuple.java
+  org/yaml/snakeyaml/util/ArrayUtils.java
+  org/yaml/snakeyaml/util/PlatformFeatureDetector.java
+  org/yaml/snakeyaml/util/ArrayStack.java
+  org/yaml/snakeyaml/util/EnumUtils.java
+  org/yaml/snakeyaml/nodes/Node.java
+  org/yaml/snakeyaml/nodes/Tag.java
+  org/yaml/snakeyaml/nodes/ScalarNode.java
+  org/yaml/snakeyaml/nodes/MappingNode.java
+  org/yaml/snakeyaml/nodes/AnchorNode.java
+  org/yaml/snakeyaml/nodes/NodeId.java
+  org/yaml/snakeyaml/nodes/CollectionNode.java
+  org/yaml/snakeyaml/nodes/SequenceNode.java
+  org/yaml/snakeyaml/nodes/NodeTuple.java
+  org/yaml/snakeyaml/inspector/UnTrustedTagInspector.java
+  org/yaml/snakeyaml/inspector/TagInspector.java
+  org/yaml/snakeyaml/composer/Composer.java
+  org/yaml/snakeyaml/composer/ComposerException.java
+  org/yaml/snakeyaml/internal/Logger.java
+  org/yaml/snakeyaml/DumperOptions.java
+  org/yaml/snakeyaml/Yaml.java
+  org/yaml/snakeyaml/parser/ParserImpl.java
+  org/yaml/snakeyaml/parser/Parser.java
+  org/yaml/snakeyaml/parser/ParserException.java
+  org/yaml/snakeyaml/parser/VersionTagsTuple.java
+  org/yaml/snakeyaml/parser/Production.java
+  org/yaml/snakeyaml/extensions/compactnotation/PackageCompactConstructor.java
+  org/yaml/snakeyaml/extensions/compactnotation/CompactConstructor.java
+  org/yaml/snakeyaml/extensions/compactnotation/CompactData.java
+  org/yaml/snakeyaml/env/EnvScalarConstructor.java
+  org/yaml/snakeyaml/introspector/Property.java
+  org/yaml/snakeyaml/introspector/FieldProperty.java
+  org/yaml/snakeyaml/introspector/BeanAccess.java
+  org/yaml/snakeyaml/introspector/PropertySubstitute.java
+  org/yaml/snakeyaml/introspector/GenericProperty.java
+  org/yaml/snakeyaml/introspector/PropertyUtils.java
+  org/yaml/snakeyaml/introspector/MissingProperty.java
+  org/yaml/snakeyaml/introspector/MethodProperty.java
+  org/yaml/snakeyaml/representer/JsonRepresenter.java
+  org/yaml/snakeyaml/representer/Representer.java
+  org/yaml/snakeyaml/representer/SafeRepresenter.java
+  org/yaml/snakeyaml/representer/Represent.java
+  org/yaml/snakeyaml/representer/BaseRepresenter.java
+  org/yaml/snakeyaml/events/DocumentEndEvent.java
+  org/yaml/snakeyaml/events/MappingEndEvent.java
+  org/yaml/snakeyaml/events/ScalarEvent.java
+  org/yaml/snakeyaml/events/StreamEndEvent.java
+  org/yaml/snakeyaml/events/CollectionStartEvent.java
+  org/yaml/snakeyaml/events/NodeEvent.java
+  org/yaml/snakeyaml/events/StreamStartEvent.java
+  org/yaml/snakeyaml/events/ImplicitTuple.java
+  org/yaml/snakeyaml/events/CommentEvent.java
+  org/yaml/snakeyaml/events/AliasEvent.java
+  org/yaml/snakeyaml/events/DocumentStartEvent.java
+  org/yaml/snakeyaml/events/Event.java
+  org/yaml/snakeyaml/events/SequenceStartEvent.java
+  org/yaml/snakeyaml/events/SequenceEndEvent.java
+  org/yaml/snakeyaml/events/CollectionEndEvent.java
+  org/yaml/snakeyaml/events/MappingStartEvent.java
+  org/yaml/snakeyaml/scanner/Scanner.java
+  org/yaml/snakeyaml/scanner/Constant.java
+  org/yaml/snakeyaml/scanner/ScannerException.java
+  org/yaml/snakeyaml/scanner/SimpleKey.java
+  org/yaml/snakeyaml/scanner/ScannerImpl.java
+  org/yaml/snakeyaml/error/MarkedYAMLException.java
+  org/yaml/snakeyaml/error/Mark.java
+  org/yaml/snakeyaml/error/MissingEnvironmentVariableException.java
+  org/yaml/snakeyaml/error/YAMLException.java
+  org/yaml/snakeyaml/tokens/StreamStartToken.java
+  org/yaml/snakeyaml/tokens/FlowMappingEndToken.java
+  org/yaml/snakeyaml/tokens/ValueToken.java
+  org/yaml/snakeyaml/tokens/BlockEntryToken.java
+  org/yaml/snakeyaml/tokens/CommentToken.java
+  org/yaml/snakeyaml/tokens/AliasToken.java
+  org/yaml/snakeyaml/tokens/DocumentStartToken.java
+  org/yaml/snakeyaml/tokens/DirectiveToken.java
+  org/yaml/snakeyaml/tokens/FlowEntryToken.java
+  org/yaml/snakeyaml/tokens/DocumentEndToken.java
+  org/yaml/snakeyaml/tokens/AnchorToken.java
+  org/yaml/snakeyaml/tokens/FlowSequenceEndToken.java
+  org/yaml/snakeyaml/tokens/TagToken.java
+  org/yaml/snakeyaml/tokens/ScalarToken.java
+  org/yaml/snakeyaml/tokens/BlockMappingStartToken.java
+  org/yaml/snakeyaml/tokens/StreamEndToken.java
+  org/yaml/snakeyaml/tokens/BlockSequenceStartToken.java
+  org/yaml/snakeyaml/tokens/TagTuple.java
+  org/yaml/snakeyaml/tokens/Token.java
+  org/yaml/snakeyaml/tokens/FlowMappingStartToken.java
+  org/yaml/snakeyaml/tokens/FlowSequenceStartToken.java
+  org/yaml/snakeyaml/tokens/BlockEndToken.java
+  org/yaml/snakeyaml/tokens/KeyToken.java
+  org/yaml/snakeyaml/resolver/ResolverTuple.java
+  org/yaml/snakeyaml/resolver/Resolver.java
+  org/yaml/snakeyaml/constructor/DuplicateKeyException.java
+  org/yaml/snakeyaml/constructor/ConstructorException.java
+  org/yaml/snakeyaml/constructor/Constructor.java
+  org/yaml/snakeyaml/constructor/SafeConstructor.java
+  org/yaml/snakeyaml/constructor/BaseConstructor.java
+  org/yaml/snakeyaml/constructor/Construct.java
+  org/yaml/snakeyaml/constructor/CustomClassLoaderConstructor.java
+  org/yaml/snakeyaml/constructor/AbstractConstruct.java
+
+/**
+ * Copyright (c) 2008, SnakeYAML
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
+ */
+
+Source archive: https://repo.maven.apache.org/maven2/org/yaml/snakeyaml/2.5/snakeyaml-2.5-sources.jar
+Members:
+  org/yaml/snakeyaml/external/com/google/gdata/util/common/base/PercentEscaper.java
+  org/yaml/snakeyaml/external/com/google/gdata/util/common/base/Escaper.java
+  org/yaml/snakeyaml/external/com/google/gdata/util/common/base/UnicodeEscaper.java
+
+/*
+ * Copyright (c) 2008 Google Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
+ */
+
+Source archive: https://repo.maven.apache.org/maven2/com/google/errorprone/error_prone_annotations/2.42.0/error_prone_annotations-2.42.0-sources.jar
+Members:
+  com/google/errorprone/annotations/CompatibleWith.java
+  com/google/errorprone/annotations/MustBeClosed.java
+  com/google/errorprone/annotations/DoNotMock.java
+  com/google/errorprone/annotations/RestrictedApi.java
+  com/google/errorprone/annotations/FormatString.java
+  com/google/errorprone/annotations/FormatMethod.java
+
+/*
+ * Copyright 2016 The Error Prone Authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+Source archive: https://repo.maven.apache.org/maven2/com/google/errorprone/error_prone_annotations/2.42.0/error_prone_annotations-2.42.0-sources.jar
+Members:
+  com/google/errorprone/annotations/Keep.java
+  com/google/errorprone/annotations/InlineMe.java
+  com/google/errorprone/annotations/InlineMeValidationDisabled.java
+  com/google/errorprone/annotations/Modifier.java
+
+/*
+ * Copyright 2021 The Error Prone Authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+Source archive: https://repo.maven.apache.org/maven2/com/google/errorprone/error_prone_annotations/2.42.0/error_prone_annotations-2.42.0-sources.jar
+Members:
+  com/google/errorprone/annotations/ForOverride.java
+  com/google/errorprone/annotations/Var.java
+  com/google/errorprone/annotations/CanIgnoreReturnValue.java
+  com/google/errorprone/annotations/CompileTimeConstant.java
+  com/google/errorprone/annotations/concurrent/LazyInit.java
+  com/google/errorprone/annotations/Immutable.java
+  com/google/errorprone/annotations/SuppressPackageLocation.java
+  com/google/errorprone/annotations/RequiredModifiers.java
+  com/google/errorprone/annotations/IncompatibleModifiers.java
+
+/*
+ * Copyright 2015 The Error Prone Authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+Source archive: https://repo.maven.apache.org/maven2/com/google/errorprone/error_prone_annotations/2.42.0/error_prone_annotations-2.42.0-sources.jar
+Members:
+  com/google/errorprone/annotations/ThreadSafe.java
+
+/*
+ * Copyright 2023 The Error Prone Authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+Source archive: https://repo.maven.apache.org/maven2/com/google/errorprone/error_prone_annotations/2.42.0/error_prone_annotations-2.42.0-sources.jar
+Members:
+  com/google/errorprone/annotations/DoNotCall.java
+  com/google/errorprone/annotations/concurrent/GuardedBy.java
+  com/google/errorprone/annotations/CheckReturnValue.java
+  com/google/errorprone/annotations/OverridingMethodsMustInvokeSuper.java
+
+/*
+ * Copyright 2017 The Error Prone Authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+Source archive: https://repo.maven.apache.org/maven2/com/google/errorprone/error_prone_annotations/2.42.0/error_prone_annotations-2.42.0-sources.jar
+Members:
+  com/google/errorprone/annotations/NoAllocation.java
+  com/google/errorprone/annotations/concurrent/UnlockMethod.java
+  com/google/errorprone/annotations/concurrent/LockMethod.java
+
+/*
+ * Copyright 2014 The Error Prone Authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+Source archive: https://repo.maven.apache.org/maven2/com/google/errorprone/error_prone_annotations/2.42.0/error_prone_annotations-2.42.0-sources.jar
+Members:
+  com/google/errorprone/annotations/ImmutableTypeParameter.java
+  com/google/errorprone/annotations/ThreadSafeTypeParameter.java
+
+/*
+ * Copyright 2018 The Error Prone Authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+Source archive: https://repo.maven.apache.org/maven2/org/jspecify/jspecify/1.0.0/jspecify-1.0.0-sources.jar
+Members:
+  org/jspecify/annotations/NonNull.java
+  org/jspecify/annotations/NullUnmarked.java
+
+/*
+ * Copyright 2022 The JSpecify Authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+Source archive: https://repo.maven.apache.org/maven2/org/jspecify/jspecify/1.0.0/jspecify-1.0.0-sources.jar
+Members:
+  org/jspecify/annotations/NullMarked.java
+  org/jspecify/annotations/Nullable.java
+
+/*
+ * Copyright 2018-2020 The JSpecify Authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+Source archive: https://repo.maven.apache.org/maven2/org/jspecify/jspecify/1.0.0/jspecify-1.0.0-sources.jar
+Members:
+  org/jspecify/annotations/package-info.java
+
+/*
+ * Copyright 2022 The JSpecify Authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/**
+ * JSpecify annotations. See <a href="http://jspecify.org">jspecify.org</a> for general information.
+ *
+ * <h2>What's here?</h2>
+ *
+ * This package will contain annotations supporting a variety of static analyses. For now it
+ * supports just nullness analysis.
+ *
+ * <h3 id="nullness">Nullness</h3>
+ *
+ * The primary annotations of interest are {@link NullMarked} and {@link Nullable}. Together they
+ * provide <b>declarative, use-site nullness</b> for Java types. Less frequently, their negations
+ * may be useful: {@link NullUnmarked} and {@link NonNull}, respectively.
+ *
+ * <p>For a comprehensive introduction to JSpecify, please see <a
+ * href="http://jspecify.org">jspecify.org</a>.
+ *
+ * <h2 id="tool-behavior">Note on tool behavior</h2>
+ *
+ * <p>Each of these annotations defines a single meaning shared by all compatible tools (and
+ * libraries). JSpecify documentation aims to provide unambiguous, tool-independent answers for how
+ * to properly annotate your APIs in all circumstances. However, tools are permitted to
+ * <i>respond</i> to the information you provide however they see fit (or not at all). JSpecify
+ * compatibility does not require that any particular finding must or must not be issued to the
+ * user, let alone its message or severity.
+ *
+ * <p>In fact, it's important to remember that declarative annotations are merely <i>one</i> source
+ * of information an analyzer may consult in concluding an expression is safely non-null. Just like
+ * one analyzer might determine that an {@code int} expression can take on only positive values,
+ * another might likewise determine that a declaratively nullable expression can take on only
+ * non-null values. In both cases the declarative knowledge is <i>correct</i>, but the inferred
+ * knowledge is both correct and more specific.
+ *
+ * <p>On the other end, the tools might even enforce <i>nothing at all</i>. In particular, your
+ * annotated code (or other code dependent on its annotated APIs) might be compiled and run without
+ * any appropriate tool even in use. Therefore adopting JSpecify annotations is not a replacement
+ * for <b>explicitly checking arguments</b> at runtime.
+ */
+
+Source archive: https://repo.maven.apache.org/maven2/jakarta/validation/jakarta.validation-api/3.0.2/jakarta.validation-api-3.0.2-sources.jar
+Members:
+  jakarta/validation/BootstrapConfiguration.java
+  jakarta/validation/Configuration.java
+  jakarta/validation/ConstraintTarget.java
+  jakarta/validation/ConstraintValidator.java
+  jakarta/validation/ConstraintValidatorFactory.java
+  jakarta/validation/ConstraintViolation.java
+  jakarta/validation/ConstraintViolationException.java
+  jakarta/validation/ElementKind.java
+  jakarta/validation/GroupDefinitionException.java
+  jakarta/validation/GroupSequence.java
+  jakarta/validation/MessageInterpolator.java
+  jakarta/validation/NoProviderFoundException.java
+  jakarta/validation/OverridesAttribute.java
+  jakarta/validation/Path.java
+  jakarta/validation/TraversableResolver.java
+  jakarta/validation/UnexpectedTypeException.java
+  jakarta/validation/Valid.java
+  jakarta/validation/Validation.java
+  jakarta/validation/constraints/AssertTrue.java
+  jakarta/validation/constraints/DecimalMin.java
+  jakarta/validation/constraints/Email.java
+  jakarta/validation/constraints/Future.java
+  jakarta/validation/constraints/Max.java
+  jakarta/validation/constraints/Negative.java
+  jakarta/validation/constraints/NotBlank.java
+  jakarta/validation/constraints/NotEmpty.java
+  jakarta/validation/constraints/NotNull.java
+  jakarta/validation/constraints/Null.java
+  jakarta/validation/constraints/Past.java
+  jakarta/validation/constraints/PastOrPresent.java
+  jakarta/validation/constraints/Pattern.java
+  jakarta/validation/constraints/Positive.java
+  jakarta/validation/constraints/PositiveOrZero.java
+  jakarta/validation/constraintvalidation/SupportedValidationTarget.java
+  jakarta/validation/executable/ExecutableValidator.java
+  jakarta/validation/groups/Default.java
+  jakarta/validation/metadata/CascadableDescriptor.java
+  jakarta/validation/metadata/ConstraintDescriptor.java
+  jakarta/validation/metadata/GroupConversionDescriptor.java
+  jakarta/validation/metadata/MethodDescriptor.java
+  jakarta/validation/metadata/MethodType.java
+  jakarta/validation/ClockProvider.java
+  jakarta/validation/Constraint.java
+  jakarta/validation/ConstraintDeclarationException.java
+  jakarta/validation/ConstraintDefinitionException.java
+  jakarta/validation/ConstraintValidatorContext.java
+  jakarta/validation/ParameterNameProvider.java
+  jakarta/validation/Payload.java
+  jakarta/validation/ReportAsSingleViolation.java
+  jakarta/validation/ValidationException.java
+  jakarta/validation/ValidationProviderResolver.java
+  jakarta/validation/Validator.java
+  jakarta/validation/ValidatorContext.java
+  jakarta/validation/ValidatorFactory.java
+  jakarta/validation/bootstrap/GenericBootstrap.java
+  jakarta/validation/bootstrap/ProviderSpecificBootstrap.java
+  jakarta/validation/constraints/AssertFalse.java
+  jakarta/validation/constraints/DecimalMax.java
+  jakarta/validation/constraints/Digits.java
+  jakarta/validation/constraints/FutureOrPresent.java
+  jakarta/validation/constraints/Min.java
+  jakarta/validation/constraints/NegativeOrZero.java
+  jakarta/validation/constraints/Size.java
+  jakarta/validation/constraintvalidation/ValidationTarget.java
+  jakarta/validation/executable/ExecutableType.java
+  jakarta/validation/executable/ValidateOnExecution.java
+  jakarta/validation/groups/ConvertGroup.java
+  jakarta/validation/metadata/BeanDescriptor.java
+  jakarta/validation/metadata/ConstructorDescriptor.java
+  jakarta/validation/metadata/ContainerDescriptor.java
+  jakarta/validation/metadata/ContainerElementTypeDescriptor.java
+  jakarta/validation/metadata/CrossParameterDescriptor.java
+  jakarta/validation/metadata/ElementDescriptor.java
+  jakarta/validation/metadata/ExecutableDescriptor.java
+  jakarta/validation/metadata/ParameterDescriptor.java
+  jakarta/validation/metadata/PropertyDescriptor.java
+  jakarta/validation/metadata/ReturnValueDescriptor.java
+  jakarta/validation/metadata/Scope.java
+  jakarta/validation/metadata/ValidateUnwrappedValue.java
+  jakarta/validation/spi/BootstrapState.java
+  jakarta/validation/spi/ConfigurationState.java
+  jakarta/validation/spi/ValidationProvider.java
+  jakarta/validation/valueextraction/ExtractedValue.java
+  jakarta/validation/valueextraction/UnwrapByDefault.java
+  jakarta/validation/valueextraction/Unwrapping.java
+  jakarta/validation/valueextraction/ValueExtractor.java
+  jakarta/validation/valueextraction/ValueExtractorDeclarationException.java
+  jakarta/validation/valueextraction/ValueExtractorDefinitionException.java
+
+/*
+ * Jakarta Bean Validation API
+ *
+ * License: Apache License, Version 2.0
+ * See the license.txt file in the root directory or <http://www.apache.org/licenses/LICENSE-2.0>.
+ */
+
+Source archive: https://repo.maven.apache.org/maven2/jakarta/validation/jakarta.validation-api/3.0.2/jakarta.validation-api-3.0.2-sources.jar
+Members:
+  jakarta/validation/bootstrap/package-info.java
+
+/*
+ * Jakarta Bean Validation API
+ *
+ * License: Apache License, Version 2.0
+ * See the license.txt file in the root directory or <http://www.apache.org/licenses/LICENSE-2.0>.
+ */
+/**
+ * Package containing bootstrap specific objects.
+ * Typical users are not interested in these objects.
+ */
+
+Source archive: https://repo.maven.apache.org/maven2/jakarta/validation/jakarta.validation-api/3.0.2/jakarta.validation-api-3.0.2-sources.jar
+Members:
+  jakarta/validation/constraintvalidation/package-info.java
+
+/*
+ * Jakarta Bean Validation API
+ *
+ * License: Apache License, Version 2.0
+ * See the license.txt file in the root directory or <http://www.apache.org/licenses/LICENSE-2.0>.
+ */
+/**
+ * Package containing constructs specific to constraint validators.
+ * In particular {@link jakarta.validation.constraintvalidation.SupportedValidationTarget}
+ * is used to refine the validation target of a {@link jakarta.validation.ConstraintValidator}.
+ */
+
+Source archive: https://repo.maven.apache.org/maven2/jakarta/validation/jakarta.validation-api/3.0.2/jakarta.validation-api-3.0.2-sources.jar
+Members:
+  jakarta/validation/groups/package-info.java
+
+/*
+ * Jakarta Bean Validation API
+ *
+ * License: Apache License, Version 2.0
+ * See the license.txt file in the root directory or <http://www.apache.org/licenses/LICENSE-2.0>.
+ */
+/**
+ * A group defines a subset of constraints. Instead of
+ * validating all constraints for a given object graph,
+ * only a subset is validated depending on the group targeted.
+ * <p>
+ * Each constraint declaration defines the list of groups it belongs to.
+ * If no group is explicitly declared, a constraint belongs to the
+ * {@link jakarta.validation.groups.Default} group.
+ * <p>
+ * When applying validation, the list of target groups is passed along.
+ * If no group is explicitly passed along, the
+ * {@code jakarta.validation.groups.Default} group is used.
+ * <p>
+ * During cascading, groups can be converted from one to another by
+ * the use of {@link jakarta.validation.groups.ConvertGroup}
+ */
+
+Source archive: https://repo.maven.apache.org/maven2/jakarta/validation/jakarta.validation-api/3.0.2/jakarta.validation-api-3.0.2-sources.jar
+Members:
+  jakarta/validation/constraints/package-info.java
+
+/*
+ * Jakarta Bean Validation API
+ *
+ * License: Apache License, Version 2.0
+ * See the license.txt file in the root directory or <http://www.apache.org/licenses/LICENSE-2.0>.
+ */
+/**
+ * Contains all the Jakarta Bean Validation provided constraints
+ * also called built-in constraints.
+ * <p>
+ * These constraints do not cover all functional use cases but do represent
+ * all the fundamental blocks to express low level constraints on basic JDK
+ * types.
+ */
+
+Source archive: https://repo.maven.apache.org/maven2/jakarta/validation/jakarta.validation-api/3.0.2/jakarta.validation-api-3.0.2-sources.jar
+Members:
+  jakarta/validation/executable/package-info.java
+
+/*
+ * Jakarta Bean Validation API
+ *
+ * License: Apache License, Version 2.0
+ * See the license.txt file in the root directory or <http://www.apache.org/licenses/LICENSE-2.0>.
+ */
+/**
+ * Package related to the control and execution of executable validation.
+ * Use {@link jakarta.validation.executable.ValidateOnExecution} to control whether or
+ * not a (set of) constructors or methods are being validated.
+ */
+
+Source archive: https://repo.maven.apache.org/maven2/jakarta/validation/jakarta.validation-api/3.0.2/jakarta.validation-api-3.0.2-sources.jar
+Members:
+  jakarta/validation/metadata/package-info.java
+
+/*
+ * Jakarta Bean Validation API
+ *
+ * License: Apache License, Version 2.0
+ * See the license.txt file in the root directory or <http://www.apache.org/licenses/LICENSE-2.0>.
+ */
+/**
+ * Package containing all objects specifically used and returned by the
+ * metadata API.
+ */
+
+Source archive: https://repo.maven.apache.org/maven2/jakarta/validation/jakarta.validation-api/3.0.2/jakarta.validation-api-3.0.2-sources.jar
+Members:
+  jakarta/validation/package-info.java
+
+/*
+ * Jakarta Bean Validation API
+ *
+ * License: Apache License, Version 2.0
+ * See the license.txt file in the root directory or <http://www.apache.org/licenses/LICENSE-2.0>.
+ */
+/**
+ * Top level package of the Jakarta Bean Validation API.
+ *
+ * The main runtime artifacts are:
+ * <ul>
+ *     <li>{@link jakarta.validation.Validation}: the entry point to bootstrap Jakarta Bean Validation</li>
+ *     <li>{@link jakarta.validation.ValidatorFactory}: the bootstrapped Jakarta Bean Validation engine</li>
+ *     <li>{@link jakarta.validation.Validator}: contract to validate beans and access the metadata</li>
+ *     <li>{@link jakarta.validation.ConstraintViolation}: constraint violation report</li>
+ * </ul>
+ *
+ * The main constraint definition artifacts are:
+ * <ul>
+ *     <li>{@link jakarta.validation.Constraint}: annotation marking an annotation as being a constraint</li>
+ *     <li>{@link jakarta.validation.ConstraintValidator}: interface implemented by the piece of code validating
+ *     a given constraint</li>
+ *     <li>{@link jakarta.validation.ReportAsSingleViolation}: marks a composed constraint as returning a single
+ *     constraint violation report</li>
+ * </ul>
+ *
+ * The main constraint declaration artifacts are:
+ * <ul>
+ *     <li>{@link jakarta.validation.Valid}: annotation marking an association as cascaded during validation</li>
+ *     <li>{@link jakarta.validation.GroupSequence}: defines a sequence of groups that should be validated sequentially</li>
+ * </ul>
+ */
+
+Source archive: https://repo.maven.apache.org/maven2/jakarta/validation/jakarta.validation-api/3.0.2/jakarta.validation-api-3.0.2-sources.jar
+Members:
+  jakarta/validation/spi/package-info.java
+
+/*
+ * Jakarta Bean Validation API
+ *
+ * License: Apache License, Version 2.0
+ * See the license.txt file in the root directory or <http://www.apache.org/licenses/LICENSE-2.0>.
+ */
+/**
+ * Package containing objects specific to the interaction between the
+ * Jakarta Bean Validation bootstrapping process and Jakarta Bean Validation providers.
+ */
+
+Source archive: https://repo.maven.apache.org/maven2/jakarta/validation/jakarta.validation-api/3.0.2/jakarta.validation-api-3.0.2-sources.jar
+Members:
+  jakarta/validation/valueextraction/package-info.java
+
+/*
+ * Jakarta Bean Validation API
+ *
+ * License: Apache License, Version 2.0
+ * See the license.txt file in the root directory or <http://www.apache.org/licenses/LICENSE-2.0>.
+ */
+/**
+ * Package containing objects dedicated to extract values to validate from containers.
+ */
+
+Source archive: https://repo.maven.apache.org/maven2/org/jboss/logging/jboss-logging/3.6.3.Final/jboss-logging-3.6.3.Final-sources.jar
+Members:
+  org/jboss/logging/AbstractLoggerProvider.java
+  org/jboss/logging/AbstractMdcLoggerProvider.java
+  org/jboss/logging/BasicLogger.java
+  org/jboss/logging/DelegatingBasicLogger.java
+  org/jboss/logging/JBossLogManagerLogger.java
+  org/jboss/logging/JBossLogManagerProvider.java
+  org/jboss/logging/JBossLogRecord.java
+  org/jboss/logging/JDKLevel.java
+  org/jboss/logging/JDKLogger.java
+  org/jboss/logging/JDKLoggerProvider.java
+  org/jboss/logging/Log4j2Logger.java
+  org/jboss/logging/Log4j2LoggerProvider.java
+  org/jboss/logging/Log4jLogger.java
+  org/jboss/logging/Log4jLoggerProvider.java
+  org/jboss/logging/Logger.java
+  org/jboss/logging/LoggerProvider.java
+  org/jboss/logging/LoggerProviders.java
+  org/jboss/logging/LoggingLocale.java
+  org/jboss/logging/MDC.java
+  org/jboss/logging/Messages.java
+  org/jboss/logging/NDC.java
+  org/jboss/logging/ParameterConverter.java
+  org/jboss/logging/SecurityActions.java
+  org/jboss/logging/SerializedLogger.java
+  org/jboss/logging/Slf4jLocationAwareLogger.java
+  org/jboss/logging/Slf4jLogger.java
+  org/jboss/logging/Slf4jLoggerProvider.java
+
+/*
+ * JBoss, Home of Professional Open Source.
+ *
+ * Copyright 2023 Red Hat, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+Source archive: https://repo.maven.apache.org/maven2/com/google/code/gson/gson/2.8.9/gson-2.8.9-sources.jar
+Members:
+  com/google/gson/JsonArray.java
+  com/google/gson/JsonElement.java
+  com/google/gson/JsonDeserializer.java
+  com/google/gson/reflect/TypeToken.java
+  com/google/gson/internal/ObjectConstructor.java
+  com/google/gson/internal/Excluder.java
+  com/google/gson/internal/bind/DefaultDateTypeAdapter.java
+  com/google/gson/internal/Primitives.java
+  com/google/gson/JsonDeserializationContext.java
+  com/google/gson/GsonBuilder.java
+  com/google/gson/FieldNamingPolicy.java
+  com/google/gson/JsonObject.java
+  com/google/gson/annotations/Until.java
+  com/google/gson/annotations/Expose.java
+  com/google/gson/annotations/SerializedName.java
+  com/google/gson/annotations/Since.java
+  com/google/gson/JsonIOException.java
+  com/google/gson/JsonSerializer.java
+  com/google/gson/Gson.java
+  com/google/gson/JsonPrimitive.java
+  com/google/gson/JsonSerializationContext.java
+  com/google/gson/JsonParseException.java
+  com/google/gson/InstanceCreator.java
+  com/google/gson/FieldNamingStrategy.java
+  com/google/gson/ExclusionStrategy.java
+
+/*
+ * Copyright (C) 2008 Google Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+Source archive: https://repo.maven.apache.org/maven2/com/google/code/gson/gson/2.8.9/gson-2.8.9-sources.jar
+Members:
+  com/google/gson/ToNumberStrategy.java
+  com/google/gson/ToNumberPolicy.java
+
+/*
+ * Copyright (C) 2021 Google Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+Source archive: https://repo.maven.apache.org/maven2/com/google/code/gson/gson/2.8.9/gson-2.8.9-sources.jar
+Members:
+  com/google/gson/LongSerializationPolicy.java
+  com/google/gson/FieldAttributes.java
+  com/google/gson/JsonStreamParser.java
+
+/*
+ * Copyright (C) 2009 Google Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+Source archive: https://repo.maven.apache.org/maven2/com/google/code/gson/gson/2.8.9/gson-2.8.9-sources.jar
+Members:
+  com/google/gson/stream/JsonScope.java
+  com/google/gson/stream/JsonToken.java
+  com/google/gson/stream/JsonReader.java
+  com/google/gson/stream/JsonWriter.java
+  com/google/gson/stream/MalformedJsonException.java
+
+/*
+ * Copyright (C) 2010 Google Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+Source archive: https://repo.maven.apache.org/maven2/com/google/code/gson/gson/2.8.9/gson-2.8.9-sources.jar
+Members:
+  com/google/gson/internal/LinkedTreeMap.java
+  com/google/gson/internal/LinkedHashTreeMap.java
+
+/*
+ * Copyright (C) 2010 The Android Open Source Project
+ * Copyright (C) 2012 Google Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+Source archive: https://repo.maven.apache.org/maven2/com/google/code/gson/gson/2.8.9/gson-2.8.9-sources.jar
+Members:
+  com/google/gson/internal/PreJava9DateFormatProvider.java
+  com/google/gson/internal/reflect/UnsafeReflectionAccessor.java
+  com/google/gson/internal/reflect/PreJava9ReflectionAccessor.java
+  com/google/gson/internal/reflect/ReflectionAccessor.java
+  com/google/gson/internal/JavaVersion.java
+
+/*
+ * Copyright (C) 2017 The Gson authors
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+Source archive: https://repo.maven.apache.org/maven2/com/google/code/gson/gson/2.8.9/gson-2.8.9-sources.jar
+Members:
+  com/google/gson/internal/LazilyParsedNumber.java
+  com/google/gson/internal/UnsafeAllocator.java
+  com/google/gson/internal/ConstructorConstructor.java
+  com/google/gson/internal/bind/DateTypeAdapter.java
+  com/google/gson/internal/bind/TreeTypeAdapter.java
+  com/google/gson/internal/sql/SqlTimeTypeAdapter.java
+  com/google/gson/internal/sql/SqlDateTypeAdapter.java
+
+/*
+ * Copyright (C) 2011 Google Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+Source archive: https://repo.maven.apache.org/maven2/com/google/code/gson/gson/2.8.9/gson-2.8.9-sources.jar
+Members:
+  com/google/gson/internal/JsonReaderInternalAccess.java
+  com/google/gson/internal/bind/MapTypeAdapterFactory.java
+  com/google/gson/internal/bind/ReflectiveTypeAdapterFactory.java
+  com/google/gson/internal/bind/CollectionTypeAdapterFactory.java
+  com/google/gson/internal/bind/TypeAdapters.java
+  com/google/gson/internal/bind/ArrayTypeAdapter.java
+  com/google/gson/internal/bind/ObjectTypeAdapter.java
+  com/google/gson/internal/bind/JsonTreeReader.java
+  com/google/gson/internal/bind/JsonTreeWriter.java
+  com/google/gson/TypeAdapter.java
+  com/google/gson/TypeAdapterFactory.java
+
+/*
+ * Copyright (C) 2011 Google Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+Source archive: https://repo.maven.apache.org/maven2/com/google/code/gson/gson/2.8.9/gson-2.8.9-sources.jar
+Members:
+  com/google/gson/internal/$Gson$Preconditions.java
+  com/google/gson/JsonNull.java
+
+/*
+ * Copyright (C) 2008 Google Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+Source archive: https://repo.maven.apache.org/maven2/com/google/code/gson/gson/2.8.9/gson-2.8.9-sources.jar
+Members:
+  com/google/gson/internal/$Gson$Types.java
+
+/**
+ * Copyright (C) 2008 Google Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+Source archive: https://repo.maven.apache.org/maven2/com/google/code/gson/gson/2.8.9/gson-2.8.9-sources.jar
+Members:
+  com/google/gson/internal/Streams.java
+  com/google/gson/JsonSyntaxException.java
+
+/*
+ * Copyright (C) 2010 Google Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+Source archive: https://repo.maven.apache.org/maven2/com/google/code/gson/gson/2.8.9/gson-2.8.9-sources.jar
+Members:
+  com/google/gson/internal/bind/TypeAdapterRuntimeTypeWrapper.java
+
+/*
+ * Copyright (C) 2011 Google Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+Source archive: https://repo.maven.apache.org/maven2/com/google/code/gson/gson/2.8.9/gson-2.8.9-sources.jar
+Members:
+  com/google/gson/internal/bind/NumberTypeAdapter.java
+
+/*
+ * Copyright (C) 2020 Google Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+Source archive: https://repo.maven.apache.org/maven2/com/google/code/gson/gson/2.8.9/gson-2.8.9-sources.jar
+Members:
+  com/google/gson/internal/bind/JsonAdapterAnnotationTypeAdapterFactory.java
+  com/google/gson/annotations/JsonAdapter.java
+
+/*
+ * Copyright (C) 2014 Google Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+Source archive: https://repo.maven.apache.org/maven2/com/google/code/gson/gson/2.8.9/gson-2.8.9-sources.jar
+Members:
+  com/google/gson/JsonParser.java
+
+/*
+ * Copyright (C) 2009 Google Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+Source archive: https://repo.maven.apache.org/maven2/com/google/code/gson/gson/2.8.9/gson-2.8.9-sources.jar
+Members:
+  com/google/gson/internal/GsonBuildConfig.java
+
+/*
+ * Copyright (C) 2018 The Gson authors
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+Source archive: https://repo.maven.apache.org/maven2/com/google/j2objc/j2objc-annotations/2.8/j2objc-annotations-2.8-sources.jar
+Members:
+  com/google/j2objc/annotations/Weak.java
+  com/google/j2objc/annotations/AutoreleasePool.java
+
+/*
+ * Copyright 2012 Google Inc. All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+Source archive: https://repo.maven.apache.org/maven2/com/google/j2objc/j2objc-annotations/2.8/j2objc-annotations-2.8-sources.jar
+Members:
+  com/google/j2objc/annotations/LoopTranslation.java
+  com/google/j2objc/annotations/Property.java
+  com/google/j2objc/annotations/RetainedWith.java
+  com/google/j2objc/annotations/RetainedLocalRef.java
+  com/google/j2objc/annotations/J2ObjCIncompatible.java
+  com/google/j2objc/annotations/ObjectiveCName.java
+  com/google/j2objc/annotations/WeakOuter.java
+  com/google/j2objc/annotations/ReflectionSupport.java
+  com/google/j2objc/annotations/OnDealloc.java
+
+/*
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+Source archive: https://repo.maven.apache.org/maven2/org/javassist/javassist/3.31.0-GA/javassist-3.31.0-GA-sources.jar
+Members:
+  javassist/ClassPath.java
+  javassist/CtMethod.java
+  javassist/CtField.java
+  javassist/tools/web/BadHttpRequest.java
+  javassist/tools/web/Viewer.java
+  javassist/tools/web/Webserver.java
+  javassist/tools/reflect/CannotInvokeException.java
+  javassist/tools/reflect/Reflection.java
+  javassist/tools/reflect/Loader.java
+  javassist/tools/reflect/Sample.java
+  javassist/tools/reflect/Compiler.java
+  javassist/tools/reflect/ClassMetaobject.java
+  javassist/tools/reflect/CannotReflectException.java
+  javassist/tools/reflect/Metaobject.java
+  javassist/tools/reflect/Metalevel.java
+  javassist/tools/reflect/CannotCreateException.java
+  javassist/tools/Callback.java
+  javassist/tools/rmi/RemoteRef.java
+  javassist/tools/rmi/StubGenerator.java
+  javassist/tools/rmi/ObjectNotFoundException.java
+  javassist/tools/rmi/Sample.java
+  javassist/tools/rmi/AppletServer.java
+  javassist/tools/rmi/ObjectImporter.java
+  javassist/tools/rmi/Proxy.java
+  javassist/tools/rmi/RemoteException.java
+  javassist/tools/framedump.java
+  javassist/tools/Dump.java
+  javassist/ClassPoolTail.java
+  javassist/ByteArrayClassPath.java
+  javassist/Modifier.java
+  javassist/util/HotSwapper.java
+  javassist/util/HotSwapAgent.java
+  javassist/util/proxy/ProxyFactory.java
+  javassist/util/proxy/SerializedProxy.java
+  javassist/util/proxy/MethodHandler.java
+  javassist/util/proxy/FactoryHelper.java
+  javassist/util/proxy/ProxyObjectOutputStream.java
+  javassist/util/proxy/DefinePackageHelper.java
+  javassist/util/proxy/ProxyObjectInputStream.java
+  javassist/util/proxy/MethodFilter.java
+  javassist/util/proxy/Proxy.java
+  javassist/util/proxy/DefineClassHelper.java
+  javassist/util/proxy/RuntimeSupport.java
+  javassist/util/proxy/SecurityActions.java
+  javassist/util/proxy/ProxyObject.java
+  javassist/CtNewConstructor.java
+  javassist/ClassClassPath.java
+  javassist/Loader.java
+  javassist/CtNewWrappedMethod.java
+  javassist/runtime/Inner.java
+  javassist/runtime/Cflow.java
+  javassist/runtime/DotClass.java
+  javassist/runtime/Desc.java
+  javassist/expr/ExprEditor.java
+  javassist/expr/Handler.java
+  javassist/expr/FieldAccess.java
+  javassist/expr/NewArray.java
+  javassist/expr/Instanceof.java
+  javassist/expr/Cast.java
+  javassist/expr/ConstructorCall.java
+  javassist/expr/Expr.java
+  javassist/expr/NewExpr.java
+  javassist/expr/MethodCall.java
+  javassist/CtArray.java
+  javassist/CtConstructor.java
+  javassist/CtNewClass.java
+  javassist/Translator.java
+  javassist/CtMember.java
+  javassist/CtNewMethod.java
+  javassist/ClassPool.java
+  javassist/CtClass.java
+  javassist/ClassMap.java
+  javassist/CtClassType.java
+  javassist/bytecode/LocalVariableAttribute.java
+  javassist/bytecode/StackMap.java
+  javassist/bytecode/MethodInfo.java
+  javassist/bytecode/AttributeInfo.java
+  javassist/bytecode/FieldInfo.java
+  javassist/bytecode/analysis/Analyzer.java
+  javassist/bytecode/analysis/SubroutineScanner.java
+  javassist/bytecode/analysis/Subroutine.java
+  javassist/bytecode/analysis/Util.java
+  javassist/bytecode/analysis/Type.java
+  javassist/bytecode/analysis/Frame.java
+  javassist/bytecode/analysis/IntQueue.java
+  javassist/bytecode/analysis/FramePrinter.java
+  javassist/bytecode/analysis/ControlFlow.java
+  javassist/bytecode/analysis/MultiType.java
+  javassist/bytecode/analysis/Executor.java
+  javassist/bytecode/analysis/MultiArrayType.java
+  javassist/bytecode/CodeAnalyzer.java
+  javassist/bytecode/EnclosingMethodAttribute.java
+  javassist/bytecode/Descriptor.java
+  javassist/bytecode/NestMembersAttribute.java
+  javassist/bytecode/SyntheticAttribute.java
+  javassist/bytecode/InstructionPrinter.java
+  javassist/bytecode/ClassFilePrinter.java
+  javassist/bytecode/ClassFile.java
+  javassist/bytecode/StackMapTable.java
+  javassist/bytecode/stackmap/Tracer.java
+  javassist/bytecode/stackmap/TypedBlock.java
+  javassist/bytecode/stackmap/TypeTag.java
+  javassist/bytecode/stackmap/BasicBlock.java
+  javassist/bytecode/stackmap/TypeData.java
+  javassist/bytecode/stackmap/MapMaker.java
+  javassist/bytecode/DeprecatedAttribute.java
+  javassist/bytecode/AccessFlag.java
+  javassist/bytecode/annotation/AnnotationImpl.java
+  javassist/bytecode/annotation/AnnotationsWriter.java
+  javassist/bytecode/annotation/NoSuchClassError.java
+  javassist/bytecode/DuplicateMemberException.java
+  javassist/bytecode/AnnotationDefaultAttribute.java
+  javassist/bytecode/Opcode.java
+  javassist/bytecode/InnerClassesAttribute.java
+  javassist/bytecode/AnnotationsAttribute.java
+  javassist/bytecode/ConstantAttribute.java
+  javassist/bytecode/ExceptionTable.java
+  javassist/bytecode/CodeIterator.java
+  javassist/bytecode/LineNumberAttribute.java
+  javassist/bytecode/Mnemonic.java
+  javassist/bytecode/BadBytecode.java
+  javassist/bytecode/SignatureAttribute.java
+  javassist/bytecode/SourceFileAttribute.java
+  javassist/bytecode/LongVector.java
+  javassist/bytecode/ByteArray.java
+  javassist/bytecode/NestHostAttribute.java
+  javassist/bytecode/ConstPool.java
+  javassist/bytecode/CodeAttribute.java
+  javassist/bytecode/Bytecode.java
+  javassist/bytecode/ClassFileWriter.java
+  javassist/bytecode/ByteStream.java
+  javassist/bytecode/ParameterAnnotationsAttribute.java
+  javassist/bytecode/ExceptionsAttribute.java
+  javassist/bytecode/LocalVariableTypeAttribute.java
+  javassist/CodeConverter.java
+  javassist/SerialVersionUID.java
+  javassist/URLClassPath.java
+  javassist/CtPrimitiveType.java
+  javassist/CannotCompileException.java
+  javassist/NotFoundException.java
+  javassist/CtNewWrappedConstructor.java
+  javassist/scopedpool/ScopedClassPoolRepositoryImpl.java
+  javassist/scopedpool/ScopedClassPoolRepository.java
+  javassist/scopedpool/SoftValueHashMap.java
+  javassist/scopedpool/ScopedClassPoolFactoryImpl.java
+  javassist/scopedpool/ScopedClassPoolFactory.java
+  javassist/scopedpool/ScopedClassPool.java
+  javassist/compiler/TypeChecker.java
+  javassist/compiler/JvstTypeChecker.java
+  javassist/compiler/Parser.java
+  javassist/compiler/KeywordTable.java
+  javassist/compiler/CompileError.java
+  javassist/compiler/SymbolTable.java
+  javassist/compiler/Lex.java
+  javassist/compiler/NoFieldException.java
+  javassist/compiler/JvstCodeGen.java
+  javassist/compiler/ProceedHandler.java
+  javassist/compiler/TokenId.java
+  javassist/compiler/CodeGen.java
+  javassist/compiler/MemberCodeGen.java
+  javassist/compiler/Javac.java
+  javassist/compiler/ast/StringL.java
+  javassist/compiler/ast/Stmnt.java
+  javassist/compiler/ast/ASTList.java
+  javassist/compiler/ast/InstanceOfExpr.java
+  javassist/compiler/ast/ASTree.java
+  javassist/compiler/ast/Pair.java
+  javassist/compiler/ast/Declarator.java
+  javassist/compiler/ast/Visitor.java
+  javassist/compiler/ast/CallExpr.java
+  javassist/compiler/ast/AssignExpr.java
+  javassist/compiler/ast/DoubleConst.java
+  javassist/compiler/ast/CastExpr.java
+  javassist/compiler/ast/BinExpr.java
+  javassist/compiler/ast/Variable.java
+  javassist/compiler/ast/MethodDecl.java
+  javassist/compiler/ast/CondExpr.java
+  javassist/compiler/ast/FieldDecl.java
+  javassist/compiler/ast/Symbol.java
+  javassist/compiler/ast/Member.java
+  javassist/compiler/ast/Expr.java
+  javassist/compiler/ast/NewExpr.java
+  javassist/compiler/ast/IntConst.java
+  javassist/compiler/ast/ArrayInit.java
+  javassist/compiler/ast/Keyword.java
+  javassist/compiler/AccessorMaker.java
+  javassist/compiler/MemberResolver.java
+  javassist/compiler/SyntaxError.java
+  javassist/LoaderClassPath.java
+  javassist/convert/TransformFieldAccess.java
+  javassist/convert/TransformAfter.java
+  javassist/convert/TransformCall.java
+  javassist/convert/TransformAccessArrayField.java
+  javassist/convert/Transformer.java
+  javassist/convert/TransformNew.java
+  javassist/convert/TransformNewClass.java
+  javassist/convert/TransformWriteField.java
+  javassist/convert/TransformBefore.java
+  javassist/convert/TransformReadField.java
+  javassist/CtBehavior.java
+
+/*
+ * Javassist, a Java-bytecode translator toolkit.
+ * Copyright (C) 1999- Shigeru Chiba. All Rights Reserved.
+ *
+ * The contents of this file are subject to the Mozilla Public License Version
+ * 1.1 (the "License"); you may not use this file except in compliance with
+ * the License.  Alternatively, the contents of this file may be used under
+ * the terms of the GNU Lesser General Public License Version 2.1 or later,
+ * or the Apache License Version 2.0.
+ *
+ * Software distributed under the License is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+ * for the specific language governing rights and limitations under the
+ * License.
+ */
+
+Source archive: https://repo.maven.apache.org/maven2/org/javassist/javassist/3.31.0-GA/javassist-3.31.0-GA-sources.jar
+Members:
+  javassist/bytecode/annotation/ShortMemberValue.java
+  javassist/bytecode/annotation/MemberValueVisitor.java
+  javassist/bytecode/annotation/AnnotationMemberValue.java
+  javassist/bytecode/annotation/MemberValue.java
+  javassist/bytecode/annotation/StringMemberValue.java
+  javassist/bytecode/annotation/ArrayMemberValue.java
+  javassist/bytecode/annotation/FloatMemberValue.java
+  javassist/bytecode/annotation/ClassMemberValue.java
+  javassist/bytecode/annotation/CharMemberValue.java
+  javassist/bytecode/annotation/ByteMemberValue.java
+  javassist/bytecode/annotation/IntegerMemberValue.java
+  javassist/bytecode/annotation/EnumMemberValue.java
+  javassist/bytecode/annotation/BooleanMemberValue.java
+  javassist/bytecode/annotation/DoubleMemberValue.java
+  javassist/bytecode/annotation/LongMemberValue.java
+  javassist/bytecode/annotation/Annotation.java
+
+/*
+ * Javassist, a Java-bytecode translator toolkit.
+ * Copyright (C) 2004 Bill Burke. All Rights Reserved.
+ *
+ * The contents of this file are subject to the Mozilla Public License Version
+ * 1.1 (the "License"); you may not use this file except in compliance with
+ * the License.  Alternatively, the contents of this file may be used under
+ * the terms of the GNU Lesser General Public License Version 2.1 or later,
+ * or the Apache License Version 2.0.
+ *
+ * Software distributed under the License is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+ * for the specific language governing rights and limitations under the
+ * License.
+ */
+
+Source archive: https://repo.maven.apache.org/maven2/jakarta/servlet/jakarta.servlet-api/6.0.0/jakarta.servlet-api-6.0.0-sources.jar
+Members:
+  jakarta/servlet/Filter.java
+  jakarta/servlet/FilterChain.java
+  jakarta/servlet/FilterConfig.java
+  jakarta/servlet/Servlet.java
+  jakarta/servlet/ServletConfig.java
+  jakarta/servlet/ServletContextAttributeEvent.java
+  jakarta/servlet/ServletContextAttributeListener.java
+  jakarta/servlet/ServletContextEvent.java
+  jakarta/servlet/ServletContextListener.java
+  jakarta/servlet/ServletException.java
+  jakarta/servlet/ServletRequestAttributeEvent.java
+  jakarta/servlet/ServletRequestAttributeListener.java
+  jakarta/servlet/ServletRequestEvent.java
+  jakarta/servlet/ServletRequestListener.java
+  jakarta/servlet/http/HttpSessionListener.java
+  jakarta/servlet/http/HttpSessionActivationListener.java
+  jakarta/servlet/http/HttpSessionAttributeListener.java
+  jakarta/servlet/http/HttpSessionBindingListener.java
+  jakarta/servlet/http/HttpSessionEvent.java
+
+/*
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates and others.
+ * All rights reserved.
+ * Copyright 2004 The Apache Software Foundation
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+Source archive: https://repo.maven.apache.org/maven2/jakarta/servlet/jakarta.servlet-api/6.0.0/jakarta.servlet-api-6.0.0-sources.jar
+Members:
+  jakarta/servlet/GenericServlet.java
+
+/*
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates and others.
+ * All rights reserved.
+ * Copyright 2004 The Apache Software Foundation  
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+Source archive: https://repo.maven.apache.org/maven2/jakarta/servlet/jakarta.servlet-api/6.0.0/jakarta.servlet-api-6.0.0-sources.jar
+Members:
+  jakarta/servlet/RequestDispatcher.java
+  jakarta/servlet/ServletContext.java
+  jakarta/servlet/ServletRequest.java
+  jakarta/servlet/ServletResponse.java
+  jakarta/servlet/UnavailableException.java
+  jakarta/servlet/http/Cookie.java
+  jakarta/servlet/http/HttpServletRequest.java
+  jakarta/servlet/http/HttpSessionBindingEvent.java
+  jakarta/servlet/ServletRequestWrapper.java
+  jakarta/servlet/ServletResponseWrapper.java
+  jakarta/servlet/http/HttpServlet.java
+  jakarta/servlet/http/HttpServletRequestWrapper.java
+  jakarta/servlet/http/HttpServletResponse.java
+  jakarta/servlet/http/HttpServletResponseWrapper.java
+  jakarta/servlet/http/HttpSession.java
+
+/*
+ * Copyright (c) 1997, 2021 Oracle and/or its affiliates and others.
+ * All rights reserved.
+ * Copyright 2004 The Apache Software Foundation
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+Source archive: https://repo.maven.apache.org/maven2/jakarta/servlet/jakarta.servlet-api/6.0.0/jakarta.servlet-api-6.0.0-sources.jar
+Members:
+  jakarta/servlet/ServletInputStream.java
+  jakarta/servlet/ServletOutputStream.java
+
+/*
+ * Copyright (c) 1997, 2022 Oracle and/or its affiliates and others.
+ * All rights reserved.
+ * Copyright 2004 The Apache Software Foundation
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+Source archive: https://repo.maven.apache.org/maven2/org/glassfish/jersey/core/jersey-common/3.1.11/jersey-common-3.1.11-sources.jar
+Members:
+  org/glassfish/jersey/internal/guava/AbstractFuture.java
+  org/glassfish/jersey/internal/guava/AbstractIterator.java
+  org/glassfish/jersey/internal/guava/AbstractListMultimap.java
+  org/glassfish/jersey/internal/guava/AbstractMapBasedMultimap.java
+  org/glassfish/jersey/internal/guava/AbstractMapEntry.java
+  org/glassfish/jersey/internal/guava/AbstractSetMultimap.java
+  org/glassfish/jersey/internal/guava/AbstractSortedSetMultimap.java
+  org/glassfish/jersey/internal/guava/ComparatorOrdering.java
+  org/glassfish/jersey/internal/guava/ExecutionList.java
+  org/glassfish/jersey/internal/guava/ForwardingCollection.java
+  org/glassfish/jersey/internal/guava/ForwardingMapEntry.java
+  org/glassfish/jersey/internal/guava/ForwardingObject.java
+  org/glassfish/jersey/internal/guava/ForwardingSet.java
+  org/glassfish/jersey/internal/guava/ForwardingSortedSet.java
+  org/glassfish/jersey/internal/guava/HashMultimap.java
+  org/glassfish/jersey/internal/guava/Iterables.java
+  org/glassfish/jersey/internal/guava/Iterators.java
+  org/glassfish/jersey/internal/guava/ListMultimap.java
+  org/glassfish/jersey/internal/guava/ListenableFuture.java
+  org/glassfish/jersey/internal/guava/Lists.java
+  org/glassfish/jersey/internal/guava/Maps.java
+  org/glassfish/jersey/internal/guava/MoreExecutors.java
+  org/glassfish/jersey/internal/guava/Multimap.java
+  org/glassfish/jersey/internal/guava/Multimaps.java
+  org/glassfish/jersey/internal/guava/NaturalOrdering.java
+  org/glassfish/jersey/internal/guava/NullsFirstOrdering.java
+  org/glassfish/jersey/internal/guava/NullsLastOrdering.java
+  org/glassfish/jersey/internal/guava/ObjectArrays.java
+  org/glassfish/jersey/internal/guava/Ordering.java
+  org/glassfish/jersey/internal/guava/Predicates.java
+  org/glassfish/jersey/internal/guava/Primitives.java
+  org/glassfish/jersey/internal/guava/ReverseNaturalOrdering.java
+  org/glassfish/jersey/internal/guava/ReverseOrdering.java
+  org/glassfish/jersey/internal/guava/SetMultimap.java
+  org/glassfish/jersey/internal/guava/Sets.java
+  org/glassfish/jersey/internal/guava/SortedSetMultimap.java
+  org/glassfish/jersey/internal/guava/TreeMultimap.java
+
+/*
+ * Copyright (C) 2007 The Guava Authors
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+Source archive: https://repo.maven.apache.org/maven2/org/glassfish/jersey/core/jersey-common/3.1.11/jersey-common-3.1.11-sources.jar
+Members:
+  org/glassfish/jersey/internal/guava/AbstractIndexedListIterator.java
+  org/glassfish/jersey/internal/guava/CacheBuilder.java
+  org/glassfish/jersey/internal/guava/LocalCache.java
+  org/glassfish/jersey/internal/guava/Platform.java
+  org/glassfish/jersey/internal/guava/SettableFuture.java
+
+/*
+ * Copyright (C) 2009 The Guava Authors
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+Source archive: https://repo.maven.apache.org/maven2/org/glassfish/jersey/core/jersey-common/3.1.11/jersey-common-3.1.11-sources.jar
+Members:
+  org/glassfish/jersey/internal/guava/AbstractMultimap.java
+  org/glassfish/jersey/internal/guava/AbstractSortedKeySortedSetMultimap.java
+  org/glassfish/jersey/internal/guava/TransformedIterator.java
+
+/*
+ * Copyright (C) 2012 The Guava Authors
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+Source archive: https://repo.maven.apache.org/maven2/org/glassfish/jersey/core/jersey-common/3.1.11/jersey-common-3.1.11-sources.jar
+Members:
+  org/glassfish/jersey/internal/guava/AbstractSequentialIterator.java
+  org/glassfish/jersey/internal/guava/Equivalence.java
+  org/glassfish/jersey/internal/guava/ThreadFactoryBuilder.java
+  org/glassfish/jersey/internal/guava/UnmodifiableListIterator.java
+
+/*
+ * Copyright (C) 2010 The Guava Authors
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+Source archive: https://repo.maven.apache.org/maven2/org/glassfish/jersey/core/jersey-common/3.1.11/jersey-common-3.1.11-sources.jar
+Members:
+  org/glassfish/jersey/internal/guava/AbstractTable.java
+
+/*
+ * Copyright (C) 2013 The Guava Authors
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
+ */
+
+Source archive: https://repo.maven.apache.org/maven2/org/glassfish/jersey/core/jersey-common/3.1.11/jersey-common-3.1.11-sources.jar
+Members:
+  org/glassfish/jersey/internal/guava/AsyncFunction.java
+  org/glassfish/jersey/internal/guava/Cache.java
+  org/glassfish/jersey/internal/guava/CacheLoader.java
+  org/glassfish/jersey/internal/guava/ExecutionError.java
+  org/glassfish/jersey/internal/guava/LoadingCache.java
+  org/glassfish/jersey/internal/guava/RemovalCause.java
+  org/glassfish/jersey/internal/guava/RemovalNotification.java
+  org/glassfish/jersey/internal/guava/Ticker.java
+  org/glassfish/jersey/internal/guava/UncheckedExecutionException.java
+  org/glassfish/jersey/internal/guava/Uninterruptibles.java
+
+/*
+ * Copyright (C) 2011 The Guava Authors
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+Source archive: https://repo.maven.apache.org/maven2/org/glassfish/jersey/core/jersey-common/3.1.11/jersey-common-3.1.11-sources.jar
+Members:
+  org/glassfish/jersey/internal/guava/CollectPreconditions.java
+  org/glassfish/jersey/internal/guava/Collections2.java
+  org/glassfish/jersey/internal/guava/HashBasedTable.java
+  org/glassfish/jersey/internal/guava/Hashing.java
+  org/glassfish/jersey/internal/guava/ImmutableEntry.java
+  org/glassfish/jersey/internal/guava/InetAddresses.java
+  org/glassfish/jersey/internal/guava/Ints.java
+  org/glassfish/jersey/internal/guava/Joiner.java
+  org/glassfish/jersey/internal/guava/PeekingIterator.java
+  org/glassfish/jersey/internal/guava/Serialization.java
+  org/glassfish/jersey/internal/guava/StandardTable.java
+  org/glassfish/jersey/internal/guava/Stopwatch.java
+  org/glassfish/jersey/internal/guava/Table.java
+  org/glassfish/jersey/internal/guava/Tables.java
+  org/glassfish/jersey/internal/guava/UnmodifiableIterator.java
+
+/*
+ * Copyright (C) 2008 The Guava Authors
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+Source archive: https://repo.maven.apache.org/maven2/org/glassfish/jersey/core/jersey-common/3.1.11/jersey-common-3.1.11-sources.jar
+Members:
+  org/glassfish/jersey/internal/guava/Futures.java
+
+/*
+ * Copyright (C) 2006 The Guava Authors
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+Source archive: https://repo.maven.apache.org/maven2/org/glassfish/jersey/core/jersey-common/3.1.11/jersey-common-3.1.11-sources.jar
+Members:
+  org/glassfish/jersey/internal/guava/GenericMapMaker.java
+
+/*
+ * Copyright (C) 2010 The Guava Authors
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS-IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+Source archive: https://repo.maven.apache.org/maven2/org/glassfish/jersey/core/jersey-common/3.1.11/jersey-common-3.1.11-sources.jar
+Members:
+  org/glassfish/jersey/internal/guava/MapMaker.java
+  org/glassfish/jersey/internal/guava/MapMakerInternalMap.java
+
+/*
+ * Copyright (C) 2009 The Guava Authors
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
+ */
+
+Source archive: https://repo.maven.apache.org/maven2/org/glassfish/jersey/core/jersey-common/3.1.11/jersey-common-3.1.11-sources.jar
+Members:
+  org/glassfish/jersey/internal/guava/MoreObjects.java
+
+/*
+ * Copyright (C) 2014 The Guava Authors
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+Source archive: https://repo.maven.apache.org/maven2/org/glassfish/jersey/core/jersey-common/3.1.11/jersey-common-3.1.11-sources.jar
+Members:
+  org/glassfish/jersey/internal/guava/Preconditions.java
+
+/*
+ * Copyright (C) 2007 The Guava Authors
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
+ */
+
+Source archive: https://repo.maven.apache.org/maven2/org/glassfish/jersey/core/jersey-common/3.1.11/jersey-common-3.1.11-sources.jar
+Members:
+  org/glassfish/jersey/internal/guava/SortedIterable.java
+  org/glassfish/jersey/internal/guava/SortedIterables.java
+
+/*
+ * Copyright (C) 2011 The Guava Authors
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the
+ * License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+Source archive: https://repo.maven.apache.org/maven2/org/glassfish/jersey/core/jersey-common/3.1.11/jersey-common-3.1.11-sources.jar
+Members:
+  org/glassfish/jersey/internal/guava/SortedLists.java
+
+/*
+ * Copyright (C) 2010 The Guava Authors
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
+ */
+
+Source archive: https://repo.maven.apache.org/maven2/org/glassfish/jersey/core/jersey-server/3.1.11/jersey-server-3.1.11-sources.jar
+Members:
+  org/glassfish/jersey/server/internal/monitoring/core/AbstractSlidingWindowTimeReservoir.java
+  org/glassfish/jersey/server/internal/monitoring/core/AbstractTimeSnapshot.java
+  org/glassfish/jersey/server/internal/monitoring/core/SlidingWindowTrimmer.java
+  org/glassfish/jersey/server/internal/monitoring/core/TimeReservoir.java
+  org/glassfish/jersey/server/internal/monitoring/core/UniformTimeReservoir.java
+  org/glassfish/jersey/server/internal/monitoring/core/UniformTimeSnapshot.java
+  org/glassfish/jersey/server/internal/monitoring/core/UniformTimeValuesSnapshot.java
+
+/*
+ * Copyright (c) 2015, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright 2010, 2013 Coda Hale and Yammer, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+Source archive: https://repo.maven.apache.org/maven2/org/glassfish/jersey/core/jersey-server/3.1.11/jersey-server-3.1.11-sources.jar
+Members:
+  org/glassfish/jersey/server/internal/monitoring/core/ReservoirConstants.java
+
+/*
+ * Copyright 2015, 2021 Oracle and/or its affiliates. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+Source archive: https://repo.maven.apache.org/maven2/org/glassfish/jersey/ext/jersey-bean-validation/3.1.11/jersey-bean-validation-3.1.11-sources.jar
+Members:
+  org/glassfish/jersey/server/validation/internal/hibernate/DestructibleBeanInstance.java
+  org/glassfish/jersey/server/validation/internal/hibernate/HibernateInjectingConstraintValidatorFactory.java
+
+/*
+ * Hibernate Validator, declare and validate application constraints
+ *
+ * License: Apache License, Version 2.0
+ * See the license.txt file in the root directory or <http://www.apache.org/licenses/LICENSE-2.0>.
+ */
+// Portions Copyright [2018] [Payara Foundation and/or its affiliates]
+
+Source archive: https://repo.maven.apache.org/maven2/org/slf4j/log4j-over-slf4j/2.0.18/log4j-over-slf4j-2.0.18-sources.jar
+Members:
+  org/apache/log4j/Appender.java
+  org/apache/log4j/AppenderSkeleton.java
+  org/apache/log4j/BasicConfigurator.java
+  org/apache/log4j/Category.java
+  org/apache/log4j/ConsoleAppender.java
+  org/apache/log4j/FileAppender.java
+  org/apache/log4j/Log4jLoggerFactory.java
+  org/apache/log4j/LogManager.java
+  org/apache/log4j/Logger.java
+  org/apache/log4j/MDC.java
+  org/apache/log4j/NDC.java
+  org/apache/log4j/PropertyConfigurator.java
+  org/apache/log4j/SimpleLayout.java
+  org/apache/log4j/WriterAppender.java
+  org/apache/log4j/helpers/LogLog.java
+  org/apache/log4j/spi/Configurator.java
+  org/apache/log4j/spi/ErrorHandler.java
+  org/apache/log4j/spi/Filter.java
+  org/apache/log4j/spi/HierarchyEventListener.java
+  org/apache/log4j/spi/LoggerFactory.java
+  org/apache/log4j/spi/LoggerRepository.java
+  org/apache/log4j/spi/LoggingEvent.java
+  org/apache/log4j/spi/OptionHandler.java
+  org/apache/log4j/xml/DOMConfigurator.java
+
+/*
+ * Copyright 2001-2004 The Apache Software Foundation.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+Source archive: https://repo.maven.apache.org/maven2/org/slf4j/log4j-over-slf4j/2.0.18/log4j-over-slf4j-2.0.18-sources.jar
+Members:
+  org/apache/log4j/Layout.java
+  org/apache/log4j/PatternLayout.java
+  org/apache/log4j/RollingFileAppender.java
+
+/*
+ * Copyright 2001-2004 The Apache Software Foundation.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+// Contributors:  Christian Trutz <christian.trutz@belaso.de>
+
+Source archive: https://repo.maven.apache.org/maven2/org/slf4j/log4j-over-slf4j/2.0.18/log4j-over-slf4j-2.0.18-sources.jar
+Members:
+  org/apache/log4j/Level.java
+
+/*
+ * Copyright 2001-2004 The Apache Software Foundation.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+// Contributors:  Kitching Simon <Simon.Kitching@orange.ch>
+//                Nicholas Wolff
+
+Source archive: https://repo.maven.apache.org/maven2/org/slf4j/log4j-over-slf4j/2.0.18/log4j-over-slf4j-2.0.18-sources.jar
+Members:
+  org/apache/log4j/Priority.java
+
+/*
+ * Copyright 2001-2004 The Apache Software Foundation.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+// Contributors:  Kitching Simon <Simon.Kitching@orange.ch>
+
+Source archive: https://repo.maven.apache.org/maven2/org/slf4j/log4j-over-slf4j/2.0.18/log4j-over-slf4j-2.0.18-sources.jar
+Members:
+  org/apache/log4j/helpers/NullEnumeration.java
+
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+Source archive: https://repo.maven.apache.org/maven2/org/slf4j/jcl-over-slf4j/2.0.18/jcl-over-slf4j-2.0.18-sources.jar
+Members:
+  org/apache/commons/logging/Log.java
+  org/apache/commons/logging/LogConfigurationException.java
+  org/apache/commons/logging/LogFactory.java
+  org/apache/commons/logging/impl/NoOpLog.java
+  org/apache/commons/logging/impl/SLF4JLocationAwareLog.java
+  org/apache/commons/logging/impl/SLF4JLog.java
+  org/apache/commons/logging/impl/SLF4JLogFactory.java
+  org/apache/commons/logging/impl/SimpleLog.java
+
+/*
+ * Copyright 2001-2004 The Apache Software Foundation.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
