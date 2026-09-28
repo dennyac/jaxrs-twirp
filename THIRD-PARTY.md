@@ -1,15 +1,16 @@
 # Third-party licenses
 
-`jaxrs-twirp-core` and `dropwizard-twirp` do not bundle their dependencies.
-Their main, source, and Javadoc jars carry the project's `META-INF/LICENSE`
-and `META-INF/NOTICE`.
+The main, source, and Javadoc jars of `jaxrs-twirp-core`, `dropwizard-twirp`,
+and `jaxrs-twirp-protoc` do not bundle dependencies. They carry the project's
+`META-INF/LICENSE` and `META-INF/NOTICE`.
 
-The protoc executable and runnable example bundle runtime dependencies.
+Two jars bundle runtime dependencies: the protoc plugin's executable
+`jaxrs-twirp-protoc-<version>-shaded.jar` and the runnable example's jar.
 Their `META-INF/THIRD-PARTY.txt` identifies those dependencies and their legal
 files. Dependency jars' license and notice files are preserved under
 `META-INF/third-party/<groupId as a path>/<artifactId>/<version>/`, without
 merging unrelated files that share a name. Supplemental files in each module's
-`src/shade` directory are included only in its binary jar.
+`src/shade` directory are included only in these two jars.
 
 The shared Protobuf license in `third-party/protobuf/LICENSE` is copied from
 [Protobuf v32.1](https://raw.githubusercontent.com/protocolbuffers/protobuf/v32.1/LICENSE)

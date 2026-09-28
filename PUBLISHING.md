@@ -16,6 +16,10 @@ inherit from the parent, so consumers need it on Central too.
 | `dropwizard-twirp` | `com.dennyac.twirp:dropwizard-twirp` |
 | `jaxrs-twirp-protoc` | `com.dennyac.twirp:jaxrs-twirp-protoc` |
 
+`jaxrs-twirp-protoc` also publishes `jaxrs-twirp-protoc-<version>-shaded.jar`
+(classifier `shaded`), an executable jar that bundles its dependencies for raw
+`protoc` use.
+
 `dropwizard-twirp-example` is a runnable demo, not a release artifact. The
 deployment command below excludes it explicitly.
 
@@ -149,8 +153,8 @@ test -z "$(git status --porcelain)"
 `autoPublish=false` leaves the deployment awaiting manual publication. At
 <https://central.sonatype.com/publishing/deployments>, wait for validation and
 confirm the deployment contains the parent POM and three libraries at `0.1.0`,
-not the example. Click **Publish** and wait for the deployment to be published
-before tagging.
+including `jaxrs-twirp-protoc-0.1.0-shaded.jar`, but not the example. Click
+**Publish** and wait for the deployment to be published before tagging.
 
 ```bash
 test "$(git rev-parse HEAD)" = "$release_commit" &&
