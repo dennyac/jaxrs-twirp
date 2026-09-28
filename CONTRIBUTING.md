@@ -15,7 +15,9 @@ mvn -B -ntp verify
 This builds every module, runs the unit tests and the example's integration
 tests (which start a real Jetty server), and runs the build checks below. To
 build one module and the modules it depends on, use `-pl <module> -am`, for
-example `mvn -pl jaxrs-twirp-core -am verify`.
+example `mvn -pl jaxrs-twirp-core -am verify`. The example runs
+`jaxrs-twirp-protoc` as a protoc plugin, which `-am` doesn't pick up, so list
+both: `mvn -pl jaxrs-twirp-protoc,dropwizard-twirp-example -am verify`.
 
 Coverage reports are written to `<module>/target/site/jacoco/index.html`.
 
