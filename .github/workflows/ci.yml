@@ -28,6 +28,11 @@ jobs:
         include:
           - os: macos-latest
             java: '17'
+          - os: windows-latest
+            java: '17'
+    defaults:
+      run:
+        shell: bash
 
     steps:
       - uses: actions/checkout@v7

@@ -195,7 +195,8 @@ class TwirpStandaloneServerTest {
 
             assertThat(response.status()).isEqualTo(200);
             assertThat(response.mediaType()).isEqualTo(MediaType.APPLICATION_JSON_TYPE);
-            assertThat(response.body()).isEqualTo("{\n  \"display_name\" : \"ordinary REST\"\n}");
+            assertThat(response.body())
+                    .isEqualToNormalizingNewlines("{\n  \"display_name\" : \"ordinary REST\"\n}");
         }
     }
 

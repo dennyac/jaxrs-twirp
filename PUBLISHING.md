@@ -119,7 +119,7 @@ mvn versions:set -DnewVersion=0.1.0 -DgenerateBackupPoms=false
 git diff -- pom.xml */pom.xml
 ```
 
-Review all five POMs: the root version and every module's parent version,
+Review every POM: the root version and every module's parent version,
 including the example's, must be `0.1.0`. `versions:set` also updates
 `project.build.outputTimestamp` in the root POM, the timestamp written into the
 jars; keep that change. Then commit only those POM changes.
