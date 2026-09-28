@@ -118,10 +118,39 @@ Calls throw `TwirpException` for these failure cases:
 
 | Failure | Error code |
 | --- | --- |
-| Recognizable Twirp error response | The server's code, message, and metadata |
-| Non-2xx response without a recognizable Twirp envelope | `UNKNOWN`, with the HTTP status and a body excerpt |
+| Twirp error response | The server's code, message, and metadata |
+| Twirp error response whose `code` is not a Twirp error code | `INTERNAL`, with the raw body in the `body` metadata entry |
+| 3xx response, or an error response without a Twirp error body, such as a proxy's HTML page | Depends on the HTTP status; see below |
+| Error response body that cannot be read | `INTERNAL` |
 | Transport or request-encoding `ProcessingException` | `UNAVAILABLE` |
 | Successful response that cannot be decoded | `MALFORMED` |
+
+A Twirp error body is a JSON object with a non-empty string `code`, an
+optional string `msg`, an optional `meta` object of strings, and no other
+fields. The Content-Type header is not checked. Other error responses get a code
+from their HTTP status, the same way as in the
+[Twirp Go client](https://github.com/twitchtv/twirp/blob/fb7430a3be6be019c7b561f3768c3e610dd2b782/example/service.twirp.go#L747-L826):
+
+| HTTP status | Error code |
+| --- | --- |
+| 3xx | `INTERNAL` |
+| 400 | `INTERNAL` |
+| 401 | `UNAUTHENTICATED` |
+| 403 | `PERMISSION_DENIED` |
+| 404 | `BAD_ROUTE` |
+| 429 | `RESOURCE_EXHAUSTED` |
+| 502, 503, 504 | `UNAVAILABLE` |
+| Any other status | `UNKNOWN` |
+
+These errors carry the metadata entries `http_error_from_intermediary` (always
+`true`), `status_code`, and either `location` (the `Location` header of a 3xx
+response) or `body` (the raw response body).
+
+A 3xx reaches the client only if the JAX-RS client does not follow it. Jersey's
+default connector follows 301, 302, and 303 by resending the call as a `GET`,
+which a Twirp server rejects with `bad_route`. Set
+`ClientProperties.FOLLOW_REDIRECTS` to `false` to get the `INTERNAL` error
+instead.
 
 Dropwizard applications can use the [managed client builder][managed-client].
 
