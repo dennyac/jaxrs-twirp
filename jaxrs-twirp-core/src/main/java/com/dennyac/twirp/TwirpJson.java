@@ -13,8 +13,12 @@ import com.google.protobuf.util.JsonFormat;
  * <ul>
  *   <li>{@code preservingProtoFieldNames()} — emit snake_case proto field names
  *       rather than camelCase.</li>
- *   <li>{@code includingDefaultValueFields()} — emit zero-value fields, matching
- *       {@code EmitUnpopulated: true}.</li>
+ *   <li>{@code alwaysPrintFieldsWithNoPresence()} — emit fields without
+ *       presence (proto3 scalars not marked {@code optional}, repeated fields
+ *       and maps) even when they hold default values, matching
+ *       {@code EmitUnpopulated: true}. Unset fields with presence, such as
+ *       message and proto2 {@code optional} fields, are omitted; Go prints
+ *       {@code null} for them.</li>
  *   <li>{@code omittingInsignificantWhitespace()} — produce compact JSON.</li>
  *   <li>parser {@code ignoringUnknownFields()} — tolerate unknown fields,
  *       matching {@code DiscardUnknown: true}.</li>
@@ -30,13 +34,13 @@ public final class TwirpJson {
     }
 
     /**
-     * The default JSON printer: snake_case field names, zero-value fields
-     * included, no insignificant whitespace.
+     * The default JSON printer: snake_case field names, fields without presence
+     * printed even when they hold default values, no insignificant whitespace.
      */
     public static JsonFormat.Printer defaultPrinter() {
         return JsonFormat.printer()
                 .preservingProtoFieldNames()
-                .includingDefaultValueFields()
+                .alwaysPrintFieldsWithNoPresence()
                 .omittingInsignificantWhitespace();
     }
 

@@ -200,9 +200,9 @@ escaped, for example `Return` becomes `return_` in Java without changing `/Retur
   on both the printer and parser. Binary protobuf needs no registry for transport.
 - **JSON names:** the default printer preserves proto field names, including
   when a field defines `json_name`. See [JSON configuration][json] to change it.
-- **Proto2 required fields:** missing required fields on decode are not
-  correctly mapped to `malformed` (HTTP 400) and can produce HTTP 500. This is
-  a [known runtime issue][runtime-limitations], not a protocol restriction.
+- **Proto2 required fields:** the runtime rejects a request missing `required`
+  fields as `malformed` (HTTP 400), and generated clients report a response
+  missing them as `MALFORMED`.
 
 [core]: https://github.com/dennyac/jaxrs-twirp/blob/main/jaxrs-twirp-core/README.md
 [build]: https://github.com/dennyac/jaxrs-twirp/blob/main/README.md#building-from-source
