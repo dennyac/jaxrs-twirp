@@ -13,7 +13,7 @@ import io.dropwizard.core.Application;
 import io.dropwizard.core.setup.Bootstrap;
 import io.dropwizard.core.setup.Environment;
 import com.dennyac.twirp.TwirpAuthFeature;
-import com.dennyac.twirp.TwirpBundle;
+import com.dennyac.twirp.dropwizard.TwirpBundle;
 import com.dennyac.twirp.example.haberdasher.HaberdasherResource;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;

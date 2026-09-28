@@ -3,7 +3,7 @@
 The [Dropwizard 5][dropwizard] adapter for [jaxrs-twirp][overview].
 `TwirpBundle` registers the core's server feature with Jersey;
 `TwirpClientBuilder` connects generated clients to existing or managed
-JAX-RS clients.
+JAX-RS clients. Both classes are in the `com.dennyac.twirp.dropwizard` package.
 
 ## Add the dependency
 
@@ -29,7 +29,7 @@ with this Dropwizard application:
 ```java
 package com.example.haberdasher;
 
-import com.dennyac.twirp.TwirpBundle;
+import com.dennyac.twirp.dropwizard.TwirpBundle;
 import io.dropwizard.core.Application;
 import io.dropwizard.core.Configuration;
 import io.dropwizard.core.setup.Bootstrap;
