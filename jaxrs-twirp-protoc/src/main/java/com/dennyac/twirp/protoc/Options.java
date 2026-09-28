@@ -29,10 +29,10 @@ import java.util.Map;
  *       {@code true} the generated client gains a static managed-client builder,
  *       which couples it to {@code dropwizard-client} at compile time. Leave it
  *       off to keep the generated client dependency-light — callers can still use
- *       the runtime {@link com.dennyac.twirp.TwirpClientBuilder} directly. Has no
+ *       the runtime {@code TwirpClientBuilder} directly. Has no
  *       effect when {@code client=false}.</li>
  *   <li>{@code context} — whether to give every generated service method a
- *       trailing {@link com.dennyac.twirp.TwirpContext} parameter carrying the
+ *       trailing {@code TwirpContext} parameter carrying the
  *       request headers and JAX-RS {@code SecurityContext} (principal + roles).
  *       Accepts {@code true}/{@code false}. Default: {@code false}. When
  *       {@code true} the generated resource populates it from {@code @Context}
@@ -95,7 +95,7 @@ public final class Options {
 
     /**
      * Whether every generated service method gains a trailing
-     * {@link com.dennyac.twirp.TwirpContext} parameter (request headers and
+     * {@code TwirpContext} parameter (request headers and
      * {@code SecurityContext}). Off by default so the generated interface stays
      * proto-only.
      */
