@@ -85,12 +85,13 @@ For the [quickstart schema][quickstart], the output includes:
 Gradle, Bazel, Make, or shell scripts can invoke the same plugin. Unlike the
 Maven configuration above, this requires `protoc` on your `PATH`.
 
-First, from this repository's root, build the plugin and record its absolute
-JAR path:
+First, from this repository's root, build the plugin and record the absolute
+path of its `shaded` JAR, which bundles protobuf-java and JavaPoet. The plain
+`jaxrs-twirp-protoc-0.1.0-SNAPSHOT.jar` needs both on the classpath.
 
 ```bash
 mvn -pl jaxrs-twirp-protoc -am package
-export TWIRP_PLUGIN_JAR="$PWD/jaxrs-twirp-protoc/target/jaxrs-twirp-protoc-0.1.0-SNAPSHOT.jar"
+export TWIRP_PLUGIN_JAR="$PWD/jaxrs-twirp-protoc/target/jaxrs-twirp-protoc-0.1.0-SNAPSHOT-shaded.jar"
 ```
 
 In your application's root directory, create `protoc-gen-twirp_java` containing:
