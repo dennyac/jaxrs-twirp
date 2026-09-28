@@ -26,10 +26,8 @@
 
     <properties>
         <!--
-            Distinct automatic-module name from the dropwizard-twirp veneer. Both
-            jars share the com.dennyac.twirp package (a deliberate split package)
-            so they are designed for the classpath, not the JPMS module path; the
-            name here is advisory only.
+            Automatic-Module-Name. Other jars must not add classes to this jar's
+            packages; the module system rejects a package split across two jars.
         -->
         <module.name>com.dennyac.twirp.core</module.name>
     </properties>

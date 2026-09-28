@@ -113,7 +113,7 @@ class PluginTest {
                 .findFirst().orElseThrow().getContent();
 
         assertThat(client)
-                .contains("import com.dennyac.twirp.TwirpClientBuilder;")
+                .contains("import com.dennyac.twirp.dropwizard.TwirpClientBuilder;")
                 .contains("import io.dropwizard.core.setup.Environment;")
                 .contains("import io.dropwizard.client.JerseyClientConfiguration;")
                 .contains("public static TwirpClientBuilder<HaberdasherClient> builder(")
