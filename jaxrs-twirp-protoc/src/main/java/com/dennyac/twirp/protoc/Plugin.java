@@ -4,6 +4,7 @@
 package com.dennyac.twirp.protoc;
 
 import com.google.protobuf.DescriptorProtos.FileDescriptorProto;
+import com.google.protobuf.DescriptorProtos.MethodDescriptorProto;
 import com.google.protobuf.DescriptorProtos.ServiceDescriptorProto;
 import com.google.protobuf.compiler.PluginProtos.CodeGeneratorRequest;
 import com.google.protobuf.compiler.PluginProtos.CodeGeneratorResponse;
@@ -67,6 +68,7 @@ public final class Plugin {
                 continue;
             }
             for (ServiceDescriptorProto service : file.getServiceList()) {
+                requireDistinctJavaMethodNames(file, service);
                 String javaPackage = TypeMapper.javaPackageOf(file);
                 response.addFile(buildFile(serviceGen.generateInterface(service), javaPackage));
                 ClassName serviceInterface = ClassName.get(javaPackage, service.getName());
@@ -84,6 +86,22 @@ public final class Plugin {
         }
 
         return response.build();
+    }
+
+    private static void requireDistinctJavaMethodNames(FileDescriptorProto file,
+                                                       ServiceDescriptorProto service) {
+        Map<String, String> rpcByJavaName = new HashMap<>();
+        for (MethodDescriptorProto method : service.getMethodList()) {
+            String javaName = JavaNaming.lowerCamelMethodName(method.getName());
+            String otherRpc = rpcByJavaName.putIfAbsent(javaName, method.getName());
+            if (otherRpc != null) {
+                String serviceName = file.getPackage().isEmpty()
+                        ? service.getName()
+                        : file.getPackage() + "." + service.getName();
+                throw new IllegalArgumentException("RPCs " + otherRpc + " and " + method.getName()
+                        + " in service " + serviceName + " both map to Java method " + javaName + "()");
+            }
+        }
     }
 
     private CodeGeneratorResponse.File buildFile(TypeSpec type, String javaPackage) {
