@@ -177,13 +177,13 @@ final class ClientGenerator {
 
         if (options.generateContext()) {
             builder.addStatement("return $T.invoke(\n"
-                            + "    $T.applyHeaders(target.path($S).request(contentType).accept(contentType), context),\n"
+                            + "    $T.applyHeaders(target.path($S).request(contentType), context),\n"
                             + "    $T.entity(request, contentType),\n"
                             + "    $T.class)",
                     TWIRP_CLIENTS, TWIRP_CLIENTS, "/" + protoMethodName, ENTITY, output);
         } else {
             builder.addStatement("return $T.invoke(\n"
-                            + "    target.path($S).request(contentType).accept(contentType),\n"
+                            + "    target.path($S).request(contentType),\n"
                             + "    $T.entity(request, contentType),\n"
                             + "    $T.class)",
                     TWIRP_CLIENTS, "/" + protoMethodName, ENTITY, output);
