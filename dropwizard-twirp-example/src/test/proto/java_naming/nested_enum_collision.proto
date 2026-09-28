@@ -1,0 +1,18 @@
+// Copyright 2026 the jaxrs-twirp authors
+// SPDX-License-Identifier: Apache-2.0
+
+syntax = "proto3";
+package java_naming.nested_enum_collision;
+option java_package = "com.dennyac.twirp.example.naming";
+
+service NestedEnumNames {
+    rpc Echo (Container.Inner) returns (Container);
+}
+
+message Container {
+    message Inner {
+        enum NestedEnumCollision {
+            UNSPECIFIED = 0;
+        }
+    }
+}

@@ -1,0 +1,12 @@
+// Copyright 2026 the jaxrs-twirp authors
+// SPDX-License-Identifier: Apache-2.0
+
+syntax = "proto3";
+package java_naming.message_collision;
+option java_package = "com.dennyac.twirp.example.naming";
+
+service MessageNames {
+    rpc Echo (MessageCollision) returns (MessageCollision);
+}
+
+message MessageCollision {}

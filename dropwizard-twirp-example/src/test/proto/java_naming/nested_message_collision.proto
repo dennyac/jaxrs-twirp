@@ -1,0 +1,16 @@
+// Copyright 2026 the jaxrs-twirp authors
+// SPDX-License-Identifier: Apache-2.0
+
+syntax = "proto3";
+package java_naming.nested_message_collision;
+option java_package = "com.dennyac.twirp.example.naming";
+
+service NestedMessageNames {
+    rpc Echo (Container.Inner.NestedMessageCollision) returns (Container);
+}
+
+message Container {
+    message Inner {
+        message NestedMessageCollision {}
+    }
+}
