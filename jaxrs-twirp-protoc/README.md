@@ -4,7 +4,9 @@ A `protoc` plugin that generates a Java service interface, a Jakarta REST
 resource, and a JAX-RS client for each Twirp service. Message classes come from
 protoc's standard Java generator.
 
-The plugin is a self-contained JAR requiring Java 17+. Generated code uses
+The plugin requires Java 17+. Its main JAR needs protobuf-java and JavaPoet on
+the classpath, which Maven's `<protocPlugin>` provides. For raw `protoc`, use
+the self-contained `shaded` JAR, which bundles both. Generated code uses
 [`jaxrs-twirp-core`][core] and Jakarta REST 3.1. The default output has no
 Dropwizard dependency.
 
