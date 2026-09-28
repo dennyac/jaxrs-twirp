@@ -28,7 +28,8 @@ implementation. See the [wire-format details][wire-format].
 ## Compatibility
 
 Requires **Java 17+** and a **Jakarta REST 3.1** implementation; source builds
-require **Maven 3.9+**. The build uses protobuf 4.32.1.
+require **Maven 3.9+**. The build uses protobuf 4.32.1 and tests the runtime on
+Jersey 3.1, both on its own and through Dropwizard 5, and on RESTEasy 6.2.19.
 
 Protobuf editions are unsupported. `google.protobuf.Any` over JSON requires a
 [`TypeRegistry`][any-json]. See the [detailed limitations][limitations].
