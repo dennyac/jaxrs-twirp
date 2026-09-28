@@ -9,9 +9,8 @@ import jakarta.ws.rs.core.MediaType;
 /**
  * Wire-protocol media types defined by the Twirp v7 spec.
  *
- * <p>The two request/response payload types are exposed here so that generated
- * resource classes can reference them as string constants in
- * {@code @Consumes}/{@code @Produces} annotations.
+ * <p>The two request/response payload types are exposed here as string constants
+ * for use in generated {@code @Consumes} annotations and by generated clients.
  */
 public final class TwirpMediaTypes {
 
