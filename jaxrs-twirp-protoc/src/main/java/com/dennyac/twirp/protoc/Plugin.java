@@ -68,7 +68,7 @@ public final class Plugin {
                 continue;
             }
             for (ServiceDescriptorProto service : file.getServiceList()) {
-                requireDistinctJavaMethodNames(file, service);
+                requireDistinctJavaMethods(file, service, types);
                 String javaPackage = TypeMapper.javaPackageOf(file);
                 response.addFile(buildFile(serviceGen.generateInterface(service), javaPackage));
                 ClassName serviceInterface = ClassName.get(javaPackage, service.getName());
@@ -88,18 +88,22 @@ public final class Plugin {
         return response.build();
     }
 
-    private static void requireDistinctJavaMethodNames(FileDescriptorProto file,
-                                                       ServiceDescriptorProto service) {
-        Map<String, String> rpcByJavaName = new HashMap<>();
+    private static void requireDistinctJavaMethods(FileDescriptorProto file,
+                                                   ServiceDescriptorProto service,
+                                                   TypeMapper types) {
+        Map<String, String> rpcBySignature = new HashMap<>();
         for (MethodDescriptorProto method : service.getMethodList()) {
-            String javaName = JavaNaming.lowerCamelMethodName(method.getName());
-            String otherRpc = rpcByJavaName.putIfAbsent(javaName, method.getName());
+            // Every generated parameter besides the request is the same for all
+            // RPCs, so the name and request class decide whether the methods clash.
+            String signature = JavaNaming.lowerCamelMethodName(method.getName())
+                    + "(" + types.resolve(method.getInputType()).canonicalName() + ")";
+            String otherRpc = rpcBySignature.putIfAbsent(signature, method.getName());
             if (otherRpc != null) {
                 String serviceName = file.getPackage().isEmpty()
                         ? service.getName()
                         : file.getPackage() + "." + service.getName();
                 throw new IllegalArgumentException("RPCs " + otherRpc + " and " + method.getName()
-                        + " in service " + serviceName + " both map to Java method " + javaName + "()");
+                        + " in service " + serviceName + " both map to Java method " + signature);
             }
         }
     }

@@ -191,8 +191,9 @@ top-level message classes are separate, and `java_outer_classname` names the
 outer message container when messages are nested. RPC URL paths always use the
 proto package and original service/RPC names. Java keyword RPC names are
 escaped, for example `Return` becomes `return_` in Java without changing `/Return`.
-Generation fails if two RPCs in one service map to the same Java method name,
-such as `URLGet` and `UrlGet` (both `urlGet`).
+RPCs that map to the same Java method name, such as `URLGet` and `UrlGet` (both
+`urlGet`), become Java overloads when their request types differ. Generation
+fails if they also share a request type.
 
 - **Editions:** `edition = "2023"` and other editions are unsupported because
   the plugin does not advertise `FEATURE_SUPPORTS_EDITIONS`. Use proto3 syntax.

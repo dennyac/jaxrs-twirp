@@ -369,30 +369,60 @@ class PluginTest {
     @ParameterizedTest
     @CsvSource({"URLGet, UrlGet, urlGet", "ABC, Abc, abc", "Return, Return_, return_"})
     void rpcsMappingToTheSameJavaMethodAreRejected(String first, String second, String javaName) {
-        FileDescriptorProto file = FileDescriptorProto.newBuilder()
-                .setName("collide.proto")
-                .setPackage("collide")
-                .addMessageType(DescriptorProto.newBuilder().setName("Req"))
-                .addService(ServiceDescriptorProto.newBuilder()
-                        .setName("Svc")
-                        .addMethod(MethodDescriptorProto.newBuilder()
-                                .setName(first)
-                                .setInputType(".collide.Req")
-                                .setOutputType(".collide.Req"))
-                        .addMethod(MethodDescriptorProto.newBuilder()
-                                .setName(second)
-                                .setInputType(".collide.Req")
-                                .setOutputType(".collide.Req")))
-                .build();
-        CodeGeneratorRequest req = CodeGeneratorRequest.newBuilder()
-                .addFileToGenerate("collide.proto")
-                .addProtoFile(file)
-                .build();
+        CodeGeneratorRequest req = twoRpcRequest(first, "Req", second, "Req");
 
         assertThatThrownBy(() -> new Plugin().generate(req))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("RPCs " + first + " and " + second
-                        + " in service collide.Svc both map to Java method " + javaName + "()");
+                        + " in service collide.Svc both map to Java method " + javaName + "(collide.Req)");
+    }
+
+    @Test
+    void rpcsSharingAJavaNameWithDifferentRequestTypesBecomeOverloads() {
+        CodeGeneratorRequest req = twoRpcRequest("URLGet", "A", "UrlGet", "B");
+
+        CodeGeneratorResponse response = new Plugin().generate(req);
+
+        assertThat(response.getError()).isEmpty();
+        Map<String, String> files = response.getFileList().stream()
+                .collect(Collectors.toMap(File::getName, File::getContent));
+        assertThat(files.get("collide/Svc.java"))
+                .contains("A urlGet(A request) throws TwirpException;")
+                .contains("B urlGet(B request) throws TwirpException;");
+        assertThat(files.get("collide/SvcResource.java"))
+                .contains("@Path(\"/URLGet\")")
+                .contains("public Response urlGet(A request, @Context HttpHeaders headers) {")
+                .contains("@Path(\"/UrlGet\")")
+                .contains("public Response urlGet(B request, @Context HttpHeaders headers) {");
+        assertThat(files.get("collide/SvcClient.java"))
+                .contains("public A urlGet(A request) throws TwirpException {")
+                .contains("target.path(\"/URLGet\")")
+                .contains("public B urlGet(B request) throws TwirpException {")
+                .contains("target.path(\"/UrlGet\")");
+    }
+
+    private static CodeGeneratorRequest twoRpcRequest(String first, String firstRequest,
+                                                      String second, String secondRequest) {
+        FileDescriptorProto.Builder file = FileDescriptorProto.newBuilder()
+                .setName("collide.proto")
+                .setPackage("collide")
+                .setOptions(FileOptions.newBuilder().setJavaMultipleFiles(true))
+                .addService(ServiceDescriptorProto.newBuilder()
+                        .setName("Svc")
+                        .addMethod(MethodDescriptorProto.newBuilder()
+                                .setName(first)
+                                .setInputType(".collide." + firstRequest)
+                                .setOutputType(".collide." + firstRequest))
+                        .addMethod(MethodDescriptorProto.newBuilder()
+                                .setName(second)
+                                .setInputType(".collide." + secondRequest)
+                                .setOutputType(".collide." + secondRequest)));
+        Stream.of(firstRequest, secondRequest).distinct()
+                .forEach(name -> file.addMessageType(DescriptorProto.newBuilder().setName(name)));
+        return CodeGeneratorRequest.newBuilder()
+                .addFileToGenerate("collide.proto")
+                .addProtoFile(file)
+                .build();
     }
 
     @Test
