@@ -1,0 +1,39 @@
+// Copyright 2026 the jaxrs-twirp authors
+// SPDX-License-Identifier: Apache-2.0
+
+syntax = "proto3";
+
+package resteasy.test;
+
+option java_package = "com.dennyac.twirp.resteasy";
+option java_multiple_files = true;
+option java_outer_classname = "EchoProtos";
+
+service Echo {
+  rpc Echo (EchoMessage) returns (EchoMessage);
+  rpc Reject (EchoMessage) returns (EchoMessage);
+  rpc ReturnNull (EchoMessage) returns (EchoMessage);
+  rpc Crash (EchoMessage) returns (EchoMessage);
+  rpc ReadHeader (HeaderRequest) returns (HeaderResponse);
+  rpc WhoAmI (WhoAmIRequest) returns (WhoAmIResponse);
+}
+
+message EchoMessage {
+  string hat_color = 1;
+  int32 hat_size = 2;
+  repeated string tags = 3;
+}
+
+message HeaderRequest {
+  string name = 1;
+}
+
+message HeaderResponse {
+  repeated string values = 1;
+}
+
+message WhoAmIRequest {}
+
+message WhoAmIResponse {
+  string subject = 1;
+}
