@@ -59,4 +59,38 @@ class TwirpInvocationsTest {
         // The invocation should have re-asserted the interrupt status.
         assertThat(Thread.interrupted()).isTrue();
     }
+
+    @Test
+    void wrapsErrorsAsInternal() {
+        AssertionError cause = new AssertionError("invariant broken");
+
+        assertThatThrownBy(() -> TwirpInvocations.invoke("Check", (Callable<String>) () -> {
+            throw cause;
+        }))
+                .isInstanceOfSatisfying(TwirpException.class, twirp -> {
+                    assertThat(twirp.getErrorCode()).isEqualTo(ErrorCode.INTERNAL);
+                    assertThat(twirp).hasMessage("Check failed: invariant broken");
+                    assertThat(twirp).hasCause(cause);
+                });
+    }
+
+    @Test
+    void propagatesVirtualMachineErrorsUnchanged() {
+        StackOverflowError error = new StackOverflowError("too deep");
+
+        assertThatThrownBy(() -> TwirpInvocations.invoke("Recurse", (Callable<String>) () -> {
+            throw error;
+        })).isSameAs(error);
+    }
+
+    @Test
+    void nullResultIsInternal() {
+        assertThatThrownBy(() -> TwirpInvocations.invoke("MakeHat", () -> null))
+                .isInstanceOfSatisfying(TwirpException.class, twirp -> {
+                    assertThat(twirp.getErrorCode()).isEqualTo(ErrorCode.INTERNAL);
+                    assertThat(twirp).hasMessage("received a null response while calling MakeHat;"
+                            + " null responses are not supported");
+                    assertThat(twirp).hasNoCause();
+                });
+    }
 }

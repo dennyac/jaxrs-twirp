@@ -5,6 +5,7 @@ package com.dennyac.twirp;
 
 import com.dennyac.twirp.codec.ProtobufJsonMessageBodyWriter;
 import com.dennyac.twirp.codec.TwirpErrorMessageBodyWriter;
+import com.dennyac.twirp.testproto.Proto2Message;
 import com.dennyac.twirp.testproto.TestMessage;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -16,8 +17,10 @@ import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.ServiceUnavailableException;
 import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 import org.glassfish.jersey.CommonProperties;
 import org.glassfish.jersey.internal.MapPropertiesDelegate;
 import org.glassfish.jersey.message.MessageBodyWorkers;
@@ -42,6 +45,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class TwirpStandaloneServerTest {
 
     private static final String ECHO_PATH = "/twirp/test.Echo/Echo";
+    private static final String PROTO2_PATH = "/twirp/test.Echo/Proto2";
     private static final TestMessage MESSAGE = TestMessage.newBuilder()
             .setHatColor("red").setHatSize(7).addTags("wool").build();
     private static final String MESSAGE_JSON =
@@ -147,6 +151,64 @@ class TwirpStandaloneServerTest {
 
     @ParameterizedTest
     @ValueSource(booleans = {false, true})
+    void missingRequiredFieldsAreMalformed(boolean withJsonProvider) throws Exception {
+        String expected = "{\"code\":\"malformed\",\"msg\":\"the request payload could not be decoded: "
+                + "Message missing required fields: count\"}";
+        try (TestServer server = new TestServer(withJsonProvider)) {
+            byte[] partial = Proto2Message.newBuilder().setName("fedora").buildPartial().toByteArray();
+
+            assertJsonError(server.request("POST", PROTO2_PATH,
+                    TwirpMediaTypes.APPLICATION_PROTOBUF, partial), 400, expected);
+            assertJsonError(server.request("POST", PROTO2_PATH,
+                    MediaType.APPLICATION_JSON, "{\"name\":\"fedora\"}".getBytes(StandardCharsets.UTF_8)),
+                    400, expected);
+        }
+    }
+
+    @ParameterizedTest
+    @ValueSource(booleans = {false, true})
+    void nullServiceResultIsInternal(boolean withJsonProvider) throws Exception {
+        try (TestServer server = new TestServer(withJsonProvider)) {
+            WireResponse response = server.request("POST", "/twirp/test.Echo/ReturnNull",
+                    TwirpMediaTypes.APPLICATION_PROTOBUF, MESSAGE.toByteArray());
+
+            assertJsonError(response, 500, "{\"code\":\"internal\",\"msg\":\"received a null response "
+                    + "while calling ReturnNull; null responses are not supported\"}");
+        }
+    }
+
+    @ParameterizedTest
+    @ValueSource(booleans = {false, true})
+    void serviceErrorIsInternal(boolean withJsonProvider) throws Exception {
+        try (TestServer server = new TestServer(withJsonProvider)) {
+            WireResponse response = server.request("POST", "/twirp/test.Echo/Fail",
+                    MediaType.APPLICATION_JSON, MESSAGE_JSON.getBytes(StandardCharsets.UTF_8));
+
+            assertJsonError(response, 500,
+                    "{\"code\":\"internal\",\"msg\":\"Fail failed: invariant broken\"}");
+        }
+    }
+
+    @ParameterizedTest
+    @ValueSource(booleans = {false, true})
+    void nonTwirpServerErrorsAreTwirpErrors(boolean withJsonProvider) throws Exception {
+        try (TestServer server = new TestServer(withJsonProvider)) {
+            assertJsonError(respondWithStatus(server, 500),
+                    500, "{\"code\":\"internal\",\"msg\":\"internal server error\"}");
+            assertJsonError(respondWithStatus(server, 501),
+                    501, "{\"code\":\"unimplemented\",\"msg\":\"the requested method is not implemented\"}");
+            assertJsonError(respondWithStatus(server, 502),
+                    500, "{\"code\":\"internal\",\"msg\":\"internal server error\"}");
+            assertJsonError(respondWithStatus(server, 503),
+                    503, "{\"code\":\"unavailable\",\"msg\":\"the service is unavailable\"}");
+            assertJsonError(server.request("POST", "/twirp/test.Echo/Unavailable",
+                            TwirpMediaTypes.APPLICATION_PROTOBUF, MESSAGE.toByteArray()),
+                    503, "{\"code\":\"unavailable\",\"msg\":\"the service is unavailable\"}");
+        }
+    }
+
+    @ParameterizedTest
+    @ValueSource(booleans = {false, true})
     void routingFailuresAreTwirpErrors(boolean withJsonProvider) throws Exception {
         try (TestServer server = new TestServer(withJsonProvider)) {
             assertJsonError(server.request("POST", "/twirp/test.Echo/Missing",
@@ -185,6 +247,11 @@ class TwirpStandaloneServerTest {
             assertThat(wrongType.status()).isEqualTo(415);
             assertThat(wrongType.mediaType()).isNull();
             assertThat(wrongType.body()).isEmpty();
+
+            WireResponse unavailable = server.request("GET", "/rest/unavailable", null, new byte[0]);
+            assertThat(unavailable.status()).isEqualTo(503);
+            assertThat(unavailable.mediaType()).isEqualTo(MediaType.TEXT_PLAIN_TYPE);
+            assertThat(unavailable.body()).isEqualTo("down for maintenance");
         }
     }
 
@@ -203,6 +270,12 @@ class TwirpStandaloneServerTest {
         assertThat(response.status()).isEqualTo(status);
         assertThat(response.mediaType()).isEqualTo(MediaType.APPLICATION_JSON_TYPE);
         assertThat(response.body()).isEqualTo(body);
+    }
+
+    private static WireResponse respondWithStatus(TestServer server, int status) throws Exception {
+        TestMessage request = TestMessage.newBuilder().setHatSize(status).build();
+        return server.request("POST", "/twirp/test.Echo/Status",
+                TwirpMediaTypes.APPLICATION_PROTOBUF, request.toByteArray());
     }
 
     private static void assertMalformed(WireResponse response) throws Exception {
@@ -284,6 +357,41 @@ class TwirpStandaloneServerTest {
         public TestMessage withoutMeta(TestMessage request) throws TwirpException {
             throw TwirpException.notFound("hat does not exist");
         }
+
+        @POST
+        @Path("/Proto2")
+        public Proto2Message proto2(Proto2Message request) {
+            return request;
+        }
+
+        @POST
+        @Path("/ReturnNull")
+        public TestMessage returnNull(TestMessage request) {
+            return TwirpInvocations.invoke("ReturnNull", () -> null);
+        }
+
+        @POST
+        @Path("/Fail")
+        public TestMessage fail(TestMessage request) {
+            return TwirpInvocations.invoke("Fail", () -> {
+                throw new AssertionError("invariant broken");
+            });
+        }
+
+        @POST
+        @Path("/Status")
+        public Response status(TestMessage request) {
+            return Response.status(request.getHatSize())
+                    .type(MediaType.TEXT_PLAIN)
+                    .entity("upstream error details")
+                    .build();
+        }
+
+        @POST
+        @Path("/Unavailable")
+        public TestMessage unavailable(TestMessage request) {
+            throw new ServiceUnavailableException();
+        }
     }
 
     @Path("/rest")
@@ -306,6 +414,13 @@ class TwirpStandaloneServerTest {
         @Produces(MediaType.APPLICATION_JSON)
         public RestMessage json() {
             return new RestMessage("ordinary REST");
+        }
+
+        @GET
+        @Path("/unavailable")
+        @Produces(MediaType.TEXT_PLAIN)
+        public Response unavailable() {
+            return Response.status(503).entity("down for maintenance").build();
         }
     }
 

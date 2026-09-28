@@ -13,15 +13,16 @@ import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 
 /**
- * Rewrites JAX-RS routing failures as Twirp {@code bad_route} responses, but
- * only beneath configured Twirp URL prefixes.
+ * Rewrites JAX-RS routing failures as Twirp {@code bad_route} responses, and
+ * server errors (HTTP 5xx) that are not already Twirp errors as
+ * {@code unimplemented}, {@code unavailable}, or {@code internal}, but only
+ * beneath configured Twirp URL prefixes. Rewritten server errors carry a
+ * generic message instead of the original body.
  */
 final class TwirpBadRouteFilter implements ContainerResponseFilter {
 
-    private static final Set<Integer> ROUTING_FAILURE_STATUSES = Set.of(404, 405, 415);
     private static final Annotation[] NO_ANNOTATIONS = new Annotation[0];
 
     private final List<String> pathPrefixes;
@@ -32,27 +33,36 @@ final class TwirpBadRouteFilter implements ContainerResponseFilter {
 
     @Override
     public void filter(ContainerRequestContext request, ContainerResponseContext response) {
-        int status = response.getStatus();
-        if (!ROUTING_FAILURE_STATUSES.contains(status)) {
+        Rewrite rewrite = rewriteFor(response.getStatus());
+        if (rewrite == null) {
             return;
         }
         if (!shouldRewrite(request.getUriInfo().getPath(false), response.getEntity())) {
             return;
         }
 
-        String message = switch (status) {
-            case 405 -> "Twirp endpoints only accept POST";
-            case 415 -> "Twirp requires application/protobuf or application/json";
-            default -> "no Twirp handler for the requested URL";
-        };
-
-        response.setStatus(ErrorCode.BAD_ROUTE.httpStatus());
+        response.setStatus(rewrite.code().httpStatus());
         response.getHeaders().remove(HttpHeaders.CONTENT_LENGTH);
         response.getHeaders().remove("Allow");
         response.setEntity(
-                TwirpError.of(ErrorCode.BAD_ROUTE, message),
+                TwirpError.of(rewrite.code(), rewrite.message()),
                 NO_ANNOTATIONS,
                 TwirpMediaTypes.APPLICATION_JSON_TYPE);
+    }
+
+    private static Rewrite rewriteFor(int status) {
+        return switch (status) {
+            case 404 -> new Rewrite(ErrorCode.BAD_ROUTE, "no Twirp handler for the requested URL");
+            case 405 -> new Rewrite(ErrorCode.BAD_ROUTE, "Twirp endpoints only accept POST");
+            case 415 -> new Rewrite(ErrorCode.BAD_ROUTE,
+                    "Twirp requires application/protobuf or application/json");
+            case 501 -> new Rewrite(ErrorCode.UNIMPLEMENTED, "the requested method is not implemented");
+            case 503 -> new Rewrite(ErrorCode.UNAVAILABLE, "the service is unavailable");
+            default -> status >= 500 ? new Rewrite(ErrorCode.INTERNAL, "internal server error") : null;
+        };
+    }
+
+    private record Rewrite(ErrorCode code, String message) {
     }
 
     boolean matchesPath(String requestPath) {

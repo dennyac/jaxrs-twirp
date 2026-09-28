@@ -20,8 +20,8 @@ resources, as in the [quickstart][quickstart]. The feature installs:
 - `ProtobufMessageBodyReader` and `ProtobufMessageBodyWriter` for binary messages.
 - `ProtobufJsonMessageBodyReader` and `ProtobufJsonMessageBodyWriter` for JSON messages.
 - `TwirpExceptionMapper` and `InvalidProtocolBufferExceptionMapper` for Twirp errors.
-- A response filter that maps routing failures under the configured prefixes to
-  `bad_route` (HTTP 404).
+- A response filter that maps routing failures and non-Twirp server errors under
+  the configured prefixes to Twirp errors.
 
 The default prefix is `/twirp`. When generating resources with a custom
 `prefix`, use the same value when registering the feature:
@@ -34,10 +34,14 @@ The constructors also accept multiple prefixes, for example
 `new TwirpServerFeature("/twirp", "/rpc")`. The printer/parser constructor accepts
 prefixes after those two arguments.
 
-Routing failures with status 404, 405, or 415 are rewritten only at a configured
-prefix or below it. Routes outside those prefixes keep their normal REST
-responses, and existing `TwirpError` responses such as `not_found` are preserved.
-A prefix of `/` covers all routes, including REST routes.
+Routing failures with status 404, 405, or 415 become `bad_route` (HTTP 404).
+Server errors (HTTP 5xx) whose body is not a `TwirpError`, such as Dropwizard's
+generic 500 for an unexpected exception, become `unimplemented` for 501,
+`unavailable` for 503, and `internal` (HTTP 500) for other statuses, with a
+generic message instead of the original body. Both rewrites apply only at a
+configured prefix or below it. Routes outside those prefixes keep their normal
+REST responses, and existing `TwirpError` responses such as `not_found` are
+preserved. A prefix of `/` covers all routes, including REST routes.
 
 ## Wire format
 
@@ -75,12 +79,17 @@ Convenience factories include `TwirpException.invalidArgument(argument, reason)`
 
 Generated resources call services through `TwirpInvocations.invoke`.
 It preserves `TwirpException`, maps `InterruptedException` to `UNAVAILABLE`
-while restoring the interrupt flag, and wraps other `Exception` instances as
-`INTERNAL`. Java `Error` instances propagate unchanged.
+while restoring the interrupt flag, and wraps other exceptions and Java `Error`s
+such as `AssertionError` as `INTERNAL`. `VirtualMachineError`s such as
+`OutOfMemoryError` propagate unchanged. A `null` result is also `INTERNAL`;
+return the message's default instance for an empty response.
 
-`InvalidProtocolBufferExceptionMapper` maps malformed protobuf/JSON input to
-`malformed` (HTTP 400). Missing proto2 required fields are a separate
-[known limitation][runtime-limitations].
+When the Twirp body readers cannot decode a request, including a proto2 message
+missing `required` fields, they throw `MalformedMessageException`, a subclass of
+protobuf's `InvalidProtocolBufferException`. `InvalidProtocolBufferExceptionMapper`
+maps it to `malformed` (HTTP 400). Other `InvalidProtocolBufferException`s, such
+as one thrown by an ordinary REST resource, are left to the application's
+exception mappers.
 
 ## Clients
 
@@ -128,7 +137,10 @@ Dropwizard applications can use the [managed client builder][managed-client].
 ## JSON configuration
 
 `TwirpJson.defaultPrinter()` preserves proto field names such as `style_name`,
-includes default-valued fields, and omits insignificant whitespace.
+prints fields without presence (proto3 scalars not marked `optional`, repeated
+fields, and maps) even when they hold default values, and omits insignificant
+whitespace. Unset fields with presence, such as message and proto2 `optional`
+fields, are omitted; Twirp's Go server prints `null` for them.
 `TwirpJson.defaultParser()` ignores unknown fields.
 
 The default printer uses the proto field name rather than a field's explicit
@@ -138,7 +150,7 @@ register a feature configured with a different printer and parser:
 ```java
 TwirpServerFeature feature = new TwirpServerFeature(
         JsonFormat.printer()
-                .includingDefaultValueFields()
+                .alwaysPrintFieldsWithNoPresence()
                 .omittingInsignificantWhitespace(),
         JsonFormat.parser());
 ```
@@ -228,10 +240,6 @@ and returning a Twirp JSON response when rejecting a request. See the
 [Dropwizard auth example][auth-example] for bearer tokens and role checks.
 
 ## Runtime limitations
-
-Missing proto2 `required` fields can surface as a server error (HTTP 500)
-instead of Twirp `malformed` (HTTP 400). This is a known implementation issue,
-not a Twirp protocol restriction.
 
 The codecs require full protobuf Java `Message` classes, not lite
 `MessageLite` output. `TwirpContext` does not model cancellation or deadlines;

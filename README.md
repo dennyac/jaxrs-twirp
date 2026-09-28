@@ -31,8 +31,7 @@ Requires **Java 17+** and a **Jakarta REST 3.1** implementation; source builds
 require **Maven 3.9+**. The build uses protobuf 4.32.1.
 
 Protobuf editions are unsupported. `google.protobuf.Any` over JSON requires a
-[`TypeRegistry`][any-json]. Decoding proto2 messages with missing `required`
-fields has a known error-mapping issue. See the [detailed limitations][limitations].
+[`TypeRegistry`][any-json]. See the [detailed limitations][limitations].
 
 ## Quickstart
 

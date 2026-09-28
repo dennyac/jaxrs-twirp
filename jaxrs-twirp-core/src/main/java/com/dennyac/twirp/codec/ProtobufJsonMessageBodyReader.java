@@ -3,6 +3,7 @@
 
 package com.dennyac.twirp.codec;
 
+import com.google.protobuf.InvalidProtocolBufferException;
 import com.google.protobuf.Message;
 import com.google.protobuf.util.JsonFormat;
 import com.dennyac.twirp.TwirpJson;
@@ -26,7 +27,9 @@ import java.nio.charset.StandardCharsets;
  * bodies, backed by protobuf's canonical JSON mapping.
  *
  * <p>Unknown fields are ignored (matching the Twirp Go server's
- * {@code DiscardUnknown: true} behavior).
+ * {@code DiscardUnknown: true} behavior). Bodies that cannot be decoded,
+ * including proto2 messages missing {@code required} fields, raise
+ * {@link MalformedMessageException}.
  */
 @Provider
 @Consumes(TwirpMediaTypes.APPLICATION_JSON)
@@ -57,7 +60,9 @@ public class ProtobufJsonMessageBodyReader implements MessageBodyReader<Message>
         Message.Builder builder = prototype.newBuilderForType();
         try (InputStreamReader reader = new InputStreamReader(entityStream, StandardCharsets.UTF_8)) {
             parser.merge(reader, builder);
+            return ProtobufMessageBodyReader.build(builder);
+        } catch (InvalidProtocolBufferException e) {
+            throw new MalformedMessageException(e);
         }
-        return builder.build();
     }
 }
