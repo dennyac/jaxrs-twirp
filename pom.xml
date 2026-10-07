@@ -56,6 +56,7 @@
         <maven.compiler.release>17</maven.compiler.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <project.build.outputTimestamp>2026-09-28T00:00:00Z</project.build.outputTimestamp>
         <license.directory>${project.basedir}/..</license.directory>
         <notice.directory>${project.basedir}/..</notice.directory>
         <javadoc.output.directory>${project.build.directory}/reports</javadoc.output.directory>
@@ -75,6 +76,15 @@
         <maven-surefire-plugin.version>3.5.5</maven-surefire-plugin.version>
         <protobuf-maven-plugin.version>0.6.1</protobuf-maven-plugin.version>
         <os-maven-plugin.version>1.7.1</os-maven-plugin.version>
+        <maven-clean-plugin.version>3.5.0</maven-clean-plugin.version>
+        <maven-install-plugin.version>3.2.0</maven-install-plugin.version>
+        <maven-deploy-plugin.version>3.2.0</maven-deploy-plugin.version>
+        <maven-site-plugin.version>3.22.0</maven-site-plugin.version>
+
+        <!-- Checks and coverage run by every module; see CONTRIBUTING.md. -->
+        <maven-enforcer-plugin.version>3.6.3</maven-enforcer-plugin.version>
+        <license-maven-plugin.version>5.1.2</license-maven-plugin.version>
+        <jacoco-maven-plugin.version>0.8.15</jacoco-maven-plugin.version>
 
         <!-- Release tooling (used by the `release` profile; see PUBLISHING.md). -->
         <maven-source-plugin.version>3.3.1</maven-source-plugin.version>
@@ -242,8 +252,140 @@
                         <protocArtifact>com.google.protobuf:protoc:${protobuf.version}:exe:${os.detected.classifier}</protocArtifact>
                     </configuration>
                 </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-clean-plugin</artifactId>
+                    <version>${maven-clean-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-install-plugin</artifactId>
+                    <version>${maven-install-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-deploy-plugin</artifactId>
+                    <version>${maven-deploy-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-site-plugin</artifactId>
+                    <version>${maven-site-plugin.version}</version>
+                </plugin>
             </plugins>
         </pluginManagement>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <version>${maven-enforcer-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>enforce-build-requirements</id>
+                        <goals>
+                            <goal>enforce</goal>
+                        </goals>
+                        <configuration>
+                            <rules>
+                                <requireJavaVersion>
+                                    <version>[17,)</version>
+                                </requireJavaVersion>
+                                <requireMavenVersion>
+                                    <version>[3.9,)</version>
+                                </requireMavenVersion>
+                                <requirePluginVersions/>
+                                <banDuplicatePomDependencyVersions/>
+                                <requireNoRepositories/>
+                            </rules>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>com.mycila</groupId>
+                <artifactId>license-maven-plugin</artifactId>
+                <version>${license-maven-plugin.version}</version>
+                <configuration>
+                    <licenseSets>
+                        <licenseSet>
+                            <inlineHeader>Copyright 2026 the jaxrs-twirp authors
+SPDX-License-Identifier: Apache-2.0</inlineHeader>
+                            <excludes>
+                                <exclude>**/*.md</exclude>
+                                <exclude>**/LICENSE</exclude>
+                                <exclude>**/NOTICE</exclude>
+                                <exclude>third-party/**</exclude>
+                                <exclude>**/src/shade/**</exclude>
+                                <exclude>**/target/**</exclude>
+                            </excludes>
+                        </licenseSet>
+                        <licenseSet>
+                            <!-- The plugin's default excludes skip .github/. -->
+                            <inlineHeader>Copyright 2026 the jaxrs-twirp authors
+SPDX-License-Identifier: Apache-2.0</inlineHeader>
+                            <useDefaultExcludes>false</useDefaultExcludes>
+                            <includes>
+                                <include>.github/**/*.yml</include>
+                                <include>.github/**/*.yaml</include>
+                            </includes>
+                        </licenseSet>
+                    </licenseSets>
+                    <mapping>
+                        <java>single_line_doubleslash_style</java>
+                        <proto>single_line_doubleslash_style</proto>
+                        <yml>hash_lines_style</yml>
+                        <yaml>hash_lines_style</yaml>
+                        <xml>compact_xml_style</xml>
+                    </mapping>
+                    <defaultInlineHeaderStyles>
+                        <defaultInlineHeaderStyle>
+                            <name>hash_lines_style</name>
+                            <beforeEachLine xml:space="preserve"># </beforeEachLine>
+                            <firstLineDetectionPattern>#.*$</firstLineDetectionPattern>
+                            <lastLineDetectionPattern>#.*$</lastLineDetectionPattern>
+                            <multiLine>false</multiLine>
+                        </defaultInlineHeaderStyle>
+                        <defaultInlineHeaderStyle>
+                            <name>compact_xml_style</name>
+                            <firstLine>&lt;!--</firstLine>
+                            <beforeEachLine xml:space="preserve">    </beforeEachLine>
+                            <endLine>--&gt;</endLine>
+                            <skipLinePattern>^&lt;\?xml.*&gt;$</skipLinePattern>
+                            <firstLineDetectionPattern>(\s|\t)*&lt;!--(\s|\t)*$</firstLineDetectionPattern>
+                            <lastLineDetectionPattern>.*--&gt;(\s|\t)*$</lastLineDetectionPattern>
+                            <multiLine>true</multiLine>
+                        </defaultInlineHeaderStyle>
+                    </defaultInlineHeaderStyles>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>check-license-headers</id>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>${jacoco-maven-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>prepare-coverage-agent</id>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>coverage-report</id>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
         <extensions>
             <extension>
                 <groupId>kr.motd.maven</groupId>
@@ -323,8 +465,7 @@
                         </executions>
                         <configuration>
                             <outputDirectory>${javadoc.output.directory}</outputDirectory>
-                            <!-- Java 17 doclint is strict; don't let it block a release. -->
-                            <doclint>none</doclint>
+                            <doclint>all,-missing</doclint>
                             <quiet>true</quiet>
                         </configuration>
                     </plugin>

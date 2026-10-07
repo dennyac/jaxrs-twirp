@@ -18,17 +18,30 @@ concurrency:
 
 jobs:
   build:
-    name: Build and test
-    runs-on: ubuntu-latest
+    name: Build and test (JDK ${{ matrix.java }}, ${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest]
+        java: ['17', '21', '25']
+        include:
+          - os: macos-latest
+            java: '17'
+          - os: windows-latest
+            java: '17'
+    defaults:
+      run:
+        shell: bash
 
     steps:
       - uses: actions/checkout@v7
 
-      - name: Set up JDK 17
+      - name: Set up JDK ${{ matrix.java }}
         uses: actions/setup-java@v6
         with:
           distribution: temurin
-          java-version: '17'
+          java-version: ${{ matrix.java }}
           cache: maven
 
       # Also builds the protoc plugin and runs the example's integration tests,
@@ -36,10 +49,22 @@ jobs:
       - name: Build and test
         run: mvn -B -ntp verify
 
+      - name: Upload coverage reports
+        if: matrix.os == 'ubuntu-latest' && matrix.java == '17'
+        uses: actions/upload-artifact@v7
+        with:
+          name: jacoco-reports
+          path: '**/target/site/jacoco/**'
+          retention-days: 7
+
+      # Javadoc is built only by the release profile.
+      - name: Build javadoc
+        run: mvn -B -ntp -Prelease -Dgpg.skip=true -DskipTests verify
+
       - name: Upload surefire reports
         if: failure()
         uses: actions/upload-artifact@v7
         with:
-          name: surefire-reports
+          name: surefire-reports-${{ matrix.os }}-jdk${{ matrix.java }}
           path: '**/target/surefire-reports/**'
           retention-days: 7
