@@ -25,6 +25,8 @@
 
     <properties>
         <module.name>com.dennyac.twirp.protoc</module.name>
+        <bundled-legal.directory>${project.build.directory}/bundled-legal</bundled-legal.directory>
+        <maven-assembly-plugin.version>3.8.0</maven-assembly-plugin.version>
     </properties>
 
     <dependencies>
@@ -55,6 +57,14 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>bundled-dependency-legal</id>
+                        <configuration>
+                            <outputDirectory>${bundled-legal.directory}/META-INF/third-party</outputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -67,7 +77,7 @@
                             <goal>copy-resources</goal>
                         </goals>
                         <configuration>
-                            <outputDirectory>${project.build.outputDirectory}</outputDirectory>
+                            <outputDirectory>${bundled-legal.directory}</outputDirectory>
                             <resources>
                                 <resource>
                                     <directory>${project.basedir}/src/shade</directory>
@@ -88,6 +98,41 @@
                                     </includes>
                                 </resource>
                             </resources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <!-- maven-shade-plugin reads only archives, so zip the staged legal files for extraJars. -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>${maven-assembly-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>bundled-legal</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                        <configuration>
+                            <attach>false</attach>
+                            <appendAssemblyId>false</appendAssemblyId>
+                            <finalName>bundled-legal</finalName>
+                            <inlineDescriptors>
+                                <inlineDescriptor>
+                                    <id>bundled-legal</id>
+                                    <formats>
+                                        <format>zip</format>
+                                    </formats>
+                                    <includeBaseDirectory>false</includeBaseDirectory>
+                                    <fileSets>
+                                        <fileSet>
+                                            <directory>${bundled-legal.directory}</directory>
+                                            <outputDirectory>.</outputDirectory>
+                                        </fileSet>
+                                    </fileSets>
+                                </inlineDescriptor>
+                            </inlineDescriptors>
                         </configuration>
                     </execution>
                 </executions>
@@ -118,7 +163,11 @@
                         </goals>
                         <configuration>
                             <createDependencyReducedPom>false</createDependencyReducedPom>
-                            <shadedArtifactAttached>false</shadedArtifactAttached>
+                            <shadedArtifactAttached>true</shadedArtifactAttached>
+                            <shadedClassifierName>shaded</shadedClassifierName>
+                            <extraJars>
+                                <extraJar>${project.build.directory}/bundled-legal.zip</extraJar>
+                            </extraJars>
                             <transformers combine.children="append">
                                 <transformer
                                         implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
