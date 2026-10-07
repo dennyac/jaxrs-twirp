@@ -20,6 +20,7 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.ServiceUnavailableException;
 import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.MultivaluedMap;
 import jakarta.ws.rs.core.Response;
 import org.glassfish.jersey.CommonProperties;
 import org.glassfish.jersey.internal.MapPropertiesDelegate;
@@ -31,14 +32,17 @@ import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.server.ServerProperties;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.util.concurrent.TimeUnit;
+import java.util.zip.GZIPOutputStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -208,6 +212,22 @@ class TwirpStandaloneServerTest {
     }
 
     @ParameterizedTest
+    @CsvSource(textBlock = """
+            500, '{"code":"internal","msg":"internal server error"}'
+            404, '{"code":"bad_route","msg":"no Twirp handler for the requested URL"}'
+            """)
+    void rewrittenErrorsDropContentEncoding(int status, String body) throws Exception {
+        try (TestServer server = new TestServer(false)) {
+            TestMessage request = TestMessage.newBuilder().setHatSize(status).build();
+            WireResponse response = server.request("POST", "/twirp/test.Echo/Gzipped",
+                    TwirpMediaTypes.APPLICATION_PROTOBUF, request.toByteArray());
+
+            assertJsonError(response, status, body);
+            assertThat(response.headers()).doesNotContainKey(HttpHeaders.CONTENT_ENCODING);
+        }
+    }
+
+    @ParameterizedTest
     @ValueSource(booleans = {false, true})
     void routingFailuresAreTwirpErrors(boolean withJsonProvider) throws Exception {
         try (TestServer server = new TestServer(withJsonProvider)) {
@@ -288,7 +308,8 @@ class TwirpStandaloneServerTest {
                 .startsWith("the request payload could not be decoded: ");
     }
 
-    private record WireResponse(int status, MediaType mediaType, byte[] bytes) {
+    private record WireResponse(int status, MediaType mediaType,
+                                MultivaluedMap<String, String> headers, byte[] bytes) {
         String body() {
             return new String(bytes, StandardCharsets.UTF_8);
         }
@@ -327,7 +348,8 @@ class TwirpStandaloneServerTest {
             ByteArrayOutputStream body = new ByteArrayOutputStream();
 
             ContainerResponse response = application.apply(request, body).get(10, TimeUnit.SECONDS);
-            return new WireResponse(response.getStatus(), response.getMediaType(), body.toByteArray());
+            return new WireResponse(response.getStatus(), response.getMediaType(),
+                    response.getStringHeaders(), body.toByteArray());
         }
 
         @Override
@@ -391,6 +413,20 @@ class TwirpStandaloneServerTest {
         @Path("/Unavailable")
         public TestMessage unavailable(TestMessage request) {
             throw new ServiceUnavailableException();
+        }
+
+        @POST
+        @Path("/Gzipped")
+        public Response gzipped(TestMessage request) throws IOException {
+            ByteArrayOutputStream compressed = new ByteArrayOutputStream();
+            try (GZIPOutputStream gzip = new GZIPOutputStream(compressed)) {
+                gzip.write("upstream error details".getBytes(StandardCharsets.UTF_8));
+            }
+            return Response.status(request.getHatSize())
+                    .type(MediaType.TEXT_PLAIN)
+                    .header(HttpHeaders.CONTENT_ENCODING, "gzip")
+                    .entity(compressed.toByteArray())
+                    .build();
         }
     }
 

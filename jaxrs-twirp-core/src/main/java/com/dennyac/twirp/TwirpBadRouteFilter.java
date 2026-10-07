@@ -43,6 +43,7 @@ final class TwirpBadRouteFilter implements ContainerResponseFilter {
 
         response.setStatus(rewrite.code().httpStatus());
         response.getHeaders().remove(HttpHeaders.CONTENT_LENGTH);
+        response.getHeaders().remove(HttpHeaders.CONTENT_ENCODING);
         response.getHeaders().remove("Allow");
         response.setEntity(
                 TwirpError.of(rewrite.code(), rewrite.message()),
