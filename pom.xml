@@ -50,6 +50,7 @@
         <module>dropwizard-twirp</module>
         <module>jaxrs-twirp-protoc</module>
         <module>dropwizard-twirp-example</module>
+        <module>jaxrs-twirp-resteasy-tests</module>
     </modules>
 
     <properties>
