@@ -106,7 +106,7 @@ class ExampleApplicationIntegrationTest {
         // Per Twirp v7, the response Content-Type mirrors the request
         // Content-Type — not the Accept header. Curl-style clients that send
         // 'Content-Type: application/json' without an Accept header should
-        // still get JSON back, not whatever happens to be first in @Produces.
+        // still get JSON back.
         String body = "{\"inches\":9}";
 
         HttpResponse<String> response = http.send(
@@ -123,6 +123,44 @@ class ExampleApplicationIntegrationTest {
         JsonNode node = mapper.readTree(response.body());
         assertThat(node.get("inches").asInt()).isEqualTo(9);
         assertThat(node.get("style_name").asText()).isEqualTo("bowler");
+    }
+
+    @Test
+    void jsonRequestIgnoresHtmlAcceptHeader() throws Exception {
+        HttpResponse<String> response = http.send(
+                HttpRequest.newBuilder(uri(MAKE_HAT_PATH))
+                        .header("Content-Type", "application/json")
+                        .header("Accept", "text/html")
+                        .POST(BodyPublishers.ofString("{\"inches\":12}", StandardCharsets.UTF_8))
+                        .build(),
+                BodyHandlers.ofString(StandardCharsets.UTF_8));
+
+        assertThat(response.statusCode()).isEqualTo(200);
+        assertThat(response.headers().firstValue("Content-Type"))
+                .hasValueSatisfying(ct -> assertThat(ct).startsWith("application/json"));
+        JsonNode node = mapper.readTree(response.body());
+        assertThat(node.get("inches").asInt()).isEqualTo(12);
+        assertThat(node.get("style_name").asText()).isEqualTo("fedora");
+    }
+
+    @Test
+    void protobufRequestIgnoresJsonAcceptHeader() throws Exception {
+        Size request = Size.newBuilder().setInches(7).build();
+
+        HttpResponse<byte[]> response = http.send(
+                HttpRequest.newBuilder(uri(MAKE_HAT_PATH))
+                        .header("Content-Type", "application/protobuf")
+                        .header("Accept", "application/json")
+                        .POST(BodyPublishers.ofByteArray(request.toByteArray()))
+                        .build(),
+                BodyHandlers.ofByteArray());
+
+        assertThat(response.statusCode()).isEqualTo(200);
+        assertThat(response.headers().firstValue("Content-Type"))
+                .hasValue("application/protobuf");
+        Hat hat = Hat.parseFrom(response.body());
+        assertThat(hat.getInches()).isEqualTo(7);
+        assertThat(hat.getStyleName()).isEqualTo("bowler");
     }
 
     @Test
@@ -183,10 +221,10 @@ class ExampleApplicationIntegrationTest {
     @Test
     void bothWireFormatsCoexistOnTheSameResource() throws Exception {
         // The generated HaberdasherResource has ONE method per RPC with
-        // @Consumes({protobuf, json}) and @Produces({protobuf, json}). This
-        // test interleaves both formats against the same endpoint to prove
-        // they share a single resource instance — no separate /protobuf or
-        // /json sub-routes, no second listener, no per-format service.
+        // @Consumes({protobuf, json}). This test interleaves both formats
+        // against the same endpoint to prove they share a single resource
+        // instance — no separate /protobuf or /json sub-routes, no second
+        // listener, no per-format service.
         URI endpoint = uri(MAKE_HAT_PATH);
 
         // 1) JSON in -> JSON out.

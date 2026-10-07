@@ -49,7 +49,7 @@ the service name appears without a package or leading dot.
 RPC paths retain the original proto spelling, such as `MakeHat`, even though
 the Java method is named `makeHat`. Requests and successful responses use
 `application/protobuf` or `application/json`; the generated resource responds
-in the request's format. No `Accept` header is needed.
+in the request's format. The `Accept` header is ignored.
 
 The [Twirp v7 protocol][spec] requires errors to use `application/json`
 regardless of the request format:

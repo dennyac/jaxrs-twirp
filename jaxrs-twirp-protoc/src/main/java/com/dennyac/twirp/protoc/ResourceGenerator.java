@@ -22,8 +22,9 @@ import java.util.Objects;
  * <ul>
  *   <li>Is annotated {@code @Path("/<prefix>/<package>.<Service>")}.</li>
  *   <li>Constructor-injects an instance of the generated service interface.</li>
- *   <li>Exposes one {@code @POST}-annotated method per RPC, accepting and
- *       producing both {@code application/protobuf} and {@code application/json}.</li>
+ *   <li>Exposes one {@code @POST}-annotated method per RPC that consumes
+ *       {@code application/protobuf} or {@code application/json} and responds
+ *       in the request's format, ignoring {@code Accept}.</li>
  *   <li>Wraps each call in {@link com.dennyac.twirp.TwirpInvocations#invoke}
  *       so that any unhandled exception becomes a Twirp {@code internal} error
  *       instead of a leaky 500.</li>
@@ -38,7 +39,6 @@ final class ResourceGenerator {
     private static final ClassName JAX_PATH = ClassName.get("jakarta.ws.rs", "Path");
     private static final ClassName JAX_POST = ClassName.get("jakarta.ws.rs", "POST");
     private static final ClassName JAX_CONSUMES = ClassName.get("jakarta.ws.rs", "Consumes");
-    private static final ClassName JAX_PRODUCES = ClassName.get("jakarta.ws.rs", "Produces");
     private static final ClassName JAX_CONTEXT = ClassName.get("jakarta.ws.rs.core", "Context");
     private static final ClassName JAX_HTTP_HEADERS = ClassName.get("jakarta.ws.rs.core", "HttpHeaders");
     private static final ClassName JAX_SECURITY_CONTEXT = ClassName.get("jakarta.ws.rs.core", "SecurityContext");
@@ -110,15 +110,9 @@ final class ResourceGenerator {
                 .addMember("value", "{$T.APPLICATION_PROTOBUF, $T.APPLICATION_JSON}",
                         TWIRP_MEDIA_TYPES, TWIRP_MEDIA_TYPES)
                 .build();
-        AnnotationSpec produces = AnnotationSpec.builder(JAX_PRODUCES)
-                .addMember("value", "{$T.APPLICATION_PROTOBUF, $T.APPLICATION_JSON}",
-                        TWIRP_MEDIA_TYPES, TWIRP_MEDIA_TYPES)
-                .build();
 
-        // Returns Response (not the proto type directly) so we can mirror the
-        // request's Content-Type onto the response per Twirp v7. The output
-        // proto is still in the @Produces list so JAX-RS content negotiation
-        // and MessageBodyWriter selection still work.
+        // No @Produces: Twirp ignores Accept, and JAX-RS would reject a mismatch
+        // with 406. The returned Response carries the request's Content-Type.
         MethodSpec.Builder builder = MethodSpec.methodBuilder(javaMethodName)
                 .addModifiers(Modifier.PUBLIC)
                 .returns(JAX_RESPONSE)
@@ -130,8 +124,7 @@ final class ResourceGenerator {
         builder.addAnnotation(JAX_POST)
                 .addAnnotation(AnnotationSpec.builder(JAX_PATH)
                         .addMember("value", "$S", "/" + protoMethodName).build())
-                .addAnnotation(consumes)
-                .addAnnotation(produces);
+                .addAnnotation(consumes);
 
         if (options.generateContext()) {
             builder.addStatement("$T context = $T.from(headers, security)", TWIRP_CONTEXT, TWIRP_CONTEXT)
