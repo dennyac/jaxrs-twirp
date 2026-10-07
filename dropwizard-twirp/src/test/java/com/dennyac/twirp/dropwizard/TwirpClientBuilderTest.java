@@ -1,8 +1,9 @@
 // Copyright 2026 the jaxrs-twirp authors
 // SPDX-License-Identifier: Apache-2.0
 
-package com.dennyac.twirp;
+package com.dennyac.twirp.dropwizard;
 
+import com.dennyac.twirp.TwirpMediaTypes;
 import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.WebTarget;

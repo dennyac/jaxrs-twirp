@@ -1,8 +1,9 @@
 // Copyright 2026 the jaxrs-twirp authors
 // SPDX-License-Identifier: Apache-2.0
 
-package com.dennyac.twirp;
+package com.dennyac.twirp.dropwizard;
 
+import com.dennyac.twirp.TwirpMediaTypes;
 import io.dropwizard.client.JerseyClientBuilder;
 import io.dropwizard.client.JerseyClientConfiguration;
 import io.dropwizard.core.setup.Environment;

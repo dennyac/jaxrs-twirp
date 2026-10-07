@@ -1,15 +1,16 @@
 // Copyright 2026 the jaxrs-twirp authors
 // SPDX-License-Identifier: Apache-2.0
 
-package com.dennyac.twirp;
+package com.dennyac.twirp.dropwizard;
 
+import com.dennyac.twirp.TwirpJson;
+import com.dennyac.twirp.TwirpServerFeature;
 import com.google.protobuf.TypeRegistry;
 import com.google.protobuf.util.JsonFormat;
 import io.dropwizard.core.Configuration;
 import io.dropwizard.core.ConfiguredBundle;
 import io.dropwizard.core.setup.Environment;
 
-import java.util.List;
 import java.util.Objects;
 
 /**
@@ -39,7 +40,7 @@ import java.util.Objects;
  * default fields), use {@link Builder}:
  * <pre>{@code
  * bootstrap.addBundle(TwirpBundle.builder()
- *     .jsonPrinter(JsonFormat.printer().includingDefaultValueFields())
+ *     .jsonPrinter(JsonFormat.printer().alwaysPrintFieldsWithNoPresence())
  *     .build());
  * }</pre>
  *
@@ -62,30 +63,23 @@ import java.util.Objects;
  */
 public class TwirpBundle<C extends Configuration> implements ConfiguredBundle<C> {
 
-    private final JsonFormat.Printer jsonPrinter;
-    private final JsonFormat.Parser jsonParser;
-    private final List<String> pathPrefixes;
+    private final TwirpServerFeature serverFeature;
 
     public TwirpBundle() {
-        this(defaultPrinter(), defaultParser(), List.of(TwirpServerFeature.DEFAULT_PATH_PREFIX));
+        this(new TwirpServerFeature());
     }
 
     public TwirpBundle(JsonFormat.Printer jsonPrinter, JsonFormat.Parser jsonParser) {
-        this(jsonPrinter, jsonParser, List.of(TwirpServerFeature.DEFAULT_PATH_PREFIX));
+        this(new TwirpServerFeature(jsonPrinter, jsonParser));
     }
 
-    private TwirpBundle(JsonFormat.Printer jsonPrinter,
-                        JsonFormat.Parser jsonParser,
-                        List<String> pathPrefixes) {
-        this.jsonPrinter = Objects.requireNonNull(jsonPrinter, "jsonPrinter");
-        this.jsonParser = Objects.requireNonNull(jsonParser, "jsonParser");
-        this.pathPrefixes = List.copyOf(pathPrefixes);
+    private TwirpBundle(TwirpServerFeature serverFeature) {
+        this.serverFeature = serverFeature;
     }
 
     @Override
     public void run(C configuration, Environment environment) {
-        environment.jersey().register(new TwirpServerFeature(
-                jsonPrinter, jsonParser, pathPrefixes.toArray(String[]::new)));
+        environment.jersey().register(serverFeature);
     }
 
     /**
@@ -109,7 +103,7 @@ public class TwirpBundle<C extends Configuration> implements ConfiguredBundle<C>
         private JsonFormat.Printer jsonPrinter = defaultPrinter();
         private JsonFormat.Parser jsonParser = defaultParser();
         private TypeRegistry typeRegistry;
-        private List<String> pathPrefixes = List.of(TwirpServerFeature.DEFAULT_PATH_PREFIX);
+        private String[] pathPrefixes = {TwirpServerFeature.DEFAULT_PATH_PREFIX};
 
         private Builder() {
         }
@@ -129,8 +123,7 @@ public class TwirpBundle<C extends Configuration> implements ConfiguredBundle<C>
          * match the code generator's {@code prefix} option.
          */
         public Builder pathPrefix(String pathPrefix) {
-            this.pathPrefixes = TwirpBadRouteFilter.normalizePrefixes(pathPrefix);
-            return this;
+            return pathPrefixes(Objects.requireNonNull(pathPrefix, "pathPrefix"));
         }
 
         /**
@@ -138,7 +131,7 @@ public class TwirpBundle<C extends Configuration> implements ConfiguredBundle<C>
          * generated resources built with different prefix options.
          */
         public Builder pathPrefixes(String... pathPrefixes) {
-            this.pathPrefixes = TwirpBadRouteFilter.normalizePrefixes(pathPrefixes);
+            this.pathPrefixes = Objects.requireNonNull(pathPrefixes, "pathPrefixes").clone();
             return this;
         }
 
@@ -165,7 +158,7 @@ public class TwirpBundle<C extends Configuration> implements ConfiguredBundle<C>
                 printer = printer.usingTypeRegistry(typeRegistry);
                 parser = parser.usingTypeRegistry(typeRegistry);
             }
-            return new TwirpBundle<>(printer, parser, pathPrefixes);
+            return new TwirpBundle<>(new TwirpServerFeature(printer, parser, pathPrefixes));
         }
     }
 }

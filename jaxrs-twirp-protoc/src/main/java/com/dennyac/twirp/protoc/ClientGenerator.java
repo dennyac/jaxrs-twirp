@@ -37,7 +37,7 @@ import java.util.Objects;
  *
  * <p>When the {@code clientBuilder} option is enabled, the class also gains a
  * static {@code builder(Environment, JerseyClientConfiguration)} factory that
- * returns a {@link com.dennyac.twirp.TwirpClientBuilder} wired to a managed
+ * returns a {@link com.dennyac.twirp.dropwizard.TwirpClientBuilder} wired to a managed
  * {@code dropwizard-client}. It is off by default so the generated client stays
  * dependency-light (the {@code WebTarget} constructors only need the JAX-RS API).
  */
@@ -54,7 +54,7 @@ final class ClientGenerator {
     private static final ClassName TWIRP_MEDIA_TYPES =
             ClassName.get("com.dennyac.twirp", "TwirpMediaTypes");
     private static final ClassName TWIRP_CLIENT_BUILDER =
-            ClassName.get("com.dennyac.twirp", "TwirpClientBuilder");
+            ClassName.get("com.dennyac.twirp.dropwizard", "TwirpClientBuilder");
     private static final ClassName TWIRP_CONTEXT =
             ClassName.get("com.dennyac.twirp", "TwirpContext");
     private static final ClassName ENVIRONMENT =
