@@ -3,7 +3,12 @@
 
 package com.dennyac.twirp;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.cfg.CoercionAction;
+import com.fasterxml.jackson.databind.cfg.CoercionInputShape;
+import com.fasterxml.jackson.databind.json.JsonMapper;
+import com.fasterxml.jackson.databind.type.LogicalType;
 import com.google.protobuf.util.JsonFormat;
 import com.dennyac.twirp.codec.ProtobufJsonMessageBodyReader;
 import com.dennyac.twirp.codec.ProtobufJsonMessageBodyWriter;
@@ -13,18 +18,16 @@ import jakarta.ws.rs.ProcessingException;
 import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.client.Invocation;
 import jakarta.ws.rs.core.Configurable;
-import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.Response;
 
-import java.io.IOException;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
 /**
- * Client-side companion to the server-side {@code TwirpBundle}. Provides helpers
- * for generated Jersey clients to talk Twirp:
+ * Client-side companion to {@link TwirpServerFeature}. Provides helpers
+ * for generated JAX-RS clients to talk Twirp:
  *
  * <ul>
  *   <li>{@link #registerProviders(Configurable)} attaches the
@@ -33,18 +36,16 @@ import java.util.Objects;
  *       {@code WebTarget}, or {@code Invocation.Builder}).
  *   <li>{@link #invoke(Invocation.Builder, Entity, Class)} sends a Twirp
  *       request and either returns the decoded protobuf response, or — on a
- *       non-2xx response — decodes the Twirp error envelope and throws a
- *       {@link TwirpException}.
+ *       non-2xx response — throws the {@link TwirpException} built by
+ *       {@link #decodeError(Response)}.
  * </ul>
  *
  * <p>Generated client classes call these helpers; user code typically does
  * not, except to construct a configured {@link jakarta.ws.rs.client.WebTarget}.
  *
- * <p>Example wiring with Dropwizard's {@code JerseyClientBuilder}:
+ * <p>Example wiring with a JAX-RS {@code ClientBuilder}:
  * <pre>{@code
- * Client client = new JerseyClientBuilder(env)
- *         .using(config.getJerseyClient())
- *         .build("haberdasher");
+ * Client client = ClientBuilder.newClient();
  * WebTarget base = client.target("http://hat-service.local:8080");
  * Haberdasher remote = new HaberdasherClient(base);
  * Hat hat = remote.makeHat(Size.newBuilder().setInches(12).build());
@@ -52,7 +53,13 @@ import java.util.Objects;
  */
 public final class TwirpClients {
 
-    private static final ObjectMapper ERROR_MAPPER = new ObjectMapper();
+    // Rejects unknown fields and non-string values, like the Go client's decoder.
+    private static final ObjectMapper ERROR_MAPPER = JsonMapper.builder()
+            .withCoercionConfig(LogicalType.Textual, config -> config
+                    .setCoercion(CoercionInputShape.Integer, CoercionAction.Fail)
+                    .setCoercion(CoercionInputShape.Float, CoercionAction.Fail)
+                    .setCoercion(CoercionInputShape.Boolean, CoercionAction.Fail))
+            .build();
 
     private TwirpClients() {
         // utility class
@@ -172,58 +179,129 @@ public final class TwirpClients {
     }
 
     /**
-     * Decode a non-2xx response body as a Twirp error envelope.
+     * Convert a non-2xx response into a {@link TwirpException}, the way the
+     * Twirp Go client does.
      *
-     * <p>Per the Twirp v7 spec the body is always {@code application/json}
-     * with a {@code {"code", "msg", "meta"}} shape — but we don't rely on the
-     * response Content-Type header being correctly set, since intermediaries
-     * (load balancers, proxies) may strip or replace it on error paths.
+     * <ul>
+     *   <li>A 3xx response becomes {@link ErrorCode#INTERNAL}, with its
+     *       {@code Location} header in the {@code location} metadata entry.
+     *       The body is not read.
+     *   <li>A Twirp error body keeps the server's code, message and metadata.
+     *       A {@code code} that isn't a Twirp error code becomes
+     *       {@link ErrorCode#INTERNAL}, with the raw body in {@code body}.
+     *   <li>Any other body is treated as an error from an intermediary such as
+     *       a proxy or load balancer. The error code comes from the HTTP status,
+     *       for example 503 becomes {@link ErrorCode#UNAVAILABLE}, and the raw
+     *       body goes in {@code body}.
+     * </ul>
      *
-     * <p>If the body cannot be parsed as a Twirp error, an
-     * {@link ErrorCode#UNKNOWN} {@link TwirpException} is returned whose
-     * message includes the HTTP status and a snippet of the body for
-     * troubleshooting.
+     * <p>Errors built from the HTTP status, including those for 3xx responses,
+     * also carry {@code http_error_from_intermediary=true} and
+     * {@code status_code} metadata. The Content-Type header is ignored because
+     * intermediaries may replace it. A body that can't be read becomes
+     * {@link ErrorCode#INTERNAL}.
      */
     public static TwirpException decodeError(Response response) {
         Objects.requireNonNull(response, "response");
         int status = response.getStatus();
+        if (isRedirect(status)) {
+            return redirectError(status, response.getHeaderString(HttpHeaders.LOCATION));
+        }
         String body;
         try {
             body = response.readEntity(String.class);
         } catch (ProcessingException e) {
-            return new TwirpException(ErrorCode.UNKNOWN,
-                    "twirp error response could not be read (HTTP " + status + ")", e);
+            return new TwirpException(ErrorCode.INTERNAL,
+                    "failed to read server error response body: " + rootMessage(e), e);
         }
         return decodeErrorBody(status, body);
     }
 
     /**
-     * Parse a Twirp error envelope from a raw response body string. Exposed
-     * separately from {@link #decodeError(Response)} so unit tests can exercise
-     * the parsing logic without round-tripping a real HTTP request.
+     * Build the {@link TwirpException} for an error response from its HTTP
+     * status and raw body, using the rules of {@link #decodeError(Response)}.
+     * A 3xx status is reported with an empty {@code location}.
      */
     public static TwirpException decodeErrorBody(int status, String body) {
-        TwirpError error = null;
-        if (body != null && !body.isEmpty()) {
-            try {
-                error = ERROR_MAPPER.readValue(body, TwirpError.class);
-            } catch (IOException e) {
-                // fall through to fallback below
+        if (isRedirect(status)) {
+            return redirectError(status, null);
+        }
+        String rawBody = body == null ? "" : body;
+        TwirpError error = parseTwirpError(rawBody);
+        if (error == null || error.getCode() == null || error.getCode().isEmpty()) {
+            return intermediaryError(status,
+                    "Error from intermediary with HTTP status code " + status
+                            + " \"" + statusText(status) + "\"",
+                    rawBody);
+        }
+        ErrorCode code = knownErrorCode(error.getCode());
+        if (code == null) {
+            return TwirpException.builder(ErrorCode.INTERNAL)
+                    .message("invalid type returned from server error response: " + error.getCode())
+                    .meta("body", rawBody)
+                    .build();
+        }
+        TwirpException.Builder builder = TwirpException.builder(code).message(error.getMsg());
+        error.getMeta().forEach((key, value) -> builder.meta(key, value == null ? "" : value));
+        return builder.build();
+    }
+
+    private static TwirpError parseTwirpError(String body) {
+        try {
+            return ERROR_MAPPER.readValue(body, TwirpError.class);
+        } catch (JsonProcessingException e) {
+            return null;
+        }
+    }
+
+    private static TwirpException redirectError(int status, String location) {
+        String target = location == null ? "" : location;
+        return intermediaryError(status,
+                "unexpected HTTP status code " + status + " \"" + statusText(status)
+                        + "\" received, Location=\"" + target + "\"",
+                target);
+    }
+
+    private static TwirpException intermediaryError(int status, String message, String bodyOrLocation) {
+        return TwirpException.builder(intermediaryErrorCode(status))
+                .message(message)
+                .meta("http_error_from_intermediary", "true")
+                .meta("status_code", Integer.toString(status))
+                .meta(isRedirect(status) ? "location" : "body", bodyOrLocation)
+                .build();
+    }
+
+    private static ErrorCode intermediaryErrorCode(int status) {
+        if (isRedirect(status)) {
+            return ErrorCode.INTERNAL;
+        }
+        return switch (status) {
+            case 400 -> ErrorCode.INTERNAL;
+            case 401 -> ErrorCode.UNAUTHENTICATED;
+            case 403 -> ErrorCode.PERMISSION_DENIED;
+            case 404 -> ErrorCode.BAD_ROUTE;
+            case 429 -> ErrorCode.RESOURCE_EXHAUSTED;
+            case 502, 503, 504 -> ErrorCode.UNAVAILABLE;
+            default -> ErrorCode.UNKNOWN;
+        };
+    }
+
+    private static ErrorCode knownErrorCode(String wireValue) {
+        for (ErrorCode code : ErrorCode.values()) {
+            if (code.wireValue().equals(wireValue)) {
+                return code;
             }
         }
-        if (error == null || error.getCode() == null) {
-            String snippet = body == null ? "" : body.length() > 256 ? body.substring(0, 256) + "..." : body;
-            return new TwirpException(ErrorCode.UNKNOWN,
-                    "non-Twirp error response (HTTP " + status + "): " + snippet);
-        }
+        return null;
+    }
 
-        ErrorCode code = ErrorCode.fromWireValue(error.getCode());
-        String message = error.getMsg() == null ? error.getCode() : error.getMsg();
-        TwirpException.Builder builder = TwirpException.builder(code).message(message);
-        for (var entry : error.getMeta().entrySet()) {
-            builder.meta(entry.getKey(), entry.getValue());
-        }
-        return builder.build();
+    private static boolean isRedirect(int status) {
+        return status >= 300 && status <= 399;
+    }
+
+    private static String statusText(int status) {
+        Response.Status known = Response.Status.fromStatusCode(status);
+        return known == null ? "" : known.getReasonPhrase();
     }
 
     private static String rootMessage(Throwable t) {
@@ -232,20 +310,5 @@ public final class TwirpClients {
             cur = cur.getCause();
         }
         return cur.getMessage() == null ? cur.getClass().getSimpleName() : cur.getMessage();
-    }
-
-    /**
-     * Returns a media-type sanity check used by tests: confirm the response
-     * carries an {@code application/json} content-type as required by the spec.
-     */
-    static boolean isJsonContent(MediaType type) {
-        return type != null
-                && "application".equalsIgnoreCase(type.getType())
-                && "json".equalsIgnoreCase(type.getSubtype());
-    }
-
-    /** Empty meta map — convenience for tests that don't care about meta entries. */
-    static java.util.Map<String, String> noMeta() {
-        return Collections.emptyMap();
     }
 }
