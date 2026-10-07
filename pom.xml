@@ -62,7 +62,7 @@
         <javadoc.output.directory>${project.build.directory}/reports</javadoc.output.directory>
 
         <dropwizard.version>5.0.2</dropwizard.version>
-        <protobuf.version>4.32.1</protobuf.version>
+        <protobuf.version>4.36.2</protobuf.version>
         <javapoet.version>1.13.0</javapoet.version>
 
         <junit.version>5.11.4</junit.version>
