@@ -31,12 +31,14 @@ import java.util.Objects;
  *       requiring a general JSON provider</li>
  *   <li>{@link TwirpExceptionMapper} — renders a {@link TwirpException} as the
  *       wire-format JSON error</li>
- *   <li>{@link InvalidProtocolBufferExceptionMapper} — renders malformed
- *       request bytes as a Twirp {@code malformed} 400</li>
+ *   <li>{@link InvalidProtocolBufferExceptionMapper} — renders request bodies the
+ *       Twirp body readers cannot decode as a Twirp {@code malformed} 400</li>
  *   <li>a route-aware response filter that renders unroutable requests beneath
  *       the configured Twirp path prefix (wrong URL, non-POST, unsupported
- *       content type) as Twirp {@code bad_route} 404s without changing ordinary
- *       REST error responses</li>
+ *       content type) as Twirp {@code bad_route} 404s, and non-Twirp 5xx
+ *       responses there as Twirp {@code internal}, {@code unimplemented} or
+ *       {@code unavailable} errors, without changing ordinary REST error
+ *       responses</li>
  * </ul>
  *
  * <p>Register it on your application's {@code Configurable} (for example a Jersey

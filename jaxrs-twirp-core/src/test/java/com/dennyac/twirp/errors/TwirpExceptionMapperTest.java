@@ -5,11 +5,13 @@ package com.dennyac.twirp.errors;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.protobuf.InvalidProtocolBufferException;
 import io.dropwizard.testing.junit5.DropwizardExtensionsSupport;
 import io.dropwizard.testing.junit5.ResourceExtension;
 import com.dennyac.twirp.ErrorCode;
 import com.dennyac.twirp.TwirpException;
 import com.dennyac.twirp.TwirpMediaTypes;
+import com.dennyac.twirp.codec.MalformedMessageException;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
@@ -87,12 +89,23 @@ class TwirpExceptionMapperTest {
     }
 
     @Test
-    void invalidProtocolBufferExceptionMapsToMalformed() throws Exception {
+    void malformedMessageExceptionMapsToMalformed() throws Exception {
         Response response = RESOURCE.target("/boom/malformed_proto").request().get();
 
         assertThat(response.getStatus()).isEqualTo(400);
         JsonNode body = json.readTree(response.readEntity(String.class));
         assertThat(body.get("code").asText()).isEqualTo("malformed");
+    }
+
+    @Test
+    void otherInvalidProtocolBufferExceptionsAreNotMalformed() throws Exception {
+        Response response = RESOURCE.target("/boom/invalid_stored_proto").request().get();
+
+        assertThat(response.getStatus()).isEqualTo(500);
+        JsonNode body = json.readTree(response.readEntity(String.class));
+        assertThat(body.get("code").asInt()).isEqualTo(500);
+        assertThat(body.get("message").asText())
+                .startsWith("There was an error processing your request.");
     }
 
     @Test
@@ -122,8 +135,10 @@ class TwirpExceptionMapperTest {
                     throw new TwirpException(ErrorCode.INTERNAL, "kaboom",
                             new RuntimeException("inner"));
                 case "malformed_proto":
-                    throw new com.google.protobuf.InvalidProtocolBufferException(
-                            "synthetic malformed wire data");
+                    throw new MalformedMessageException(new InvalidProtocolBufferException(
+                            "synthetic malformed wire data"));
+                case "invalid_stored_proto":
+                    throw new InvalidProtocolBufferException("stored record is corrupt");
                 default:
                     return "ok";
             }

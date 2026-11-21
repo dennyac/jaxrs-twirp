@@ -1,0 +1,18 @@
+// Copyright 2026 the jaxrs-twirp authors
+// SPDX-License-Identifier: Apache-2.0
+
+syntax = "proto2";
+
+package com.dennyac.twirp.testproto;
+
+option java_package = "com.dennyac.twirp.testproto";
+option java_multiple_files = true;
+option java_outer_classname = "Proto2TestProtos";
+
+// Used to test decoding of missing required fields and JSON printing of unset
+// optional fields.
+message Proto2Message {
+  required string name = 1;
+  required int32 count = 2;
+  optional string note = 3;
+}

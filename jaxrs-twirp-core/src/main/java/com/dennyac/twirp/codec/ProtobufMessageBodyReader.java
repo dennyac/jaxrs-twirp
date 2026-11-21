@@ -3,7 +3,9 @@
 
 package com.dennyac.twirp.codec;
 
+import com.google.protobuf.InvalidProtocolBufferException;
 import com.google.protobuf.Message;
+import com.google.protobuf.UninitializedMessageException;
 import com.dennyac.twirp.TwirpMediaTypes;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.WebApplicationException;
@@ -29,6 +31,9 @@ import java.lang.reflect.Type;
  * {@link Message} subtype declared by the resource method. The concrete type's
  * static {@code getDefaultInstance()} method is invoked once via reflection and
  * the prototype is cached per-class for subsequent requests.
+ *
+ * <p>Bodies that cannot be decoded, including proto2 messages missing
+ * {@code required} fields, raise {@link MalformedMessageException}.
  */
 @Provider
 @Consumes(TwirpMediaTypes.APPLICATION_PROTOBUF)
@@ -49,8 +54,20 @@ public class ProtobufMessageBodyReader implements MessageBodyReader<Message> {
                             InputStream entityStream) throws IOException, WebApplicationException {
         Message prototype = defaultInstanceOf(type);
         Message.Builder builder = prototype.newBuilderForType();
-        builder.mergeFrom(entityStream);
-        return builder.build();
+        try {
+            builder.mergeFrom(entityStream);
+            return build(builder);
+        } catch (InvalidProtocolBufferException e) {
+            throw new MalformedMessageException(e);
+        }
+    }
+
+    static Message build(Message.Builder builder) throws InvalidProtocolBufferException {
+        try {
+            return builder.build();
+        } catch (UninitializedMessageException e) {
+            throw e.asInvalidProtocolBufferException();
+        }
     }
 
     static Message defaultInstanceOf(Class<?> type) {

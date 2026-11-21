@@ -31,8 +31,10 @@ import java.nio.charset.StandardCharsets;
  * <ul>
  *   <li>{@code preservingProtoFieldNames()} — emit snake_case proto field names
  *       rather than camelCase.</li>
- *   <li>{@code includingDefaultValueFields()} — emit zero-value fields, matching
- *       {@code EmitUnpopulated: true}.</li>
+ *   <li>{@code alwaysPrintFieldsWithNoPresence()} — emit fields without
+ *       presence even when they hold default values, matching
+ *       {@code EmitUnpopulated: true}. Unset fields with presence, such as
+ *       proto2 {@code optional} fields, are omitted.</li>
  *   <li>{@code omittingInsignificantWhitespace()} — produce compact JSON.</li>
  * </ul>
  */
