@@ -3,7 +3,11 @@
 
 package com.dennyac.twirp.dropwizard;
 
+import com.dennyac.twirp.TwirpClients;
+import com.dennyac.twirp.TwirpJson;
 import com.dennyac.twirp.TwirpMediaTypes;
+import com.google.protobuf.TypeRegistry;
+import com.google.protobuf.util.JsonFormat;
 import io.dropwizard.client.JerseyClientBuilder;
 import io.dropwizard.client.JerseyClientConfiguration;
 import io.dropwizard.core.setup.Environment;
@@ -11,6 +15,7 @@ import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.client.WebTarget;
 
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * Fluent helper that turns a base URI plus an HTTP client into a ready-to-use
@@ -70,11 +75,16 @@ public final class TwirpClientBuilder<T> {
         T create(WebTarget baseTarget, String contentType);
     }
 
+    private static final AtomicLong DEFAULT_NAME_SEQUENCE = new AtomicLong();
+
     private final ClientFactory<T> factory;
 
     private String contentType = TwirpMediaTypes.APPLICATION_PROTOBUF;
     private String baseUri;
     private String clientName;
+    private JsonFormat.Printer jsonPrinter;
+    private JsonFormat.Parser jsonParser;
+    private TypeRegistry typeRegistry;
 
     // Exactly one client source is used by build(): a caller-supplied client
     // wins; otherwise an environment + configuration pair builds a managed one.
@@ -147,11 +157,48 @@ public final class TwirpClientBuilder<T> {
     }
 
     /**
+     * Customize the protobuf JSON printer used for outbound
+     * {@code application/json} requests. When unset,
+     * {@link TwirpJson#defaultPrinter()} is used.
+     */
+    public TwirpClientBuilder<T> jsonPrinter(JsonFormat.Printer printer) {
+        this.jsonPrinter = Objects.requireNonNull(printer, "printer");
+        return this;
+    }
+
+    /**
+     * Customize the protobuf JSON parser used for inbound
+     * {@code application/json} responses. When unset,
+     * {@link TwirpJson#defaultParser()} is used.
+     */
+    public TwirpClientBuilder<T> jsonParser(JsonFormat.Parser parser) {
+        this.jsonParser = Objects.requireNonNull(parser, "parser");
+        return this;
+    }
+
+    /**
+     * Register a {@link TypeRegistry} so that messages embedding a
+     * {@code google.protobuf.Any} can be serialized to and parsed from JSON.
+     * The registry is applied to both the printer and the parser at
+     * {@link #build} time, preserving their other settings.
+     *
+     * <p>Only needed for the JSON wire format — binary protobuf carries the
+     * {@code Any} type URL inline and needs no registry. Do not combine this
+     * with a custom {@link #jsonPrinter}/{@link #jsonParser} that already has
+     * a registry of its own; supply the registry through exactly one path.
+     */
+    public TwirpClientBuilder<T> typeRegistry(TypeRegistry registry) {
+        this.typeRegistry = Objects.requireNonNull(registry, "registry");
+        return this;
+    }
+
+    /**
      * Name used when this builder creates a managed client via
      * {@link #using(Environment, JerseyClientConfiguration)}; surfaces in
      * Dropwizard client metrics and thread names. Must be unique per managed
-     * client — if you build several stubs from one {@code Environment}, give each
-     * a distinct name. When unset, a name is derived from the {@code baseUri}.
+     * client — if you set explicit names for several stubs in one
+     * {@code Environment}, give each a distinct name. When unset, a unique name
+     * is derived from the {@code baseUri} with a monotonic sequence suffix.
      * Ignored when an existing client is supplied through {@link #using(Client)}.
      */
     public TwirpClientBuilder<T> clientName(String clientName) {
@@ -168,7 +215,20 @@ public final class TwirpClientBuilder<T> {
      */
     public T build() {
         Objects.requireNonNull(baseUri, "baseUri must be set before build()");
+        JsonFormat.Printer printer = null;
+        JsonFormat.Parser parser = null;
+        if (jsonPrinter != null || jsonParser != null || typeRegistry != null) {
+            printer = jsonPrinter != null ? jsonPrinter : TwirpJson.defaultPrinter();
+            parser = jsonParser != null ? jsonParser : TwirpJson.defaultParser();
+            if (typeRegistry != null) {
+                printer = printer.usingTypeRegistry(typeRegistry);
+                parser = parser.usingTypeRegistry(typeRegistry);
+            }
+        }
         WebTarget root = resolveClient().target(baseUri);
+        if (printer != null) {
+            TwirpClients.registerProviders(root, printer, parser);
+        }
         return factory.create(root, contentType);
     }
 
@@ -186,14 +246,14 @@ public final class TwirpClientBuilder<T> {
 
     /**
      * The Dropwizard client name must be unique per managed client. If the caller
-     * didn't set one, derive it from the baseUri so two stubs pointed at different
-     * hosts don't collide on metric/thread names; fall back to a constant only when
-     * no baseUri is available (build() requires one, so that's effectively never).
+     * didn't set one, derive it from the baseUri plus a sequence number so two
+     * stubs pointed at the same host don't collide on Dropwizard metric names.
      */
     private String resolveClientName() {
         if (clientName != null) {
             return clientName;
         }
-        return baseUri == null ? "twirp-client" : "twirp-client-" + baseUri;
+        long id = DEFAULT_NAME_SEQUENCE.incrementAndGet();
+        return baseUri == null ? "twirp-client-" + id : "twirp-client-" + baseUri + "-" + id;
     }
 }

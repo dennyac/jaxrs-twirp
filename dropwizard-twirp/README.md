@@ -130,8 +130,27 @@ Haberdasher remote = TwirpClientBuilder.forService(HaberdasherClient::new)
 ```
 
 The default format is protobuf; `json()` selects JSON. `baseUri` is the
-application's base URL without the Twirp service path. Give each managed client
-a unique `clientName` within an environment.
+application's base URL without the Twirp service path. Give each explicitly
+named managed client a unique `clientName` within an environment; when omitted,
+the builder generates a unique default name per client from `baseUri`.
+
+To customize the client's JSON serialization or handle `google.protobuf.Any`
+over JSON, configure `jsonPrinter(...)`, `jsonParser(...)`, or
+`typeRegistry(...)` on the builder (matching `TwirpBundle.Builder`):
+
+```java
+Haberdasher remote = TwirpClientBuilder.forService(HaberdasherClient::new)
+        .using(client)
+        .baseUri("https://hats.example.com")
+        .json()
+        .typeRegistry(TypeRegistry.newBuilder()
+                .add(Hat.getDescriptor())
+                .build())
+        .build();
+```
+
+Supply a `TypeRegistry` either through `typeRegistry(...)` or on custom
+printer/parser instances, not both.
 
 The managed overload uses `io.dropwizard.client.JerseyClientConfiguration`
 and requires `dropwizard-client`, an optional dependency of this module.
