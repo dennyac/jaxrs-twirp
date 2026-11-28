@@ -85,10 +85,14 @@ class PluginTest {
                 .contains("public HaberdasherClient(WebTarget baseTarget) {")
                 .contains("this(baseTarget, TwirpMediaTypes.APPLICATION_PROTOBUF);")
                 .contains("public HaberdasherClient(WebTarget baseTarget, String contentType) {")
+                .contains("if (!TwirpMediaTypes.APPLICATION_PROTOBUF.equals(contentType)"
+                        + " && !TwirpMediaTypes.APPLICATION_JSON.equals(contentType)) {")
+                .contains("throw new IllegalArgumentException(\"Unsupported Twirp content type: \" + contentType);")
                 .contains("TwirpClients.registerProviders(baseTarget);")
                 .contains("this.target = baseTarget.path(\"/twirp/twitch.twirp.example.Haberdasher\");")
                 .contains("@Override")
                 .contains("public Hat makeHat(Size request) throws TwirpException {")
+                .contains("Objects.requireNonNull(request, \"request\");")
                 .contains("return TwirpClients.invoke(")
                 .contains("target.path(\"/MakeHat\").request(contentType),")
                 .doesNotContain(".accept(")
@@ -122,8 +126,49 @@ class PluginTest {
                 .contains("Environment environment")
                 .contains("JerseyClientConfiguration configuration")
                 .contains("return TwirpClientBuilder.forService(HaberdasherClient::new)")
-                .contains(".using(environment, configuration)")
-                .contains(".clientName(\"HaberdasherClient\");");
+                .contains(".using(environment, configuration);")
+                .doesNotContain(".clientName(");
+    }
+
+    @Test
+    void clientValidatesContentTypeBeforeRegisteringProviders() {
+        CodeGeneratorRequest req = CodeGeneratorRequest.newBuilder()
+                .addFileToGenerate("haberdasher.proto")
+                .addProtoFile(haberdasherFile(true))
+                .build();
+
+        String client = new Plugin().generate(req).getFileList().stream()
+                .filter(f -> f.getName().endsWith("HaberdasherClient.java"))
+                .findFirst().orElseThrow().getContent();
+
+        String contentTypeCheck = "if (!TwirpMediaTypes.APPLICATION_PROTOBUF.equals(contentType)"
+                + " && !TwirpMediaTypes.APPLICATION_JSON.equals(contentType)) {";
+        String throwStatement = "throw new IllegalArgumentException(\"Unsupported Twirp content type: \" + contentType);";
+        String registerProviders = "TwirpClients.registerProviders(baseTarget);";
+
+        assertThat(client)
+                .containsSubsequence(
+                        "Objects.requireNonNull(contentType, \"contentType\");",
+                        contentTypeCheck,
+                        throwStatement,
+                        registerProviders);
+    }
+
+    @Test
+    void clientRejectsNullRequestBeforeInvoking() {
+        CodeGeneratorRequest req = CodeGeneratorRequest.newBuilder()
+                .addFileToGenerate("haberdasher.proto")
+                .addProtoFile(haberdasherFile(true))
+                .build();
+
+        String client = new Plugin().generate(req).getFileList().stream()
+                .filter(f -> f.getName().endsWith("HaberdasherClient.java"))
+                .findFirst().orElseThrow().getContent();
+
+        assertThat(client).containsSubsequence(
+                "public Hat makeHat(Size request) throws TwirpException {",
+                "Objects.requireNonNull(request, \"request\");",
+                "return TwirpClients.invoke(");
     }
 
     @Test
@@ -154,9 +199,11 @@ class PluginTest {
         String client = files.get("com/twitch/twirp/example/haberdasher/HaberdasherClient.java");
         assertThat(client)
                 .contains("import com.dennyac.twirp.TwirpContext;")
-                .contains("public Hat makeHat(Size request, TwirpContext context) throws TwirpException {")
-                .contains("TwirpClients.applyHeaders("
-                        + "target.path(\"/MakeHat\").request(contentType), context)")
+                .containsSubsequence(
+                        "public Hat makeHat(Size request, TwirpContext context) throws TwirpException {",
+                        "Objects.requireNonNull(request, \"request\");",
+                        "TwirpClients.applyHeaders("
+                                + "target.path(\"/MakeHat\").request(contentType), context)")
                 .doesNotContain(".accept(");
     }
 
