@@ -47,6 +47,8 @@ final class ClientGenerator {
             ClassName.get("jakarta.ws.rs.client", "WebTarget");
     private static final ClassName ENTITY =
             ClassName.get("jakarta.ws.rs.client", "Entity");
+    private static final ClassName MEDIA_TYPE =
+            ClassName.get("jakarta.ws.rs.core", "MediaType");
     private static final ClassName TWIRP_CLIENTS =
             ClassName.get("com.dennyac.twirp", "TwirpClients");
     private static final ClassName TWIRP_EXCEPTION =
@@ -132,16 +134,19 @@ final class ClientGenerator {
                                 + "\n@param baseTarget any {@code WebTarget} whose root the server is at\n"
                                 + "@param contentType one of {@link $T#APPLICATION_PROTOBUF} or "
                                 + "{@link $T#APPLICATION_JSON}\n"
-                                + "@throws IllegalArgumentException if {@code contentType} is not a supported "
-                                + "Twirp media type\n",
+                                + "@throws java.lang.IllegalArgumentException if {@code contentType} is not a "
+                                + "supported Twirp media type\n",
                         TWIRP_MEDIA_TYPES, TWIRP_MEDIA_TYPES)
                 .addStatement("$T.requireNonNull(baseTarget, $S)", OBJECTS, "baseTarget")
                 .addStatement("$T.requireNonNull(contentType, $S)", OBJECTS, "contentType")
-                .beginControlFlow("if (!$T.APPLICATION_PROTOBUF.equals(contentType)"
-                                + " && !$T.APPLICATION_JSON.equals(contentType))",
+                .addStatement("$T parsedContentType = $T.valueOf(contentType)", MEDIA_TYPE, MEDIA_TYPE)
+                .beginControlFlow("if (parsedContentType.isWildcardType()"
+                                + " || parsedContentType.isWildcardSubtype()"
+                                + " || (!$T.APPLICATION_PROTOBUF_TYPE.isCompatible(parsedContentType)"
+                                + " && !$T.APPLICATION_JSON_TYPE.isCompatible(parsedContentType)))",
                         TWIRP_MEDIA_TYPES, TWIRP_MEDIA_TYPES)
-                .addStatement("throw new $T($S + contentType)",
-                        IllegalArgumentException.class, "Unsupported Twirp content type: ")
+                .addStatement("throw new java.lang.IllegalArgumentException($S + contentType)",
+                        "Unsupported Twirp content type: ")
                 .endControlFlow()
                 .addStatement("$T.registerProviders(baseTarget)", TWIRP_CLIENTS)
                 .addStatement("this.target = baseTarget.path($S)", servicePath)

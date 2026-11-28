@@ -79,15 +79,20 @@ class PluginTest {
         String client = files.get("com/twitch/twirp/example/haberdasher/HaberdasherClient.java");
         assertThat(client)
                 .contains("package com.twitch.twirp.example.haberdasher;")
+                .contains("import jakarta.ws.rs.core.MediaType;")
                 .contains("public final class HaberdasherClient implements Haberdasher {")
                 .contains("private final WebTarget target;")
                 .contains("private final String contentType;")
                 .contains("public HaberdasherClient(WebTarget baseTarget) {")
                 .contains("this(baseTarget, TwirpMediaTypes.APPLICATION_PROTOBUF);")
                 .contains("public HaberdasherClient(WebTarget baseTarget, String contentType) {")
-                .contains("if (!TwirpMediaTypes.APPLICATION_PROTOBUF.equals(contentType)"
-                        + " && !TwirpMediaTypes.APPLICATION_JSON.equals(contentType)) {")
-                .contains("throw new IllegalArgumentException(\"Unsupported Twirp content type: \" + contentType);")
+                .contains("MediaType parsedContentType = MediaType.valueOf(contentType);")
+                .contains("if (parsedContentType.isWildcardType()"
+                        + " || parsedContentType.isWildcardSubtype()"
+                        + " || (!TwirpMediaTypes.APPLICATION_PROTOBUF_TYPE.isCompatible(parsedContentType)"
+                        + " && !TwirpMediaTypes.APPLICATION_JSON_TYPE.isCompatible(parsedContentType))) {")
+                .contains("throw new java.lang.IllegalArgumentException("
+                        + "\"Unsupported Twirp content type: \" + contentType);")
                 .contains("TwirpClients.registerProviders(baseTarget);")
                 .contains("this.target = baseTarget.path(\"/twirp/twitch.twirp.example.Haberdasher\");")
                 .contains("@Override")
@@ -141,14 +146,21 @@ class PluginTest {
                 .filter(f -> f.getName().endsWith("HaberdasherClient.java"))
                 .findFirst().orElseThrow().getContent();
 
-        String contentTypeCheck = "if (!TwirpMediaTypes.APPLICATION_PROTOBUF.equals(contentType)"
-                + " && !TwirpMediaTypes.APPLICATION_JSON.equals(contentType)) {";
-        String throwStatement = "throw new IllegalArgumentException(\"Unsupported Twirp content type: \" + contentType);";
+        String parseMediaType = "MediaType parsedContentType = MediaType.valueOf(contentType);";
+        String contentTypeCheck = "if (parsedContentType.isWildcardType()"
+                + " || parsedContentType.isWildcardSubtype()"
+                + " || (!TwirpMediaTypes.APPLICATION_PROTOBUF_TYPE.isCompatible(parsedContentType)"
+                + " && !TwirpMediaTypes.APPLICATION_JSON_TYPE.isCompatible(parsedContentType))) {";
+        String throwStatement = "throw new java.lang.IllegalArgumentException("
+                + "\"Unsupported Twirp content type: \" + contentType);";
         String registerProviders = "TwirpClients.registerProviders(baseTarget);";
 
         assertThat(client)
+                .contains("import jakarta.ws.rs.core.MediaType;")
+                .contains("@throws java.lang.IllegalArgumentException")
                 .containsSubsequence(
                         "Objects.requireNonNull(contentType, \"contentType\");",
+                        parseMediaType,
                         contentTypeCheck,
                         throwStatement,
                         registerProviders);
