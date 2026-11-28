@@ -121,7 +121,9 @@ under `/api`, include `/api` in the base URL, but not `/twirp/...`.
 
 Binary protobuf is the default. Pass `TwirpMediaTypes.APPLICATION_JSON` as the
 second constructor argument for JSON. The generated constructor calls
-`TwirpClients.registerProviders` on the target.
+`TwirpClients.registerProviders(target)`, which skips any provider class already
+registered on the target or its parent `Client` so custom JSON codecs registered
+beforehand are preserved.
 
 Calls throw `TwirpException` for these failure cases:
 
@@ -131,7 +133,9 @@ Calls throw `TwirpException` for these failure cases:
 | Twirp error response whose `code` is not a Twirp error code | `INTERNAL`, with the raw body in the `body` metadata entry |
 | 3xx response, or an error response without a Twirp error body, such as a proxy's HTML page | Depends on the HTTP status; see below |
 | Error response body that cannot be read | `INTERNAL` |
-| Transport or request-encoding `ProcessingException` | `UNAVAILABLE` |
+| Client-side request encoding or missing provider `ProcessingException` | `INTERNAL` |
+| Request or response-read timeout (`SocketTimeoutException`, `HttpTimeoutException`, or `TimeoutException`) | `DEADLINE_EXCEEDED` |
+| Other transport `ProcessingException` | `UNAVAILABLE` |
 | Successful response that cannot be decoded | `MALFORMED` |
 
 A Twirp error body is a JSON object with a non-empty string `code`, an
