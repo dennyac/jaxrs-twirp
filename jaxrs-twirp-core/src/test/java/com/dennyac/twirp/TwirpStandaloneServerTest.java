@@ -5,6 +5,7 @@ package com.dennyac.twirp;
 
 import com.dennyac.twirp.codec.ProtobufJsonMessageBodyWriter;
 import com.dennyac.twirp.codec.TwirpErrorMessageBodyWriter;
+import com.dennyac.twirp.testproto.Parcel;
 import com.dennyac.twirp.testproto.Proto2Message;
 import com.dennyac.twirp.testproto.TestMessage;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -12,6 +13,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.jakarta.rs.json.JacksonJsonProvider;
+import com.google.protobuf.Any;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
@@ -190,6 +192,22 @@ class TwirpStandaloneServerTest {
 
             assertJsonError(response, 500,
                     "{\"code\":\"internal\",\"msg\":\"Fail failed: invariant broken\"}");
+        }
+    }
+
+    @ParameterizedTest
+    @ValueSource(booleans = {false, true})
+    void jsonEncodingFailureAfterLargeFieldIsTwirpInternal(boolean withJsonProvider) throws Exception {
+        try (TestServer server = new TestServer(withJsonProvider)) {
+            WireResponse response = server.request("POST", "/twirp/test.Echo/LargeParcel",
+                    MediaType.APPLICATION_JSON, MESSAGE_JSON.getBytes(StandardCharsets.UTF_8));
+
+            assertThat(response.status()).isEqualTo(500);
+            assertThat(response.mediaType()).isEqualTo(MediaType.APPLICATION_JSON_TYPE);
+            JsonNode body = new ObjectMapper().readTree(response.body());
+            assertThat(body.fieldNames()).toIterable().containsExactly("code", "msg");
+            assertThat(body.get("code").asText()).isEqualTo("internal");
+            assertThat(body.get("msg").asText()).startsWith("failed to encode JSON message: ");
         }
     }
 
@@ -399,6 +417,15 @@ class TwirpStandaloneServerTest {
             return TwirpInvocations.invoke("Fail", () -> {
                 throw new AssertionError("invariant broken");
             });
+        }
+
+        @POST
+        @Path("/LargeParcel")
+        public Parcel largeParcel(TestMessage request) {
+            return Parcel.newBuilder()
+                    .setLabel("a".repeat(64 * 1024))
+                    .setContents(Any.pack(request))
+                    .build();
         }
 
         @POST

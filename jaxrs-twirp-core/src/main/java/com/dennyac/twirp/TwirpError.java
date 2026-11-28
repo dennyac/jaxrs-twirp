@@ -51,11 +51,13 @@ public final class TwirpError {
     }
 
     @JsonProperty("code")
+    @JsonInclude(JsonInclude.Include.ALWAYS)
     public String getCode() {
         return code;
     }
 
     @JsonProperty("msg")
+    @JsonInclude(JsonInclude.Include.ALWAYS)
     public String getMsg() {
         return msg;
     }

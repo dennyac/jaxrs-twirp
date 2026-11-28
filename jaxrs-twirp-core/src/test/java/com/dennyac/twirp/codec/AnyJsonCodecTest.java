@@ -3,20 +3,23 @@
 
 package com.dennyac.twirp.codec;
 
-import com.google.protobuf.Any;
-import com.google.protobuf.Message;
-import com.google.protobuf.TypeRegistry;
-import com.google.protobuf.util.JsonFormat;
+import com.dennyac.twirp.ErrorCode;
+import com.dennyac.twirp.TwirpException;
 import com.dennyac.twirp.TwirpJson;
 import com.dennyac.twirp.TwirpMediaTypes;
 import com.dennyac.twirp.testproto.Parcel;
 import com.dennyac.twirp.testproto.TestMessage;
+import com.google.protobuf.Any;
+import com.google.protobuf.InvalidProtocolBufferException;
+import com.google.protobuf.Message;
+import com.google.protobuf.TypeRegistry;
+import com.google.protobuf.Value;
+import com.google.protobuf.util.JsonFormat;
 import jakarta.ws.rs.core.MultivaluedHashMap;
 import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -57,7 +60,11 @@ class AnyJsonCodecTest {
         assertThatThrownBy(() -> writer.writeTo(
                 PARCEL, Parcel.class, null, null, TwirpMediaTypes.APPLICATION_JSON_TYPE,
                 new MultivaluedHashMap<>(), new ByteArrayOutputStream()))
-                .isInstanceOf(IOException.class);
+                .isInstanceOfSatisfying(TwirpException.class, twirp -> {
+                    assertThat(twirp.getErrorCode()).isEqualTo(ErrorCode.INTERNAL);
+                    assertThat(twirp.getMessage()).startsWith("failed to encode JSON message: ");
+                    assertThat(twirp.getCause()).isInstanceOf(InvalidProtocolBufferException.class);
+                });
     }
 
     @Test
@@ -72,7 +79,23 @@ class AnyJsonCodecTest {
         assertThatThrownBy(() -> writer.writeTo(
                 largeParcel, Parcel.class, null, null, TwirpMediaTypes.APPLICATION_JSON_TYPE,
                 new MultivaluedHashMap<>(), out))
-                .isInstanceOf(IOException.class);
+                .isInstanceOfSatisfying(TwirpException.class, twirp ->
+                        assertThat(twirp.getErrorCode()).isEqualTo(ErrorCode.INTERNAL));
+
+        assertThat(out.size()).isZero();
+    }
+
+    @Test
+    void nonFiniteProtobufValueMapsToInternalWithoutWritingBytes() {
+        Value nanValue = Value.newBuilder().setNumberValue(Double.NaN).build();
+        ProtobufJsonMessageBodyWriter writer = new ProtobufJsonMessageBodyWriter();
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+
+        assertThatThrownBy(() -> writer.writeTo(
+                nanValue, Value.class, null, null, TwirpMediaTypes.APPLICATION_JSON_TYPE,
+                new MultivaluedHashMap<>(), out))
+                .isInstanceOfSatisfying(TwirpException.class, twirp ->
+                        assertThat(twirp.getErrorCode()).isEqualTo(ErrorCode.INTERNAL));
 
         assertThat(out.size()).isZero();
     }

@@ -7,6 +7,7 @@ import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.SecurityContext;
 
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -227,22 +228,43 @@ public final class TwirpContext {
             if (name == null || name.isBlank()) {
                 throw new IllegalArgumentException("outbound header names must not be blank");
             }
-            if (containsLineBreak(name)) {
-                throw new IllegalArgumentException(
-                        "outbound header names must not contain CR or LF");
+            for (int i = 0; i < name.length(); i++) {
+                char c = name.charAt(i);
+                if (c == '\r' || c == '\n') {
+                    throw new IllegalArgumentException(
+                            "outbound header names must not contain CR or LF");
+                }
+                if ((c < ' ' && c != '\t') || c == 0x7F) {
+                    throw new IllegalArgumentException(
+                            "outbound header names must not contain control characters");
+                }
             }
             String trimmed = name.trim();
+            if (trimmed.isEmpty()) {
+                throw new IllegalArgumentException("outbound header names must not be blank");
+            }
+            for (int i = 0; i < trimmed.length(); i++) {
+                if (trimmed.charAt(i) <= ' ') {
+                    throw new IllegalArgumentException(
+                            "outbound header names must not contain whitespace: " + trimmed);
+                }
+            }
             String normalized = trimmed.toLowerCase(java.util.Locale.ROOT);
             if (TRANSPORT_CONTROLLED_HEADERS.contains(normalized)) {
                 throw new IllegalArgumentException(
                         "outbound header is controlled by the HTTP transport: " + trimmed);
             }
-            List<String> values = entry.getValue();
-            if (values == null) {
+            if (snapshot.containsKey(trimmed)) {
+                throw new IllegalArgumentException(
+                        "duplicate outbound header name: " + trimmed);
+            }
+            List<String> rawValues = entry.getValue();
+            if (rawValues == null) {
                 throw new IllegalArgumentException(
                         "outbound header values must not be null: " + trimmed);
             }
-            for (String value : values) {
+            List<String> copiedValues = new ArrayList<>(rawValues.size());
+            for (String value : rawValues) {
                 if (value == null) {
                     throw new IllegalArgumentException(
                             "outbound header values must not be null: " + trimmed);
@@ -251,8 +273,9 @@ public final class TwirpContext {
                     throw new IllegalArgumentException(
                             "outbound header values must not contain CR or LF: " + trimmed);
                 }
+                copiedValues.add(value);
             }
-            snapshot.put(trimmed, List.copyOf(values));
+            snapshot.put(trimmed, Collections.unmodifiableList(copiedValues));
         }
         return snapshot;
     }

@@ -3,6 +3,7 @@
 
 package com.dennyac.twirp;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 
@@ -33,6 +34,11 @@ class TwirpErrorTest {
         assertThat(mapper.writeValueAsString(emptyMsg))
                 .isEqualTo("{\"code\":\"internal\",\"msg\":\"\"}");
         assertThat(mapper.writeValueAsString(nullMsg))
+                .isEqualTo("{\"code\":\"internal\",\"msg\":\"\"}");
+
+        ObjectMapper nonEmptyMapper = new ObjectMapper()
+                .setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
+        assertThat(nonEmptyMapper.writeValueAsString(emptyMsg))
                 .isEqualTo("{\"code\":\"internal\",\"msg\":\"\"}");
     }
 

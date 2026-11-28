@@ -56,19 +56,23 @@ class TwirpDropwizardServerTest {
     }
 
     @Test
-    void responseEncodingFailuresAreInternalRatherThanMalformed() {
+    void responseEncodingFailuresAreInternalRatherThanMalformed() throws Exception {
         Response response = post("/twirp/test.Failing/Parcel", MediaType.APPLICATION_JSON);
 
         assertThat(response.getStatus()).isEqualTo(500);
-        assertThat(response.readEntity(String.class)).isEqualTo(INTERNAL);
+        JsonNode body = json.readTree(response.readEntity(String.class));
+        assertThat(body.get("code").asText()).isEqualTo("internal");
+        assertThat(body.get("msg").asText()).startsWith("failed to encode JSON message: ");
     }
 
     @Test
-    void midStreamJsonEncodingFailureAfterLargeFieldStillReturnsInternalError() {
+    void midStreamJsonEncodingFailureAfterLargeFieldStillReturnsInternalError() throws Exception {
         Response response = post("/twirp/test.Failing/LargeParcel", MediaType.APPLICATION_JSON);
 
         assertThat(response.getStatus()).isEqualTo(500);
-        assertThat(response.readEntity(String.class)).isEqualTo(INTERNAL);
+        JsonNode body = json.readTree(response.readEntity(String.class));
+        assertThat(body.get("code").asText()).isEqualTo("internal");
+        assertThat(body.get("msg").asText()).startsWith("failed to encode JSON message: ");
     }
 
     @ParameterizedTest
