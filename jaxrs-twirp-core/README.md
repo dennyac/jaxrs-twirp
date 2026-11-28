@@ -134,7 +134,7 @@ Calls throw `TwirpException` for these failure cases:
 | 3xx response, or an error response without a Twirp error body, such as a proxy's HTML page | Depends on the HTTP status; see below |
 | Error response body that cannot be read | `INTERNAL` |
 | Client-side request encoding or missing provider `ProcessingException` | `INTERNAL` |
-| Request timeout (`SocketTimeoutException`, `HttpTimeoutException`, or `TimeoutException`) | `DEADLINE_EXCEEDED` |
+| Request or response-read timeout (`SocketTimeoutException`, `HttpTimeoutException`, or `TimeoutException`) | `DEADLINE_EXCEEDED` |
 | Other transport `ProcessingException` | `UNAVAILABLE` |
 | Successful response that cannot be decoded | `MALFORMED` |
 

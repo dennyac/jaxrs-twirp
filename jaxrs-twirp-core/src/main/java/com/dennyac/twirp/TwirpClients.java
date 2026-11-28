@@ -13,6 +13,7 @@ import com.google.protobuf.CodedOutputStream;
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.google.protobuf.UninitializedMessageException;
 import com.google.protobuf.util.JsonFormat;
+import com.dennyac.twirp.codec.MalformedMessageException;
 import com.dennyac.twirp.codec.ProtobufJsonMessageBodyReader;
 import com.dennyac.twirp.codec.ProtobufJsonMessageBodyWriter;
 import com.dennyac.twirp.codec.ProtobufMessageBodyReader;
@@ -20,6 +21,7 @@ import com.dennyac.twirp.codec.ProtobufMessageBodyWriter;
 import jakarta.ws.rs.ProcessingException;
 import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.client.Invocation;
+import jakarta.ws.rs.client.ResponseProcessingException;
 import jakarta.ws.rs.core.Configurable;
 import jakarta.ws.rs.core.Configuration;
 import jakarta.ws.rs.core.HttpHeaders;
@@ -156,14 +158,16 @@ public final class TwirpClients {
      * <p>A {@link ProcessingException} thrown while sending the request is mapped
      * by cause: client-side request encoding or provider-lookup failures become
      * {@link ErrorCode#INTERNAL}, timeouts ({@link SocketTimeoutException},
-     * {@link HttpTimeoutException}, or {@link TimeoutException}) become
+     * {@link HttpTimeoutException}, or {@link TimeoutException}) while sending
+     * the request or reading the response become
      * {@link ErrorCode#DEADLINE_EXCEEDED}, and other transport failures become
      * {@link ErrorCode#UNAVAILABLE}. Successful (2xx) responses are decoded with
      * the response-side {@code MessageBodyReader} that matches the response
      * Content-Type — both {@code application/protobuf} and
      * {@code application/json} are supported.
      *
-     * <p>The response is always closed before returning.
+     * <p>The response is always closed before returning, including any response
+     * attached to a {@link ResponseProcessingException}.
      *
      * @param invocation   the {@code Invocation.Builder} to {@code POST} against
      * @param entity       the request entity (a protobuf {@code Message} wrapped
@@ -194,6 +198,10 @@ public final class TwirpClients {
                 try {
                     return response.readEntity(responseType);
                 } catch (ProcessingException e) {
+                    if (hasCauseMatching(e, TwirpClients::isTimeout)) {
+                        throw new TwirpException(ErrorCode.DEADLINE_EXCEEDED,
+                                "twirp request timed out: " + rootMessage(e), e);
+                    }
                     throw new TwirpException(ErrorCode.MALFORMED,
                             "twirp response could not be decoded: " + rootMessage(e), e);
                 }
@@ -224,8 +232,9 @@ public final class TwirpClients {
      * <p>Errors built from the HTTP status, including those for 3xx responses,
      * also carry {@code http_error_from_intermediary=true} and
      * {@code status_code} metadata. The Content-Type header is ignored because
-     * intermediaries may replace it. A body that can't be read becomes
-     * {@link ErrorCode#INTERNAL}.
+     * intermediaries may replace it. A body that times out while reading
+     * becomes {@link ErrorCode#DEADLINE_EXCEEDED}; any other read failure
+     * becomes {@link ErrorCode#INTERNAL}.
      */
     public static TwirpException decodeError(Response response) {
         Objects.requireNonNull(response, "response");
@@ -237,6 +246,10 @@ public final class TwirpClients {
         try {
             body = response.readEntity(String.class);
         } catch (ProcessingException e) {
+            if (hasCauseMatching(e, TwirpClients::isTimeout)) {
+                return new TwirpException(ErrorCode.DEADLINE_EXCEEDED,
+                        "twirp request timed out: " + rootMessage(e), e);
+            }
             return new TwirpException(ErrorCode.INTERNAL,
                     "failed to read server error response body: " + rootMessage(e), e);
         }
@@ -274,6 +287,22 @@ public final class TwirpClients {
     }
 
     private static TwirpException mapProcessingException(ProcessingException e) {
+        if (e instanceof ResponseProcessingException rpe) {
+            closeQuietly(rpe.getResponse(), e);
+            if (hasCauseMatching(e, TwirpClients::isTimeout)) {
+                return new TwirpException(ErrorCode.DEADLINE_EXCEEDED,
+                        "twirp request timed out: " + rootMessage(e), e);
+            }
+            // Jersey's HttpUrlConnector wraps IOException from MessageBodyWriter.writeTo
+            // (including InvalidProtocolBufferException) in ResponseProcessingException
+            // if the server still returns an HTTP status.
+            if (hasCauseMatching(e, TwirpClients::isProtobufEncodingFailure)) {
+                return new TwirpException(ErrorCode.INTERNAL,
+                        "twirp request could not be encoded: " + rootMessage(e), e);
+            }
+            return new TwirpException(ErrorCode.UNAVAILABLE,
+                    "twirp transport failure: " + rootMessage(e), e);
+        }
         if (hasCauseMatching(e, TwirpClients::isRequestEncodingFailure)) {
             return new TwirpException(ErrorCode.INTERNAL,
                     "twirp request could not be encoded: " + rootMessage(e), e);
@@ -284,6 +313,17 @@ public final class TwirpClients {
         }
         return new TwirpException(ErrorCode.UNAVAILABLE,
                 "twirp transport failure: " + rootMessage(e), e);
+    }
+
+    private static void closeQuietly(Response response, Throwable primary) {
+        if (response == null) {
+            return;
+        }
+        try {
+            response.close();
+        } catch (RuntimeException closeError) {
+            primary.addSuppressed(closeError);
+        }
     }
 
     private static boolean hasCauseMatching(Throwable root, Predicate<Throwable> predicate) {
@@ -297,18 +337,20 @@ public final class TwirpClients {
     }
 
     private static boolean isRequestEncodingFailure(Throwable t) {
-        return t instanceof InvalidProtocolBufferException
-                || t instanceof UninitializedMessageException
-                || t instanceof CodedOutputStream.OutOfSpaceException
+        return isProtobufEncodingFailure(t)
                 || t instanceof JsonProcessingException
                 || isProviderNotFound(t);
     }
 
+    private static boolean isProtobufEncodingFailure(Throwable t) {
+        return (t instanceof InvalidProtocolBufferException && !(t instanceof MalformedMessageException))
+                || t instanceof UninitializedMessageException
+                || t instanceof CodedOutputStream.OutOfSpaceException;
+    }
+
     private static boolean isProviderNotFound(Throwable t) {
         for (Class<?> cls = t.getClass(); cls != null && cls != Object.class; cls = cls.getSuperclass()) {
-            String simpleName = cls.getSimpleName();
-            if ("MessageBodyProviderNotFoundException".equals(simpleName)
-                    || "NoMessageBodyWriterFoundFailure".equals(simpleName)) {
+            if ("MessageBodyProviderNotFoundException".equals(cls.getSimpleName())) {
                 return true;
             }
         }

@@ -23,7 +23,10 @@ import jakarta.ws.rs.client.ClientRequestFilter;
 import jakarta.ws.rs.client.ClientResponseFilter;
 import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.client.Invocation;
+import jakarta.ws.rs.client.ResponseProcessingException;
 import jakarta.ws.rs.client.WebTarget;
+import jakarta.ws.rs.core.Configurable;
+import jakarta.ws.rs.core.Configuration;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import org.junit.jupiter.api.Test;
@@ -42,10 +45,13 @@ import java.net.SocketTimeoutException;
 import java.net.URI;
 import java.net.http.HttpTimeoutException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.TimeoutException;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
@@ -373,6 +379,109 @@ class TwirpClientsTest {
     }
 
     @Test
+    void invokeClosesResponseOnResponseProcessingExceptionAndDoesNotTreatAsRequestEncoding() {
+        AtomicBoolean closed = new AtomicBoolean();
+        Response response = trackingResponse(closed);
+        ResponseProcessingException failure = new ResponseProcessingException(
+                response, new JsonGenerationException("bad json", (JsonGenerator) null));
+
+        TwirpException ex = invokeFailingPost(failure);
+
+        assertThat(closed).isTrue();
+        assertThat(ex.getErrorCode()).isEqualTo(ErrorCode.UNAVAILABLE);
+        assertThat(ex.getMessage()).isEqualTo("twirp transport failure: bad json");
+        assertThat(ex.getCause()).isSameAs(failure);
+    }
+
+    @Test
+    void invokeClosesResponseAndMapsTimeoutOnResponseProcessingException() {
+        AtomicBoolean closed = new AtomicBoolean();
+        Response response = trackingResponse(closed);
+        ResponseProcessingException failure = new ResponseProcessingException(
+                response, new SocketTimeoutException("Read timed out"));
+
+        TwirpException ex = invokeFailingPost(failure);
+
+        assertThat(closed).isTrue();
+        assertThat(ex.getErrorCode()).isEqualTo(ErrorCode.DEADLINE_EXCEEDED);
+        assertThat(ex.getMessage()).isEqualTo("twirp request timed out: Read timed out");
+        assertThat(ex.getCause()).isSameAs(failure);
+    }
+
+    @Test
+    void invokeMaps2xxReadEntityTimeoutToDeadlineExceeded() {
+        ClientResponseFilter timeoutBody = (request, response) -> response.setEntityStream(new InputStream() {
+            @Override
+            public int read() throws IOException {
+                throw new SocketTimeoutException("Read timed out");
+            }
+        });
+
+        TwirpException ex = invokeAborted(
+                Response.ok().type(TwirpMediaTypes.APPLICATION_PROTOBUF_TYPE).entity(new byte[]{1}).build(),
+                timeoutBody);
+
+        assertThat(ex.getErrorCode()).isEqualTo(ErrorCode.DEADLINE_EXCEEDED);
+        assertThat(ex.getMessage()).isEqualTo("twirp request timed out: Read timed out");
+        assertThat(ex.getCause()).isInstanceOf(ProcessingException.class);
+    }
+
+    @Test
+    void invokeMapsErrorBodyReadTimeoutToDeadlineExceeded() {
+        ClientResponseFilter timeoutBody = (request, response) -> response.setEntityStream(new InputStream() {
+            @Override
+            public int read() throws IOException {
+                throw new SocketTimeoutException("Read timed out");
+            }
+        });
+
+        TwirpException ex = invokeAborted(
+                Response.status(503).type(MediaType.TEXT_HTML_TYPE).entity(PROXY_PAGE).build(),
+                timeoutBody);
+
+        assertThat(ex.getErrorCode()).isEqualTo(ErrorCode.DEADLINE_EXCEEDED);
+        assertThat(ex.getMessage()).isEqualTo("twirp request timed out: Read timed out");
+        assertThat(ex.getCause()).isInstanceOf(ProcessingException.class);
+    }
+
+    @Test
+    void registerProvidersSkipsAlreadyRegisteredClasses() {
+        Set<Class<?>> registered = new HashSet<>();
+        List<Object> registerCalls = new ArrayList<>();
+        Configurable<?> target = recordingConfigurable(registered, registerCalls);
+
+        TwirpClients.registerProviders(target);
+        assertThat(registerCalls)
+                .extracting(Object::getClass)
+                .containsExactlyInAnyOrder(
+                        ProtobufMessageBodyReader.class,
+                        ProtobufMessageBodyWriter.class,
+                        ProtobufJsonMessageBodyReader.class,
+                        ProtobufJsonMessageBodyWriter.class);
+
+        registerCalls.clear();
+        TwirpClients.registerProviders(target);
+        assertThat(registerCalls).isEmpty();
+    }
+
+    @Test
+    void registerProvidersOnlyRegistersMissingDefaultsWhenJsonCodecsPresent() {
+        Set<Class<?>> registered = new HashSet<>(Set.of(
+                ProtobufJsonMessageBodyReader.class,
+                ProtobufJsonMessageBodyWriter.class));
+        List<Object> registerCalls = new ArrayList<>();
+        Configurable<?> target = recordingConfigurable(registered, registerCalls);
+
+        TwirpClients.registerProviders(target);
+
+        assertThat(registerCalls)
+                .extracting(Object::getClass)
+                .containsExactlyInAnyOrder(
+                        ProtobufMessageBodyReader.class,
+                        ProtobufMessageBodyWriter.class);
+    }
+
+    @Test
     void registerProvidersPreservesCustomJsonCodecsOnParentClient() throws IOException {
         TypeRegistry registry = TypeRegistry.newBuilder()
                 .add(TestMessage.getDescriptor())
@@ -519,6 +628,70 @@ class TwirpClientsTest {
         });
         server.start();
         return server;
+    }
+
+    private static Response trackingResponse(AtomicBoolean closed) {
+        return new Response() {
+            @Override
+            public void close() {
+                closed.set(true);
+            }
+
+            @Override public int getStatus() { return 200; }
+            @Override public StatusType getStatusInfo() { return Status.OK; }
+            @Override public Object getEntity() { return null; }
+            @Override public <T> T readEntity(Class<T> entityType) { throw new UnsupportedOperationException(); }
+            @Override public <T> T readEntity(jakarta.ws.rs.core.GenericType<T> entityType) { throw new UnsupportedOperationException(); }
+            @Override public <T> T readEntity(Class<T> entityType, java.lang.annotation.Annotation[] annotations) { throw new UnsupportedOperationException(); }
+            @Override public <T> T readEntity(jakarta.ws.rs.core.GenericType<T> entityType, java.lang.annotation.Annotation[] annotations) { throw new UnsupportedOperationException(); }
+            @Override public boolean hasEntity() { return false; }
+            @Override public boolean bufferEntity() { return false; }
+            @Override public MediaType getMediaType() { return null; }
+            @Override public java.util.Locale getLanguage() { return null; }
+            @Override public int getLength() { return -1; }
+            @Override public Set<String> getAllowedMethods() { return Set.of(); }
+            @Override public Map<String, jakarta.ws.rs.core.NewCookie> getCookies() { return Map.of(); }
+            @Override public jakarta.ws.rs.core.EntityTag getEntityTag() { return null; }
+            @Override public java.util.Date getDate() { return null; }
+            @Override public java.util.Date getLastModified() { return null; }
+            @Override public URI getLocation() { return null; }
+            @Override public Set<jakarta.ws.rs.core.Link> getLinks() { return Set.of(); }
+            @Override public boolean hasLink(String relation) { return false; }
+            @Override public jakarta.ws.rs.core.Link getLink(String relation) { return null; }
+            @Override public jakarta.ws.rs.core.Link.Builder getLinkBuilder(String relation) { return null; }
+            @Override public jakarta.ws.rs.core.MultivaluedMap<String, Object> getMetadata() { return null; }
+            @Override public jakarta.ws.rs.core.MultivaluedMap<String, String> getStringHeaders() { return null; }
+            @Override public String getHeaderString(String name) { return null; }
+        };
+    }
+
+    private static Configurable<?> recordingConfigurable(Set<Class<?>> registered, List<Object> registerCalls) {
+        Configuration config = (Configuration) Proxy.newProxyInstance(
+                TwirpClientsTest.class.getClassLoader(),
+                new Class<?>[]{Configuration.class},
+                (ignored, method, args) -> {
+                    if ("isRegistered".equals(method.getName()) && args.length == 1 && args[0] instanceof Class<?> cls) {
+                        return registered.contains(cls);
+                    }
+                    throw new UnsupportedOperationException(method.getName());
+                });
+        Object[] proxyHolder = new Object[1];
+        Configurable<?> configurable = (Configurable<?>) Proxy.newProxyInstance(
+                TwirpClientsTest.class.getClassLoader(),
+                new Class<?>[]{Configurable.class},
+                (ignored, method, args) -> {
+                    if ("getConfiguration".equals(method.getName())) {
+                        return config;
+                    }
+                    if ("register".equals(method.getName()) && args.length == 1) {
+                        registerCalls.add(args[0]);
+                        registered.add(args[0] instanceof Class<?> cls ? cls : args[0].getClass());
+                        return proxyHolder[0];
+                    }
+                    throw new UnsupportedOperationException(method.getName());
+                });
+        proxyHolder[0] = configurable;
+        return configurable;
     }
 
     private static Invocation.Builder recordingBuilder(Map<String, List<String>> applied) {
