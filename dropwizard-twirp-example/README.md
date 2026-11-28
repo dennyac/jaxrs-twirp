@@ -31,7 +31,7 @@ Dropwizard-managed clients, see [`TwirpClientBuilder`][managed-client].
 With JDK 17+ and Maven 3.9+, run from the repository root:
 
 ```bash
-mvn -pl jaxrs-twirp-protoc,dropwizard-twirp-example -am install
+mvn -pl dropwizard-twirp-example -am install
 java -jar dropwizard-twirp-example/target/dropwizard-twirp-example-0.1.0-SNAPSHOT.jar \
   server dropwizard-twirp-example/src/main/resources/example.yml
 ```
