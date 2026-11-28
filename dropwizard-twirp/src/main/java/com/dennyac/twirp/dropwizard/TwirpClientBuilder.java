@@ -6,6 +6,8 @@ package com.dennyac.twirp.dropwizard;
 import com.dennyac.twirp.TwirpClients;
 import com.dennyac.twirp.TwirpJson;
 import com.dennyac.twirp.TwirpMediaTypes;
+import com.dennyac.twirp.codec.ProtobufJsonMessageBodyReader;
+import com.dennyac.twirp.codec.ProtobufJsonMessageBodyWriter;
 import com.google.protobuf.TypeRegistry;
 import com.google.protobuf.util.JsonFormat;
 import io.dropwizard.client.JerseyClientBuilder;
@@ -13,6 +15,8 @@ import io.dropwizard.client.JerseyClientConfiguration;
 import io.dropwizard.core.setup.Environment;
 import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.client.WebTarget;
+import jakarta.ws.rs.core.Configuration;
+import jakarta.ws.rs.core.MediaType;
 
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicLong;
@@ -197,8 +201,8 @@ public final class TwirpClientBuilder<T> {
      * {@link #using(Environment, JerseyClientConfiguration)}; surfaces in
      * Dropwizard client metrics and thread names. Must be unique per managed
      * client — if you set explicit names for several stubs in one
-     * {@code Environment}, give each a distinct name. When unset, a unique name
-     * is derived from the {@code baseUri} with a monotonic sequence suffix.
+     * {@code Environment}, give each a distinct name. When unset, a unique
+     * monotonic name ({@code twirp-client-<n>}) is generated per client.
      * Ignored when an existing client is supplied through {@link #using(Client)}.
      */
     public TwirpClientBuilder<T> clientName(String clientName) {
@@ -209,12 +213,21 @@ public final class TwirpClientBuilder<T> {
     /**
      * Resolve the root {@code WebTarget} and construct the generated client.
      *
-     * @throws NullPointerException  if {@link #baseUri(String)} was never set
-     * @throws IllegalStateException if no client source was configured via a
-     *                               {@code using(...)} overload
+     * @throws NullPointerException     if {@link #baseUri(String)} was never set
+     * @throws IllegalArgumentException if {@link #contentType(String)} is not a
+     *                                  supported Twirp media type or if a
+     *                                  {@link TypeRegistry} is supplied both on
+     *                                  the builder and on a custom JSON codec
+     * @throws IllegalStateException    if no client source was configured via a
+     *                                  {@code using(...)} overload, or if custom
+     *                                  JSON configuration is requested on a
+     *                                  caller-supplied {@code Client} that
+     *                                  already has Twirp JSON providers
+     *                                  registered
      */
     public T build() {
         Objects.requireNonNull(baseUri, "baseUri must be set before build()");
+        validateContentType(contentType);
         JsonFormat.Printer printer = null;
         JsonFormat.Parser parser = null;
         if (jsonPrinter != null || jsonParser != null || typeRegistry != null) {
@@ -224,12 +237,34 @@ public final class TwirpClientBuilder<T> {
                 printer = printer.usingTypeRegistry(typeRegistry);
                 parser = parser.usingTypeRegistry(typeRegistry);
             }
+            if (client != null) {
+                Configuration clientConfig = client.getConfiguration();
+                if (clientConfig.isRegistered(ProtobufJsonMessageBodyReader.class)
+                        || clientConfig.isRegistered(ProtobufJsonMessageBodyWriter.class)) {
+                    throw new IllegalStateException(
+                            "Cannot apply custom JSON configuration to a Client that already has "
+                                    + "Twirp JSON providers registered; pass a Client without Twirp JSON "
+                                    + "providers or configure them on the Client directly");
+                }
+            }
         }
         WebTarget root = resolveClient().target(baseUri);
         if (printer != null) {
             TwirpClients.registerProviders(root, printer, parser);
         }
         return factory.create(root, contentType);
+    }
+
+    private static void validateContentType(String contentType) {
+        MediaType parsed = MediaType.valueOf(contentType);
+        if (parsed.isWildcardType() || parsed.isWildcardSubtype()
+                || (!TwirpMediaTypes.APPLICATION_PROTOBUF_TYPE.isCompatible(parsed)
+                        && !TwirpMediaTypes.APPLICATION_JSON_TYPE.isCompatible(parsed))) {
+            throw new IllegalArgumentException(
+                    "Unsupported Twirp content type '" + contentType + "': expected "
+                            + TwirpMediaTypes.APPLICATION_PROTOBUF + " or "
+                            + TwirpMediaTypes.APPLICATION_JSON);
+        }
     }
 
     private Client resolveClient() {
@@ -245,15 +280,15 @@ public final class TwirpClientBuilder<T> {
     }
 
     /**
-     * The Dropwizard client name must be unique per managed client. If the caller
-     * didn't set one, derive it from the baseUri plus a sequence number so two
-     * stubs pointed at the same host don't collide on Dropwizard metric names.
+     * The Dropwizard client name must be unique per managed client. When the
+     * caller doesn't set one, generate a monotonic name so multiple stubs never
+     * collide on Dropwizard metric names and raw baseUri values are never
+     * embedded in metrics, thread names, or User-Agent headers.
      */
     private String resolveClientName() {
         if (clientName != null) {
             return clientName;
         }
-        long id = DEFAULT_NAME_SEQUENCE.incrementAndGet();
-        return baseUri == null ? "twirp-client-" + id : "twirp-client-" + baseUri + "-" + id;
+        return "twirp-client-" + DEFAULT_NAME_SEQUENCE.incrementAndGet();
     }
 }

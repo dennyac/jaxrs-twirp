@@ -29,10 +29,15 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
+import static org.assertj.core.api.Assertions.assertThatIllegalStateException;
 import static org.assertj.core.api.Assertions.assertThatNullPointerException;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -244,10 +249,72 @@ class TwirpClientBuilderTest {
     }
 
     @Test
-    void defaultManagedClientNamesDoNotCollideForSameBaseUri() {
+    void customJsonOnClientWithExistingTwirpProvidersIsRejected() {
+        TwirpClients.registerProviders(client);
+        TypeRegistry registry = TypeRegistry.newBuilder()
+                .add(SourceContext.getDescriptor())
+                .build();
+
+        assertThatIllegalStateException().isThrownBy(() -> TwirpClientBuilder.forService((root, ct) -> root)
+                .using(client)
+                .baseUri("http://localhost:8080")
+                .json()
+                .jsonPrinter(JsonFormat.printer())
+                .build());
+        assertThatIllegalStateException().isThrownBy(() -> TwirpClientBuilder.forService((root, ct) -> root)
+                .using(client)
+                .baseUri("http://localhost:8080")
+                .json()
+                .jsonParser(JsonFormat.parser())
+                .build());
+        assertThatIllegalStateException().isThrownBy(() -> TwirpClientBuilder.forService((root, ct) -> root)
+                .using(client)
+                .baseUri("http://localhost:8080")
+                .json()
+                .typeRegistry(registry)
+                .build());
+
+        // Without custom JSON settings, reusing a Client with Twirp providers remains allowed.
+        WebTarget target = TwirpClientBuilder.forService((root, ct) -> root)
+                .using(client)
+                .baseUri("http://localhost:8080")
+                .json()
+                .build();
+        assertThat(target.getUri().toString()).startsWith("http://localhost:8080");
+    }
+
+    @Test
+    void invalidContentTypeFailsBeforeCreatingManagedClient() throws Exception {
+        Environment environment = new Environment("twirp-client-builder-content-type-test");
+        Set<String> initialMetrics = Set.copyOf(environment.metrics().getNames());
+        int initialManagedCount = environment.lifecycle().getManagedObjects().size();
+        try {
+            for (String invalid : List.of("text/plain", "*/*", "application/*", "not-a-media-type")) {
+                TwirpClientBuilder<WebTarget> builder = TwirpClientBuilder.forService((root, ct) -> root)
+                        .using(environment, new JerseyClientConfiguration())
+                        .baseUri("http://localhost:8080")
+                        .contentType(invalid);
+                assertThatIllegalArgumentException().isThrownBy(builder::build);
+            }
+            assertThat(environment.metrics().getNames()).containsExactlyInAnyOrderElementsOf(initialMetrics);
+            assertThat(environment.lifecycle().getManagedObjects()).hasSize(initialManagedCount);
+
+            String accepted = TwirpClientBuilder.forService((root, ct) -> ct)
+                    .using(client)
+                    .baseUri("http://localhost:8080")
+                    .contentType("application/json; charset=utf-8")
+                    .build();
+            assertThat(accepted).isEqualTo("application/json; charset=utf-8");
+        } finally {
+            stopManagedObjects(environment);
+        }
+    }
+
+    @Test
+    void defaultManagedClientNamesDoNotCollideAndExcludeBaseUri() throws Exception {
         Environment environment = new Environment("twirp-client-builder-collision-test");
         try {
-            String baseUri = "http://localhost:8080";
+            String baseUri = "http://user:secret@localhost:8080/api%20v1";
             WebTarget first = TwirpClientBuilder.forService((root, ct) -> root)
                     .using(environment, new JerseyClientConfiguration())
                     .baseUri(baseUri)
@@ -259,13 +326,14 @@ class TwirpClientBuilderTest {
 
             assertThat(first.getUri().toString()).startsWith(baseUri);
             assertThat(second.getUri().toString()).startsWith(baseUri);
+            assertThat(environment.metrics().getNames())
+                    .noneMatch(name -> name.contains("secret") || name.contains("localhost"));
+
+            Pattern defaultName = Pattern.compile("twirp-client-\\d+");
             long distinctDefaultNames = environment.metrics().getNames().stream()
-                    .filter(name -> name.contains("twirp-client-" + baseUri + "-"))
-                    .map(name -> {
-                        int start = name.indexOf("twirp-client-" + baseUri + "-");
-                        int end = name.indexOf('.', start + ("twirp-client-" + baseUri + "-").length());
-                        return end < 0 ? name.substring(start) : name.substring(start, end);
-                    })
+                    .map(defaultName::matcher)
+                    .filter(Matcher::find)
+                    .map(Matcher::group)
                     .distinct()
                     .count();
             assertThat(distinctDefaultNames).isEqualTo(2);
@@ -275,7 +343,7 @@ class TwirpClientBuilderTest {
     }
 
     @Test
-    void explicitManagedClientNameIsPreserved() {
+    void explicitManagedClientNameIsPreserved() throws Exception {
         Environment environment = new Environment("twirp-client-builder-explicit-name-test");
         try {
             TwirpClientBuilder.forService((root, ct) -> root)
@@ -297,13 +365,13 @@ class TwirpClientBuilderTest {
         }
     }
 
-    private static void stopManagedObjects(Environment environment) {
+    private static void stopManagedObjects(Environment environment) throws Exception {
         for (LifeCycle managed : environment.lifecycle().getManagedObjects()) {
-            try {
-                managed.stop();
-            } catch (Exception ignored) {
-                // Best-effort cleanup of Dropwizard managed resources in tests.
+            // Jetty's AbstractLifeCycle.stop() is a no-op if start() was never called.
+            if (!managed.isRunning()) {
+                managed.start();
             }
+            managed.stop();
         }
     }
 
