@@ -73,6 +73,23 @@
             <artifactId>dropwizard-testing</artifactId>
             <scope>test</scope>
         </dependency>
+        <!--
+            Runs as a protoc plugin below, not on the classpath. Depending on
+            its POM makes the reactor build it first, including with -am and -T.
+        -->
+        <dependency>
+            <groupId>com.dennyac.twirp</groupId>
+            <artifactId>jaxrs-twirp-protoc</artifactId>
+            <version>${project.version}</version>
+            <type>pom</type>
+            <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
     </dependencies>
 
     <build>
