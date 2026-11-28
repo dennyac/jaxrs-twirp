@@ -9,6 +9,9 @@ import com.fasterxml.jackson.databind.cfg.CoercionAction;
 import com.fasterxml.jackson.databind.cfg.CoercionInputShape;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.databind.type.LogicalType;
+import com.google.protobuf.CodedOutputStream;
+import com.google.protobuf.InvalidProtocolBufferException;
+import com.google.protobuf.UninitializedMessageException;
 import com.google.protobuf.util.JsonFormat;
 import com.dennyac.twirp.codec.ProtobufJsonMessageBodyReader;
 import com.dennyac.twirp.codec.ProtobufJsonMessageBodyWriter;
@@ -18,12 +21,20 @@ import jakarta.ws.rs.ProcessingException;
 import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.client.Invocation;
 import jakarta.ws.rs.core.Configurable;
+import jakarta.ws.rs.core.Configuration;
 import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.Response;
 
+import java.net.SocketTimeoutException;
+import java.net.http.HttpTimeoutException;
+import java.util.Collections;
+import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
+import java.util.concurrent.TimeoutException;
+import java.util.function.Predicate;
 
 /**
  * Client-side companion to {@link TwirpServerFeature}. Provides helpers
@@ -70,14 +81,27 @@ public final class TwirpClients {
      * (typically a {@link jakarta.ws.rs.client.Client} or
      * {@link jakarta.ws.rs.client.WebTarget}).
      *
-     * <p>Equivalent to calling {@code registerProviders(target, defaultPrinter(),
-     * defaultParser())}.
-     *
-     * <p>JAX-RS provider registration is idempotent: calling this multiple times
-     * with the same target is safe but redundant.
+     * <p>Each provider class is registered only if it is not already registered on
+     * {@code target} (including providers inherited by a {@code WebTarget} from its
+     * parent {@code Client}). Callers that register custom JSON codecs via
+     * {@link #registerProviders(Configurable, JsonFormat.Printer, JsonFormat.Parser)}
+     * therefore keep those codecs when constructing generated clients.
      */
     public static void registerProviders(Configurable<?> target) {
-        registerProviders(target, TwirpJson.defaultPrinter(), TwirpJson.defaultParser());
+        Objects.requireNonNull(target, "target");
+        Configuration config = target.getConfiguration();
+        if (config == null || !config.isRegistered(ProtobufMessageBodyReader.class)) {
+            target.register(new ProtobufMessageBodyReader());
+        }
+        if (config == null || !config.isRegistered(ProtobufMessageBodyWriter.class)) {
+            target.register(new ProtobufMessageBodyWriter());
+        }
+        if (config == null || !config.isRegistered(ProtobufJsonMessageBodyReader.class)) {
+            target.register(new ProtobufJsonMessageBodyReader(TwirpJson.defaultParser()));
+        }
+        if (config == null || !config.isRegistered(ProtobufJsonMessageBodyWriter.class)) {
+            target.register(new ProtobufJsonMessageBodyWriter(TwirpJson.defaultPrinter()));
+        }
     }
 
     /**
@@ -129,11 +153,14 @@ public final class TwirpClients {
      * Send a Twirp request and either return the decoded response or throw a
      * {@link TwirpException} carrying the server's error.
      *
-     * <p>Any {@link ProcessingException} thrown by the JAX-RS client (transport
-     * errors, marshalling errors) is wrapped as
-     * {@link ErrorCode#UNAVAILABLE}. Successful (2xx) responses are decoded
-     * with the response-side {@code MessageBodyReader} that matches the
-     * response Content-Type — both {@code application/protobuf} and
+     * <p>A {@link ProcessingException} thrown while sending the request is mapped
+     * by cause: client-side request encoding or provider-lookup failures become
+     * {@link ErrorCode#INTERNAL}, timeouts ({@link SocketTimeoutException},
+     * {@link HttpTimeoutException}, or {@link TimeoutException}) become
+     * {@link ErrorCode#DEADLINE_EXCEEDED}, and other transport failures become
+     * {@link ErrorCode#UNAVAILABLE}. Successful (2xx) responses are decoded with
+     * the response-side {@code MessageBodyReader} that matches the response
+     * Content-Type — both {@code application/protobuf} and
      * {@code application/json} are supported.
      *
      * <p>The response is always closed before returning.
@@ -158,8 +185,7 @@ public final class TwirpClients {
         try {
             response = invocation.post(entity);
         } catch (ProcessingException e) {
-            throw new TwirpException(ErrorCode.UNAVAILABLE,
-                    "twirp transport failure: " + rootMessage(e), e);
+            throw mapProcessingException(e);
         }
 
         try {
@@ -241,9 +267,58 @@ public final class TwirpClients {
                     .meta("body", rawBody)
                     .build();
         }
-        TwirpException.Builder builder = TwirpException.builder(code).message(error.getMsg());
+        String message = error.getMsg() == null ? "" : error.getMsg();
+        TwirpException.Builder builder = TwirpException.builder(code).message(message);
         error.getMeta().forEach((key, value) -> builder.meta(key, value == null ? "" : value));
         return builder.build();
+    }
+
+    private static TwirpException mapProcessingException(ProcessingException e) {
+        if (hasCauseMatching(e, TwirpClients::isRequestEncodingFailure)) {
+            return new TwirpException(ErrorCode.INTERNAL,
+                    "twirp request could not be encoded: " + rootMessage(e), e);
+        }
+        if (hasCauseMatching(e, TwirpClients::isTimeout)) {
+            return new TwirpException(ErrorCode.DEADLINE_EXCEEDED,
+                    "twirp request timed out: " + rootMessage(e), e);
+        }
+        return new TwirpException(ErrorCode.UNAVAILABLE,
+                "twirp transport failure: " + rootMessage(e), e);
+    }
+
+    private static boolean hasCauseMatching(Throwable root, Predicate<Throwable> predicate) {
+        Set<Throwable> visited = Collections.newSetFromMap(new IdentityHashMap<>());
+        for (Throwable cur = root; cur != null && visited.add(cur); cur = cur.getCause()) {
+            if (predicate.test(cur)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static boolean isRequestEncodingFailure(Throwable t) {
+        return t instanceof InvalidProtocolBufferException
+                || t instanceof UninitializedMessageException
+                || t instanceof CodedOutputStream.OutOfSpaceException
+                || t instanceof JsonProcessingException
+                || isProviderNotFound(t);
+    }
+
+    private static boolean isProviderNotFound(Throwable t) {
+        for (Class<?> cls = t.getClass(); cls != null && cls != Object.class; cls = cls.getSuperclass()) {
+            String simpleName = cls.getSimpleName();
+            if ("MessageBodyProviderNotFoundException".equals(simpleName)
+                    || "NoMessageBodyWriterFoundFailure".equals(simpleName)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static boolean isTimeout(Throwable t) {
+        return t instanceof SocketTimeoutException
+                || t instanceof HttpTimeoutException
+                || t instanceof TimeoutException;
     }
 
     private static TwirpError parseTwirpError(String body) {
