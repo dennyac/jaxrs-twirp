@@ -288,8 +288,7 @@ class TwirpClientsTest {
 
             assertThat(thrown).isInstanceOfSatisfying(TwirpException.class, ex -> {
                 assertThat(ex.getErrorCode()).isEqualTo(ErrorCode.INTERNAL);
-                assertThat(ex.getCause()).isInstanceOf(ProcessingException.class);
-                assertThat(ex.getCause()).hasCauseInstanceOf(InvalidProtocolBufferException.class);
+                assertThat(ex).hasRootCauseInstanceOf(InvalidProtocolBufferException.class);
             });
         } finally {
             server.stop(0);
