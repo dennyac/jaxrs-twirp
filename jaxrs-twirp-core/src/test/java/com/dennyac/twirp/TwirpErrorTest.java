@@ -3,6 +3,7 @@
 
 package com.dennyac.twirp;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 
@@ -21,6 +22,24 @@ class TwirpErrorTest {
         String json = mapper.writeValueAsString(error);
 
         assertThat(json).isEqualTo("{\"code\":\"not_found\",\"msg\":\"no such hat\"}");
+    }
+
+    @Test
+    void alwaysIncludesMsgEvenWhenEmptyOrNull() throws Exception {
+        TwirpError emptyMsg = new TwirpError("internal", "", Map.of());
+        TwirpError nullMsg = new TwirpError("internal", null, null);
+
+        assertThat(emptyMsg.getMsg()).isEmpty();
+        assertThat(nullMsg.getMsg()).isEmpty();
+        assertThat(mapper.writeValueAsString(emptyMsg))
+                .isEqualTo("{\"code\":\"internal\",\"msg\":\"\"}");
+        assertThat(mapper.writeValueAsString(nullMsg))
+                .isEqualTo("{\"code\":\"internal\",\"msg\":\"\"}");
+
+        ObjectMapper nonEmptyMapper = new ObjectMapper()
+                .setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
+        assertThat(nonEmptyMapper.writeValueAsString(emptyMsg))
+                .isEqualTo("{\"code\":\"internal\",\"msg\":\"\"}");
     }
 
     @Test

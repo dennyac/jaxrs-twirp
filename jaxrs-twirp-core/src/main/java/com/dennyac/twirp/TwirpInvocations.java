@@ -49,8 +49,11 @@ public final class TwirpInvocations {
         } catch (VirtualMachineError e) {
             throw e;
         } catch (Exception | Error e) {
-            throw new TwirpException(ErrorCode.INTERNAL,
-                    methodName + " failed: " + e.getMessage(), e);
+            String detail = e.getMessage();
+            String message = (detail == null || detail.isBlank())
+                    ? methodName + " failed"
+                    : methodName + " failed: " + detail;
+            throw new TwirpException(ErrorCode.INTERNAL, message, e);
         }
         if (result == null) {
             throw new TwirpException(ErrorCode.INTERNAL,

@@ -50,6 +50,19 @@ class TwirpErrorMessageBodyWriterTest {
     }
 
     @Test
+    void writesEmptyMsgFieldWhenMessageIsEmptyOrNull() throws Exception {
+        ByteArrayOutputStream emptyOut = new ByteArrayOutputStream();
+        write(TwirpError.of(ErrorCode.INTERNAL, ""), emptyOut);
+        assertThat(emptyOut.toString(StandardCharsets.UTF_8))
+                .isEqualTo("{\"code\":\"internal\",\"msg\":\"\"}");
+
+        ByteArrayOutputStream nullOut = new ByteArrayOutputStream();
+        write(TwirpError.of(ErrorCode.INTERNAL, null), nullOut);
+        assertThat(nullOut.toString(StandardCharsets.UTF_8))
+                .isEqualTo("{\"code\":\"internal\",\"msg\":\"\"}");
+    }
+
+    @Test
     void preservesPropertyOrderMetadataEscapingAndUtf8() throws Exception {
         Map<String, String> meta = new LinkedHashMap<>();
         meta.put("argument", "hat_color");
