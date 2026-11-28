@@ -47,6 +47,8 @@ final class ClientGenerator {
             ClassName.get("jakarta.ws.rs.client", "WebTarget");
     private static final ClassName ENTITY =
             ClassName.get("jakarta.ws.rs.client", "Entity");
+    private static final ClassName MEDIA_TYPE =
+            ClassName.get("jakarta.ws.rs.core", "MediaType");
     private static final ClassName TWIRP_CLIENTS =
             ClassName.get("com.dennyac.twirp", "TwirpClients");
     private static final ClassName TWIRP_EXCEPTION =
@@ -112,9 +114,8 @@ final class ClientGenerator {
                                     + "client you build yourself, use a constructor or {@link $T} directly.\n",
                             clientName, clientName, TWIRP_CLIENT_BUILDER)
                     .addStatement("return $T.forService($T::new)\n"
-                                    + "    .using(environment, configuration)\n"
-                                    + "    .clientName($S)",
-                            TWIRP_CLIENT_BUILDER, self, clientName)
+                                    + "    .using(environment, configuration)",
+                            TWIRP_CLIENT_BUILDER, self)
                     .build());
         }
 
@@ -132,10 +133,21 @@ final class ClientGenerator {
                 .addJavadoc("Construct a client that uses the supplied content type as the wire format.\n"
                                 + "\n@param baseTarget any {@code WebTarget} whose root the server is at\n"
                                 + "@param contentType one of {@link $T#APPLICATION_PROTOBUF} or "
-                                + "{@link $T#APPLICATION_JSON}\n",
+                                + "{@link $T#APPLICATION_JSON}\n"
+                                + "@throws java.lang.IllegalArgumentException if {@code contentType} is not a "
+                                + "supported Twirp media type\n",
                         TWIRP_MEDIA_TYPES, TWIRP_MEDIA_TYPES)
                 .addStatement("$T.requireNonNull(baseTarget, $S)", OBJECTS, "baseTarget")
                 .addStatement("$T.requireNonNull(contentType, $S)", OBJECTS, "contentType")
+                .addStatement("$T parsedContentType = $T.valueOf(contentType)", MEDIA_TYPE, MEDIA_TYPE)
+                .beginControlFlow("if (parsedContentType.isWildcardType()"
+                                + " || parsedContentType.isWildcardSubtype()"
+                                + " || (!$T.APPLICATION_PROTOBUF_TYPE.isCompatible(parsedContentType)"
+                                + " && !$T.APPLICATION_JSON_TYPE.isCompatible(parsedContentType)))",
+                        TWIRP_MEDIA_TYPES, TWIRP_MEDIA_TYPES)
+                .addStatement("throw new java.lang.IllegalArgumentException($S + contentType)",
+                        "Unsupported Twirp content type: ")
+                .endControlFlow()
                 .addStatement("$T.registerProviders(baseTarget)", TWIRP_CLIENTS)
                 .addStatement("this.target = baseTarget.path($S)", servicePath)
                 .addStatement("this.contentType = contentType")
@@ -174,6 +186,7 @@ final class ClientGenerator {
             builder.addParameter(TWIRP_CONTEXT, "context");
         }
         builder.addException(TWIRP_EXCEPTION);
+        builder.addStatement("$T.requireNonNull(request, $S)", OBJECTS, "request");
 
         if (options.generateContext()) {
             builder.addStatement("return $T.invoke(\n"
