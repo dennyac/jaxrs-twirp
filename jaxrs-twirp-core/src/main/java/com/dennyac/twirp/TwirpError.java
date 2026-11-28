@@ -21,7 +21,6 @@ import java.util.Map;
  * }
  * </pre>
  */
-@JsonInclude(JsonInclude.Include.NON_EMPTY)
 @JsonPropertyOrder({"code", "msg", "meta"})
 public final class TwirpError {
 
@@ -34,7 +33,7 @@ public final class TwirpError {
             @JsonProperty("msg")  String msg,
             @JsonProperty("meta") Map<String, String> meta) {
         this.code = code;
-        this.msg = msg;
+        this.msg = msg == null ? "" : msg;
         this.meta = meta == null
                 ? Collections.emptyMap()
                 : Collections.unmodifiableMap(new LinkedHashMap<>(meta));
@@ -62,6 +61,7 @@ public final class TwirpError {
     }
 
     @JsonProperty("meta")
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     public Map<String, String> getMeta() {
         return meta;
     }

@@ -61,6 +61,23 @@ class AnyJsonCodecTest {
     }
 
     @Test
+    void failedJsonSerializationWritesNoPartialBytes() {
+        Parcel largeParcel = Parcel.newBuilder()
+                .setLabel("a".repeat(64 * 1024))
+                .setContents(Any.pack(TestMessage.newBuilder().setHatColor("red").build()))
+                .build();
+        ProtobufJsonMessageBodyWriter writer = new ProtobufJsonMessageBodyWriter();
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+
+        assertThatThrownBy(() -> writer.writeTo(
+                largeParcel, Parcel.class, null, null, TwirpMediaTypes.APPLICATION_JSON_TYPE,
+                new MultivaluedHashMap<>(), out))
+                .isInstanceOf(IOException.class);
+
+        assertThat(out.size()).isZero();
+    }
+
+    @Test
     void anyFieldStillRoundTripsAsBinaryProtobufWithoutARegistry() throws Exception {
         // The same Parcel is perfectly happy on the binary wire — the Any type
         // URL travels inline, so no registry is required.

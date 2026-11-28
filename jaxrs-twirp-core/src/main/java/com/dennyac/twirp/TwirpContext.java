@@ -10,7 +10,6 @@ import java.security.Principal;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.TreeMap;
@@ -228,19 +227,38 @@ public final class TwirpContext {
             if (name == null || name.isBlank()) {
                 throw new IllegalArgumentException("outbound header names must not be blank");
             }
-            String normalized = name.toLowerCase(java.util.Locale.ROOT);
+            if (containsLineBreak(name)) {
+                throw new IllegalArgumentException(
+                        "outbound header names must not contain CR or LF");
+            }
+            String trimmed = name.trim();
+            String normalized = trimmed.toLowerCase(java.util.Locale.ROOT);
             if (TRANSPORT_CONTROLLED_HEADERS.contains(normalized)) {
                 throw new IllegalArgumentException(
-                        "outbound header is controlled by the HTTP transport: " + name);
+                        "outbound header is controlled by the HTTP transport: " + trimmed);
             }
             List<String> values = entry.getValue();
-            if (values == null || values.stream().anyMatch(Objects::isNull)) {
+            if (values == null) {
                 throw new IllegalArgumentException(
-                        "outbound header values must not be null: " + name);
+                        "outbound header values must not be null: " + trimmed);
             }
-            snapshot.put(name, List.copyOf(values));
+            for (String value : values) {
+                if (value == null) {
+                    throw new IllegalArgumentException(
+                            "outbound header values must not be null: " + trimmed);
+                }
+                if (containsLineBreak(value)) {
+                    throw new IllegalArgumentException(
+                            "outbound header values must not contain CR or LF: " + trimmed);
+                }
+            }
+            snapshot.put(trimmed, List.copyOf(values));
         }
         return snapshot;
+    }
+
+    private static boolean containsLineBreak(String value) {
+        return value.indexOf('\r') >= 0 || value.indexOf('\n') >= 0;
     }
 
     private static void copyRequestHeaders(Map<String, List<String>> target, HttpHeaders headers) {

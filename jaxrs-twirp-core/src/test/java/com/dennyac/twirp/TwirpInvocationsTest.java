@@ -75,6 +75,39 @@ class TwirpInvocationsTest {
     }
 
     @Test
+    void omitsDetailWhenThrownMessageIsNullOrBlank() {
+        NullPointerException nullMsg = new NullPointerException();
+        assertThatThrownBy(() -> TwirpInvocations.invoke("Lookup", (Callable<String>) () -> {
+            throw nullMsg;
+        }))
+                .isInstanceOfSatisfying(TwirpException.class, twirp -> {
+                    assertThat(twirp.getErrorCode()).isEqualTo(ErrorCode.INTERNAL);
+                    assertThat(twirp).hasMessage("Lookup failed");
+                    assertThat(twirp).hasCause(nullMsg);
+                });
+
+        IllegalArgumentException blankMsg = new IllegalArgumentException("   ");
+        assertThatThrownBy(() -> TwirpInvocations.invoke("Validate", (Callable<String>) () -> {
+            throw blankMsg;
+        }))
+                .isInstanceOfSatisfying(TwirpException.class, twirp -> {
+                    assertThat(twirp.getErrorCode()).isEqualTo(ErrorCode.INTERNAL);
+                    assertThat(twirp).hasMessage("Validate failed");
+                    assertThat(twirp).hasCause(blankMsg);
+                });
+
+        AssertionError emptyError = new AssertionError("");
+        assertThatThrownBy(() -> TwirpInvocations.invoke("Check", (Callable<String>) () -> {
+            throw emptyError;
+        }))
+                .isInstanceOfSatisfying(TwirpException.class, twirp -> {
+                    assertThat(twirp.getErrorCode()).isEqualTo(ErrorCode.INTERNAL);
+                    assertThat(twirp).hasMessage("Check failed");
+                    assertThat(twirp).hasCause(emptyError);
+                });
+    }
+
+    @Test
     void propagatesVirtualMachineErrorsUnchanged() {
         StackOverflowError error = new StackOverflowError("too deep");
 

@@ -113,9 +113,46 @@ class TwirpContextTest {
                 .hasMessageContaining("Content-Type");
 
         assertThatThrownBy(() -> TwirpContext.ofOutboundHeaders(
+                Map.of(" Content-Type ", List.of("text/plain"))))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("Content-Type");
+
+        assertThatThrownBy(() -> TwirpContext.ofOutboundHeaders(
                 Map.of("Connection", List.of("close"))))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("Connection");
+
+        assertThatThrownBy(() -> TwirpContext.ofOutboundHeaders(
+                Map.of("\tConnection\t", List.of("close"))))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("Connection");
+    }
+
+    @Test
+    void outboundFactoryTrimsHeaderNamesAndRejectsLineBreaks() {
+        TwirpContext context = TwirpContext.ofOutboundHeaders(
+                Map.of(" X-Request-Id ", List.of("abc123")));
+        assertThat(context.outboundHeaders()).containsEntry("X-Request-Id", List.of("abc123"));
+        assertThat(context.header("x-request-id")).hasValue("abc123");
+
+        assertThatThrownBy(() -> TwirpContext.ofOutboundHeaders(
+                Map.of("X-Bad\r\nInjected", List.of("val"))))
+                .isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> TwirpContext.ofOutboundHeaders(
+                Map.of("X-Bad\n", List.of("val"))))
+                .isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> TwirpContext.ofOutboundHeaders(
+                Map.of("\rX-Bad", List.of("val"))))
+                .isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> TwirpContext.ofOutboundHeaders(
+                Map.of("X-Trace", List.of("ok\r\nX-Injected: evil"))))
+                .isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> TwirpContext.ofOutboundHeaders(
+                Map.of("X-Trace", List.of("ok\n"))))
+                .isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> TwirpContext.ofOutboundHeaders(
+                Map.of("X-Trace", List.of("ok\r"))))
+                .isInstanceOf(IllegalArgumentException.class);
     }
 
     private static SecurityContext fakeSecurity(Principal principal, Set<String> roles) {

@@ -16,8 +16,6 @@ import jakarta.ws.rs.ext.Provider;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
@@ -63,8 +61,7 @@ public class ProtobufJsonMessageBodyWriter implements MessageBodyWriter<Message>
     public void writeTo(Message message, Class<?> type, Type genericType, Annotation[] annotations,
                         MediaType mediaType, MultivaluedMap<String, Object> httpHeaders,
                         OutputStream entityStream) throws IOException, WebApplicationException {
-        Writer writer = new OutputStreamWriter(entityStream, StandardCharsets.UTF_8);
-        printer.appendTo(message, writer);
-        writer.flush();
+        String json = printer.print(message);
+        entityStream.write(json.getBytes(StandardCharsets.UTF_8));
     }
 }

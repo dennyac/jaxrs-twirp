@@ -24,6 +24,19 @@ class TwirpErrorTest {
     }
 
     @Test
+    void alwaysIncludesMsgEvenWhenEmptyOrNull() throws Exception {
+        TwirpError emptyMsg = new TwirpError("internal", "", Map.of());
+        TwirpError nullMsg = new TwirpError("internal", null, null);
+
+        assertThat(emptyMsg.getMsg()).isEmpty();
+        assertThat(nullMsg.getMsg()).isEmpty();
+        assertThat(mapper.writeValueAsString(emptyMsg))
+                .isEqualTo("{\"code\":\"internal\",\"msg\":\"\"}");
+        assertThat(mapper.writeValueAsString(nullMsg))
+                .isEqualTo("{\"code\":\"internal\",\"msg\":\"\"}");
+    }
+
+    @Test
     void includesMetaWhenPresent() throws Exception {
         TwirpError error = new TwirpError("unavailable", "back soon",
                 Map.of("retry_after", "15s"));

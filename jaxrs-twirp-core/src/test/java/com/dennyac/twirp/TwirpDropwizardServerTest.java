@@ -63,6 +63,14 @@ class TwirpDropwizardServerTest {
         assertThat(response.readEntity(String.class)).isEqualTo(INTERNAL);
     }
 
+    @Test
+    void midStreamJsonEncodingFailureAfterLargeFieldStillReturnsInternalError() {
+        Response response = post("/twirp/test.Failing/LargeParcel", MediaType.APPLICATION_JSON);
+
+        assertThat(response.getStatus()).isEqualTo(500);
+        assertThat(response.readEntity(String.class)).isEqualTo(INTERNAL);
+    }
+
     @ParameterizedTest
     @ValueSource(strings = {"overflow", "corrupt-record"})
     void restFailuresKeepDropwizardErrors(String path) throws Exception {
@@ -109,6 +117,15 @@ class TwirpDropwizardServerTest {
         @Path("/Parcel")
         public Parcel parcel(TestMessage request) {
             return Parcel.newBuilder().setContents(Any.pack(request)).build();
+        }
+
+        @POST
+        @Path("/LargeParcel")
+        public Parcel largeParcel(TestMessage request) {
+            return Parcel.newBuilder()
+                    .setLabel("a".repeat(64 * 1024))
+                    .setContents(Any.pack(request))
+                    .build();
         }
 
         @POST
